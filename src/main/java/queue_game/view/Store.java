@@ -19,7 +19,10 @@ public class Store extends JComponent {
 	}
 	@Override
 	public Dimension getPreferredSize(){
-		return new Dimension(120, 420);
+		if (getParent() == null)
+			return new Dimension(120, 420);
+		Dimension size = getParent().getSize();
+		return new Dimension(size.width / 5, 3 * size.height / 4);
 	}
 	@Override
 	public Dimension getMaximumSize(){
@@ -28,6 +31,7 @@ public class Store extends JComponent {
 	@Override
     protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		setSize(getPreferredSize());
 		Dimension size = getSize();
 		g.setColor(color);
 		g.fillRect(0, 0, size.width - 1, size.height / 5);

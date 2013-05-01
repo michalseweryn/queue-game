@@ -1,6 +1,6 @@
 package queue_game;
 
-import java.awt.FlowLayout;
+import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -18,6 +18,7 @@ public class App {
 	public static void createAndShowGUI(){
 		JFrame frame = new JFrame("Kolejka");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
         frame.add(new Board());
 		frame.pack();
 		frame.setVisible(true);
