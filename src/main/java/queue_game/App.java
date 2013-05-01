@@ -1,5 +1,7 @@
 package queue_game;
 
+import java.awt.FlowLayout;
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -9,19 +11,17 @@ import queue_game.view.Board;
  * Hello world!
  *
  */
-public class App extends JFrame{
+public class App {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1820499848125435414L;
-	public App(){
-		super("Kolejka");
-		add(new Board());
-		pack();
-		setVisible(true);
-	}
 	public static void createAndShowGUI(){
-		new App();
+		JFrame frame = new JFrame("Kolejka");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new FlowLayout());
+        frame.add(new Board());
+		frame.pack();
+		frame.setVisible(true);
 		
 	}
     public static void main( String[] args )

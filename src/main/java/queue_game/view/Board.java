@@ -5,20 +5,31 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.Insets;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 /**
  * @author michal
  * 
  * User interface containing players panel and game board. 
  */
-public class Board extends JComponent {
-
-	/**
-	 * As a JComponent must have UID.
-	 */
+public class Board extends JPanel {
 	private static final long serialVersionUID = -2270325617374583365L;
+	Store store;
+	public Board(){
+		// No layout allows us to set position of all components manually
+		setLayout(null);
+	}
+	/**
+	 * Sets Position of component on board. 
+	 */
+    void setPosition(JComponent component, int x, int y){
+        Insets insets = getInsets();
+        Dimension size = component.getPreferredSize();
+        component.setBounds(insets.left + x, insets.top + y, size.width, size.height);
+    }
 	@Override
 	public Dimension getMinimumSize(){
 		return new Dimension(480, 360);
