@@ -17,7 +17,6 @@ import javax.swing.JPanel;
  */
 public class Board extends JPanel {
 	private static final long serialVersionUID = -2270325617374583365L;
-	Store store;
 	public Board(){
 		// No layout allows us to set position of all components manually
 		setLayout(null);
