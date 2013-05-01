@@ -18,8 +18,12 @@ import javax.swing.JPanel;
 public class Board extends JPanel {
 	private static final long serialVersionUID = -2270325617374583365L;
 	public Board(){
+		super();
 		// No layout allows us to set position of all components manually
 		setLayout(null);
+		Store s = new Store(Color.BLUE);
+		setPosition(s, 30, 30);
+		add(s);
 	}
 	/**
 	 * Sets Position of component on board. 
@@ -43,13 +47,11 @@ public class Board extends JPanel {
 	}
 	@Override
     protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
-		Dimension size = getSize();
-		int r = 2;
-		Rectangle rect = new Rectangle(0, 0, size.width - 1, size.height - 1);
+		Rectangle rect = new Rectangle(getSize());
 		g2d.setColor(Color.BLACK);
 		g2d.draw(rect);
-		g2d.drawString("Plansza", r, r + g2d.getFont().getSize());
 	}
 
 }
