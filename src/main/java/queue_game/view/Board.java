@@ -49,7 +49,8 @@ public class Board extends JPanel {
     protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
-		Rectangle rect = new Rectangle(getSize());
+		Dimension size = getSize();
+		Rectangle rect = new Rectangle(0, 0, size.width - 1, size.height - 1);
 		g2d.setColor(Color.BLACK);
 		g2d.draw(rect);
 	}
