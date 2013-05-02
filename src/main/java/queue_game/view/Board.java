@@ -10,6 +10,8 @@ import java.awt.Insets;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import queue_game.controller.Handler;
+
 /**
  * @author michal
  * 
@@ -17,12 +19,14 @@ import javax.swing.JPanel;
  */
 public class Board extends JPanel {
 	private static final long serialVersionUID = -2270325617374583365L;
+	public Handler myHandler=new Handler(this);
 	public Board(){
 		super();
 		// No layout allows us to set position of all components manually
 		setLayout(null);
 		Store s = new Store(Color.BLUE);
 		setPosition(s, 30, 30);
+		s.addMouseListener(myHandler);
 		add(s);
 	}
 	/**
