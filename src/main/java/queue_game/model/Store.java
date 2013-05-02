@@ -75,7 +75,7 @@ public class Store {
 	 * @param numberOfRemovedProducts
 	 * removes declared number of typically stored products
 	 */
-	public void remove(int numberOfRemovedProducts){
+	public void removeProducts(int numberOfRemovedProducts){
 		numberOf[productType.ordinal()]-=numberOfRemovedProducts;
 		if(numberOf[productType.ordinal()]<0)
 			throw new RuntimeException("Not enough products");
@@ -86,7 +86,7 @@ public class Store {
 	 * @param type
 	 * removes declared number of products of declared type.
 	 */
-	public void remove(int numberOfRemovedProducts, ProductType type){
+	public void removeProducts(int numberOfRemovedProducts, ProductType type){
 		numberOf[type.ordinal()]-=numberOfRemovedProducts;
 		if(numberOf[type.ordinal()]<0)
 			throw new RuntimeException("Not enough products");
