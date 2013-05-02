@@ -35,7 +35,7 @@ public class Store {
 	 * @param type
 	 * Adds one product of non-typical type to the shop
 	 */
-	public void addProducts(ProductType type){
+	public void addProduct(ProductType type){
 		numberOf[type.ordinal()]+=1;
 	}
 	/**
