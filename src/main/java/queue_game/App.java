@@ -5,10 +5,11 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import queue_game.controller.Game;
 import queue_game.view.Board;
 
 /**
- * Hello world!
+ * Main window of game.
  *
  */
 public class App {
@@ -19,7 +20,10 @@ public class App {
 		JFrame frame = new JFrame("Kolejka");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        frame.add(new Board());
+        Board board = new Board();
+        Game game = new Game();
+        board.setGame(game);
+        frame.add(board);
 		frame.pack();
 		frame.setVisible(true);
 		
