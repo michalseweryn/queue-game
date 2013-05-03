@@ -2,13 +2,12 @@ package queue_game.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.Insets;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 
 import queue_game.controller.Game;
 import queue_game.model.GameState;
@@ -19,17 +18,21 @@ import queue_game.model.ProductType;
  * 
  * User interface containing game board. 
  */
-public class Board extends JPanel {
+public class Board extends JComponent {
 	private static final long serialVersionUID = -2270325617374583365L;
 	private Game game = null;
 	private GameState gameState = null;
 	public Board(){
 		super();
-		// No layout allows us to set position of all components manually
-		setLayout(null);
-		Store s = new Store(ProductType.KIOSK, Color.BLUE, this);
-		setPosition(s, 30, 30);
-		add(s);
+		FlowLayout layout = new FlowLayout();
+		layout.setVgap(0);
+		layout.setHgap(0);
+		setLayout(layout);
+		add(new Store(ProductType.KIOSK, Color.BLUE, this));
+		add(new Store(ProductType.RTV_AGD, Color.GREEN, this));
+		add(new Store(ProductType.CLOTHES, Color.PINK, this));
+		add(new Store(ProductType.FOOD, Color.ORANGE, this));
+		add(new Store(ProductType.FURNITURE, Color.MAGENTA, this));
 	}
 	/**
 	 * Sets currently played game. All input will be translated to game events and passed to this game. 
@@ -39,14 +42,6 @@ public class Board extends JPanel {
 		this.game = game;
 		this.gameState = game.getGameState();
 	}
-	/**
-	 * Sets Position of component on board. 
-	 */
-    void setPosition(JComponent component, int x, int y){
-        Insets insets = getInsets();
-        Dimension size = component.getPreferredSize();
-        component.setBounds(insets.left + x, insets.top + y, size.width, size.height);
-    }
 	@Override
 	public Dimension getMinimumSize(){
 		return new Dimension(480, 360);
@@ -63,7 +58,7 @@ public class Board extends JPanel {
     protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
-		Dimension size = getParent().getSize();
+		Dimension size = getSize();
 		Rectangle rect = new Rectangle(0, 0, size.width - 1, size.height - 1);
 		g2d.setColor(Color.BLACK);
 		g2d.draw(rect);
