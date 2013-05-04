@@ -9,20 +9,32 @@ import java.awt.event.MouseListener;
 import javax.swing.JComponent;
 
 import queue_game.model.ProductType;
+/**
+ * A class which generates a square on each store (by now all of them cyan, cause 
+ * stores' colors are not chosen yet), which contains the amount of this-store-products
+ * available.
+ * By default it is invisible and is to be turned on by setVisible(true) when some products appear.
+ * 
+ * @author KK
+ */
 
-public class JStore extends JComponent implements MouseListener{
-	private static final long serialVersionUID = 7452536279840255740L;
+public class JProductAmountField extends JComponent implements MouseListener{
+	
+	private static final long serialVersionUID = 7459675797433335680L;
 	private Color color;
-	private JBoard board;
+	private JStore store;
 	private ProductType product;
 	@Override
 	public Dimension getMinimumSize(){
-		return new Dimension(80, 300);
+		return new Dimension(1, 1);
 	}
+	
+	///////////////////////////////////////////////
+	
 	@Override
 	public Dimension getPreferredSize(){
 		if (getParent() == null)
-			return new Dimension(120, 420);
+			return new Dimension(20, 40);
 		Dimension size = getParent().getSize();
 		return new Dimension(size.width / 5,  3 * size.height / 4);
 	}
@@ -32,10 +44,12 @@ public class JStore extends JComponent implements MouseListener{
 	}
 	@Override
     protected void paintComponent(Graphics g) {
-		System.out.println("b" + color);
+		System.out.println("c");
+
 		super.paintComponent(g);
+		System.out.println(getParent());
 		Dimension size = getSize();
-		g.setColor(color);
+		g.setColor(Color.cyan);
 		g.fillRect(0, 0, size.width - 1, size.height / 5);
 		int initialHeight = size.height / 5 + 2;
 		int remainingHeight = size.height - initialHeight;
@@ -46,42 +60,22 @@ public class JStore extends JComponent implements MouseListener{
 	}
 	/**
 	 * 
-	 * @param product offered type of products
 	 * @param color 
 	 * @param board
 	 */
-	public JStore(ProductType product, Color color, JBoard board) {
+	public JProductAmountField (Color color, JStore store) {
 		super();
-		this.product = product;
-		this.board = board;
+		System.out.println("aaaaaaaaaaaaaa");this.store = store;
 		this.color = color;
+		System.out.println(getParent());
+		addMouseListener(this);
+		this.setVisible(true);
+	}	
 
-		addMouseListener(this);
-		addProductAmountField();
-	}
-	/**
-	 * @param store
-	 */
-	public JStore(queue_game.model.Store store, JBoard board) {
-		this.product = store.productType;
-		this.board = board;
-		this.color = JBoard.defaultColorSet[product.ordinal()];
-		System.out.println("  " + getParent());
-		addMouseListener(this);
-		System.out.println("aaa");
-		addProductAmountField();
-	}
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 	 */
-	
-	void addProductAmountField() {
-		add(new JProductAmountField(Color.CYAN, this));
-		System.out.println("asa");
-	}
 	public void mouseClicked(MouseEvent e) {
-		if(board != null && board.getGame() != null && board.getGameState() != null)
-			board.getGame().queueSelected(board.getGameState().getActivePlayer(), product);
 	}
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
@@ -100,3 +94,4 @@ public class JStore extends JComponent implements MouseListener{
 	 */
 	public void mouseReleased(MouseEvent e) {}
 }
+	

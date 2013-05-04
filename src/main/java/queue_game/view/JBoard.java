@@ -7,7 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
-import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 import queue_game.controller.Game;
 import queue_game.model.GameState;
@@ -17,7 +17,7 @@ import queue_game.model.GameState;
  * 
  *         User interface containing game board.
  */
-public class JBoard extends JComponent {
+public class JBoard extends JPanel {
 	private static final long serialVersionUID = -2270325617374583365L;
 	public static final Color[] defaultColorSet = new Color[] { Color.BLUE,
 			Color.GREEN, Color.PINK, Color.ORANGE, Color.MAGENTA };
