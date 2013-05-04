@@ -2,6 +2,7 @@ package queue_game.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -65,6 +66,10 @@ public class JStore extends JComponent implements MouseListener{
 	 */
 	public JStore(queue_game.model.Store store, JBoard board) {
 		this.product = store.productType;
+		FlowLayout layout = new FlowLayout();
+		layout.setVgap(0);
+		layout.setHgap(0);
+		setLayout(layout);
 		if(!store.getQueue().isEmpty()){
 			for(int i=0;i<store.getQueue().size();i++){
 				this.add(new Pawn(this.product,playerscolors.colorOfPlayer(store.getQueue().get(i)),board,store.getQueue().size()-1));

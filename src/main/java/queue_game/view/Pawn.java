@@ -28,22 +28,17 @@ public class Pawn extends JComponent implements MouseListener{
 		if (getParent() == null)
 			return new Dimension(3, 3);
 		Dimension size = getParent().getSize();
-		return new Dimension(size.height / 12,  size.height / 12);
+		return new Dimension(size.width / 12,  size.width / 12);
 	}
 	@Override
 	public Dimension getMaximumSize(){
-		return new Dimension(5, 5);
+		return new Dimension(100, 100);
 	}
 	@Override
     protected void paintComponent(Graphics g) {
-		System.out.println("COS");
-		super.paintComponent(g);
-		Dimension size = getSize();
-		Dimension parentSize = board.getSize();
 		g.setColor(color);
-		int initialHeight = parentSize.height / 5 + 2;
-		int remainingHeight = parentSize.height - initialHeight;
-		g.fillOval(size.width / 3, initialHeight + place * (remainingHeight / 10 + 1), size.width, size.height);
+		Dimension size = getSize();
+		g.fillOval(0, 0, size.width, size.height);
 	}
 	/**
 	 * @param args
