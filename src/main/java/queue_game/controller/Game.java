@@ -48,16 +48,29 @@ public class Game {
 	 *            market.
 	 */
 	public void queueSelected(int playerNo, ProductType destination) {
-		int id = gameState.getActivePlayer();
 		int nPlayers = gameState.getNumberOfPlayers();
-		gameState.setActivePlayer((id + 1) % nPlayers);
+		int id = gameState.getActivePlayer();
+		int tmpid =id;
 		Integer tmp = gameState.getAmountOfPawns().get(id);
-		if (!tmp.equals(new Integer(0))) {
-			if (gameState.getCurrentGamePhase().equals(GamePhase.QUEUING_UP)) {
+		if (gameState.getCurrentGamePhase().equals(GamePhase.QUEUING_UP)) {
+			if (!tmp.equals(new Integer(0))) {
 				gameState.getStore(destination).addPawn(id);
-				gameState.getAmountOfPawns().set(id, tmp-1);
+				gameState.getAmountOfPawns().set(id, tmp - 1);
+				id=id+1;
+				id= id % nPlayers;
+				while (gameState.getAmountOfPawns().get(id).equals(new Integer(0))) {
+					id = id+1;
+					id =id%nPlayers;
+					if(tmpid==id){
+						gameState.setCurrentGamePhase(GamePhase.DELIVERY);
+						break;
+					}
+				}
+				gameState.setActivePlayer((id) % nPlayers);
 				view.update();
-			}
+
+			} 
+			
 		}
 		if (view != null) {
 			view.repaint();
