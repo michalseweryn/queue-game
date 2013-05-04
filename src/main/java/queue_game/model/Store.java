@@ -12,6 +12,9 @@ public class Store {
 	public LinkedList<Integer> queue=new LinkedList<Integer>();
 	private int numberOf[]=new int[5];
 			
+	public void addPawn(Integer playerNo){ 
+		queue.addLast(playerNo);
+	}
 	/**
 	 * 
 	 * @param productType
