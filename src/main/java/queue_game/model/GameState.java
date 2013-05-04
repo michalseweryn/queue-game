@@ -3,6 +3,8 @@
  */
 package queue_game.model;
 
+import java.util.ArrayList;
+
 /**
  * @author michal
  * A model part of MVC. Illustrates current situation on Board.
@@ -12,6 +14,7 @@ public class GameState {
 	private int numberOfPlayers;
 	private int activePlayer = 0;
 	private Store[] stores;
+	private ArrayList<Integer> amountOfPawns=new ArrayList<Integer>();
 	private GamePhase currentGamePhase = null;
 	public GameState(){
 		stores = new Store[ProductType.values().length];
@@ -59,5 +62,15 @@ public class GameState {
 	public void setActivePlayer(int id) {
 		activePlayer = id;
 	}
+
+	public ArrayList<Integer> getAmountOfPawns() {
+		return amountOfPawns;
+	}
+
+	public void setAmountOfPawns(ArrayList<Integer> amountOfPawns) {
+		this.amountOfPawns = amountOfPawns;
+	}
+
+	
 
 }
