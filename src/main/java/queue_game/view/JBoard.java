@@ -23,7 +23,8 @@ public class JBoard extends JPanel {
 			Color.GREEN, Color.PINK, Color.ORANGE, Color.MAGENTA };
 	private Game game = null;
 	private GameState gameState = null;
-
+	private JStore[] stores = new JStore[5];
+	
 	public JBoard(Game game) {
 		super();
 		this.game = game;
@@ -33,8 +34,12 @@ public class JBoard extends JPanel {
 		layout.setVgap(0);
 		layout.setHgap(0);
 		setLayout(layout);
+		int counter = 0;
 		for (queue_game.model.Store store : gameState.getStores())
-			add(new JStore(store, this));
+		{
+			stores[counter] = new JStore(store, this);
+			add(stores[counter++]);
+		}
 	}
 
 	/**

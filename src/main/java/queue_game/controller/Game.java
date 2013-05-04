@@ -4,10 +4,12 @@
 package queue_game.controller;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import queue_game.model.GamePhase;
 import queue_game.model.GameState;
 import queue_game.model.ProductType;
+import queue_game.model.Store;
 import queue_game.view.JBoard;
 
 /**
@@ -63,6 +65,7 @@ public class Game {
 					id =id%nPlayers;
 					if(tmpid==id){
 						gameState.setCurrentGamePhase(GamePhase.DELIVERY);
+						deliveryPhase();
 						break;
 					}
 				}
@@ -78,6 +81,24 @@ public class Game {
 
 	}
 
+		
+	/**
+	 * Randomizes 3 stores with repetitions and delivers products to them.
+	 * 
+	 * @author krzysiek
+	 */
+	public void deliveryPhase() {
+		int rand;
+		Random rG = new Random();
+		for (int i=0; i<3; i++) {
+			rand = rG.nextInt(5);
+			Store deliveredStore = gameState.getStore(ProductType.values()[rand]);
+			deliveredStore.addProducts(1);
+		}
+		view.update();
+	}
+		
+	
 	/**
 	 * Method for handling players' pawn selections (e.g. on queue jumping)
 	 * 

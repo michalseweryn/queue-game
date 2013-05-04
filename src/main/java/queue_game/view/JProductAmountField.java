@@ -12,8 +12,7 @@ import queue_game.model.ProductType;
 /**
  * A class which generates a square on each store (by now all of them cyan, cause 
  * stores' colors are not chosen yet), which contains the amount of this-store-products
- * available.
- * By default it is invisible and is to be turned on by setVisible(true) when some products appear.
+ * available. Invisible if there is no products.
  * 
  * @author KK
  */
@@ -34,9 +33,10 @@ public class JProductAmountField extends JComponent implements MouseListener{
 	@Override
 	public Dimension getPreferredSize(){
 		if (getParent() == null)
-			return new Dimension(20, 40);
+			return new Dimension(120, 420);
+		System.out.println(getParent());
 		Dimension size = getParent().getSize();
-		return new Dimension(size.width / 5,  3 * size.height / 4);
+		return new Dimension(size.width, size.height/5);
 	}
 	@Override
 	public Dimension getMaximumSize(){
@@ -44,19 +44,11 @@ public class JProductAmountField extends JComponent implements MouseListener{
 	}
 	@Override
     protected void paintComponent(Graphics g) {
-		System.out.println("c");
-
 		super.paintComponent(g);
-		System.out.println(getParent());
 		Dimension size = getSize();
 		g.setColor(Color.cyan);
-		g.fillRect(0, 0, size.width - 1, size.height / 5);
-		int initialHeight = size.height / 5 + 2;
-		int remainingHeight = size.height - initialHeight;
-		//When there are more than 10 pawns, you should resize the rectangles
-		for(int i = 0; i < 10; ++i) {
-			g.fillRect(size.width / 3, initialHeight + i * (remainingHeight / 10 + 1), size.width / 3, remainingHeight / 10 - 2);
-		}
+		g.fillRect(size.width/4, size.height /6, 2*size.width/4, 4*size.height/ 6);
+		
 	}
 	/**
 	 * 
@@ -65,17 +57,19 @@ public class JProductAmountField extends JComponent implements MouseListener{
 	 */
 	public JProductAmountField (Color color, JStore store) {
 		super();
-		System.out.println("aaaaaaaaaaaaaa");this.store = store;
 		this.color = color;
-		System.out.println(getParent());
+		this.store = store;
 		addMouseListener(this);
-		this.setVisible(true);
+		if(store.getStore().getNumberOf()>0)
+			this.setVisible(true);
+		else this.setVisible(false);
 	}	
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 	 */
 	public void mouseClicked(MouseEvent e) {
+		store.mouseClicked(e);
 	}
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)

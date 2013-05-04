@@ -6,19 +6,21 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.LinkedList;
 
 import javax.swing.JComponent;
 
 import queue_game.model.PlayerColor;
 import queue_game.model.ProductType;
+import queue_game.model.Store;
 
 public class JStore extends JComponent implements MouseListener{
 	private static final long serialVersionUID = 7452536279840255740L;
 	private Color color;
 	private JBoard board;
+	private Store store;
 	private ProductType product;
 	public PlayerColor playerscolors = new PlayerColor();
+	private JProductAmountField prAmountField;
 	
 	@Override
 	public Dimension getMinimumSize(){
@@ -37,7 +39,6 @@ public class JStore extends JComponent implements MouseListener{
 	}
 	@Override
     protected void paintComponent(Graphics g) {
-		System.out.println("b" + color);
 		super.paintComponent(g);
 		Dimension size = getSize();
 		g.setColor(color);
@@ -49,26 +50,13 @@ public class JStore extends JComponent implements MouseListener{
 			g.fillRect(size.width / 3, initialHeight + i * (remainingHeight / 10 + 1), size.width / 3, remainingHeight / 10 - 2);
 		}
 	}
-	/**
-	 * 
-	 * @param product offered type of products
-	 * @param color 
-	 * @param board
-	 */
-	public JStore(ProductType product, Color color, JBoard board) {
-		super();
-		this.product = product;
-		this.board = board;
-		this.color = color;
-
-		addMouseListener(this);
-		addProductAmountField();
-	}
+	
 	/**
 	 * @param store
 	 */
 	public JStore(queue_game.model.Store store, JBoard board) {
 		this.product = store.productType;
+		this.store = store;
 		FlowLayout layout = new FlowLayout();
 		layout.setVgap(0);
 		layout.setHgap(0);
@@ -80,19 +68,32 @@ public class JStore extends JComponent implements MouseListener{
 		}
 		this.board = board;
 		this.color = JBoard.defaultColorSet[product.ordinal()];
-		System.out.println("  " + getParent());
 		addMouseListener(this);
-		System.out.println("aaa");
 		addProductAmountField();
 	}
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 	 */
-	
-	void addProductAmountField() {
-		add(new JProductAmountField(Color.CYAN, this));
-		System.out.println("asa");
+	/**
+	 * 
+	 * Returns Store object equivalent to this JStore object. 
+	 */
+
+	public Store getStore() {
+		return store;
 	}
+	
+	protected void addProductAmountField() {
+		prAmountField = new JProductAmountField(Color.CYAN, this);
+		add(prAmountField);
+		
+	}
+	
+	public void setProductAmountFieldVisible(boolean b) {
+		prAmountField.setVisible(b);
+	}
+	
+	
 	public void mouseClicked(MouseEvent e) {
 		if(board != null && board.getGame() != null && board.getGameState() != null)
 			board.getGame().queueSelected(board.getGameState().getActivePlayer(), product);
