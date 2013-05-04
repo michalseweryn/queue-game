@@ -13,6 +13,9 @@ import queue_game.view.Board;
  *
  */
 public class App {
+	/**
+	 * 
+	 */
 	public static void createAndShowGUI(){
 		JFrame frame = new JFrame("Kolejka");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -20,7 +23,6 @@ public class App {
         Board board = new Board();
         Game game = new Game();
         board.setGame(game);
-        game.start(2);
         frame.add(board);
 		frame.pack();
 		frame.setVisible(true);

@@ -11,6 +11,9 @@ import javax.swing.JComponent;
 import queue_game.model.ProductType;
 
 public class Store extends JComponent implements MouseListener{
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 7452536279840255740L;
 	private Color color;
 	private Board board;
@@ -24,7 +27,7 @@ public class Store extends JComponent implements MouseListener{
 		if (getParent() == null)
 			return new Dimension(120, 420);
 		Dimension size = getParent().getSize();
-		return new Dimension(size.width / 5,  3 * size.height / 4);
+		return new Dimension(size.width / 5, 3 * size.height / 4);
 	}
 	@Override
 	public Dimension getMaximumSize(){
@@ -33,6 +36,7 @@ public class Store extends JComponent implements MouseListener{
 	@Override
     protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		setSize(getPreferredSize());
 		Dimension size = getSize();
 		g.setColor(color);
 		g.fillRect(0, 0, size.width - 1, size.height / 5);
@@ -61,7 +65,7 @@ public class Store extends JComponent implements MouseListener{
 	 */
 	public void mouseClicked(MouseEvent e) {
 		if(board != null && board.getGame() != null && board.getGameState() != null)
-			board.getGame().queueSelected(board.getGameState().getActivePlayer(), product);
+			board.getGame().productSelected(board.getGameState().getActivePlayerNo(), product);
 	}
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
