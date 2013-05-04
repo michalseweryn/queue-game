@@ -17,14 +17,8 @@ public class JStore extends JComponent implements MouseListener{
 	private Color color;
 	private JBoard board;
 	private ProductType product;
-	private LinkedList<Pawn> pawns = new LinkedList<Pawn>();
 	public PlayerColor playerscolors = new PlayerColor();
-	public LinkedList<Pawn> getPawns() {
-		return pawns;
-	}
-	public void setPawns(LinkedList<Pawn> pawns) {
-		this.pawns = pawns;
-	}
+	
 	@Override
 	public Dimension getMinimumSize(){
 		return new Dimension(80, 300);
@@ -73,7 +67,7 @@ public class JStore extends JComponent implements MouseListener{
 		this.product = store.productType;
 		if(!store.getQueue().isEmpty()){
 			for(int i=0;i<store.getQueue().size();i++){
-				this.pawns.add(new Pawn(this.product,playerscolors.colorOfPlayer(store.getQueue().get(i)),board,store.getQueue().size()-1));
+				this.add(new Pawn(this.product,playerscolors.colorOfPlayer(store.getQueue().get(i)),board,store.getQueue().size()-1));
 			}
 		}
 		this.board = board;
