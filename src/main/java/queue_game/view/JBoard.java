@@ -11,51 +11,56 @@ import javax.swing.JComponent;
 
 import queue_game.controller.Game;
 import queue_game.model.GameState;
-import queue_game.model.ProductType;
 
 /**
  * @author michal
  * 
- * User interface containing game board. 
+ *         User interface containing game board.
  */
-public class Board extends JComponent {
+public class JBoard extends JComponent {
 	private static final long serialVersionUID = -2270325617374583365L;
+	public static final Color[] defaultColorSet = new Color[] { Color.BLUE,
+			Color.GREEN, Color.PINK, Color.ORANGE, Color.MAGENTA };
 	private Game game = null;
 	private GameState gameState = null;
-	public Board(){
+
+	public JBoard(Game game) {
 		super();
+		this.game = game;
+		this.gameState = game.getGameState();
+		game.addView(this);
 		FlowLayout layout = new FlowLayout();
 		layout.setVgap(0);
 		layout.setHgap(0);
 		setLayout(layout);
-		add(new Store(ProductType.KIOSK, Color.BLUE, this));
-		add(new Store(ProductType.RTV_AGD, Color.GREEN, this));
-		add(new Store(ProductType.CLOTHES, Color.PINK, this));
-		add(new Store(ProductType.FOOD, Color.ORANGE, this));
-		add(new Store(ProductType.FURNITURE, Color.MAGENTA, this));
+		for (queue_game.model.Store store : gameState.getStores())
+			add(new JStore(store, this));
 	}
+
 	/**
-	 * Sets currently played game. All input will be translated to game events and passed to this game. 
+	 * Sets currently played game. All input will be translated to game events
+	 * and passed to this game.
+	 * 
 	 * @param game
 	 */
-	public void setGame(Game game){
-		this.game = game;
-		this.gameState = game.getGameState();
-	}
+
 	@Override
-	public Dimension getMinimumSize(){
+	public Dimension getMinimumSize() {
 		return new Dimension(480, 360);
 	}
+
 	@Override
-	public Dimension getPreferredSize(){
+	public Dimension getPreferredSize() {
 		return new Dimension(640, 480);
 	}
+
 	@Override
-	public Dimension getMaximumSize(){
+	public Dimension getMaximumSize() {
 		return new Dimension(700, 700);
 	}
+
 	@Override
-    protected void paintComponent(Graphics g) {
+	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		Dimension size = getSize();
@@ -63,13 +68,16 @@ public class Board extends JComponent {
 		g2d.setColor(Color.BLACK);
 		g2d.draw(rect);
 	}
+
 	/**
-	 * Object for subcomponents to pass events 
+	 * Object for subcomponents to pass events
+	 * 
 	 * @return
 	 */
 	Game getGame() {
 		return game;
 	}
+
 	GameState getGameState() {
 		return gameState;
 	}

@@ -4,6 +4,7 @@
 package queue_game.controller;
 
 import queue_game.model.*;
+import queue_game.view.JBoard;
 
 /**
  * @author michal
@@ -13,6 +14,7 @@ import queue_game.model.*;
  */
 public class Game {
 	private GameState gameState;
+	private JBoard view;
 
 	public Game() {
 		gameState = new GameState();
@@ -36,14 +38,14 @@ public class Game {
 	 *            queue destination type or null, when destination is outdoor market.
 	 */
 	public void queueSelected(int playerNo, ProductType destination) {
+		int id = gameState.getActivePlayer();
+		int nPlayers = gameState.getNumberOfPlayers();
+		gameState.setActivePlayer((id + 1) % nPlayers);
 		String queue = (destination != null) ? destination.toString()
 				: "OUTDOOR_MARKET";
 		System.out.println("Player " + playerNo + " selected queue to "
 				+ queue + ".");
-		int id = gameState.getActivePlayer();
-		int nPlayers = gameState.getNumberOfPlayers();
-		gameState.setActivePlayer((id + 1) % nPlayers);
-				
+		view.repaint();
 	}
 
 	/**
@@ -58,4 +60,11 @@ public class Game {
 			int position) {
 
 	}
+	/**
+	 * Sets object to be informed about changes in model; 
+	 */
+	public void addView(JBoard view){
+		this.view = view;
+	}
+	
 }

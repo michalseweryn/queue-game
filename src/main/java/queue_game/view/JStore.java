@@ -10,10 +10,10 @@ import javax.swing.JComponent;
 
 import queue_game.model.ProductType;
 
-public class Store extends JComponent implements MouseListener{
+public class JStore extends JComponent implements MouseListener{
 	private static final long serialVersionUID = 7452536279840255740L;
 	private Color color;
-	private Board board;
+	private JBoard board;
 	private ProductType product;
 	@Override
 	public Dimension getMinimumSize(){
@@ -49,11 +49,20 @@ public class Store extends JComponent implements MouseListener{
 	 * @param color 
 	 * @param board
 	 */
-	public Store(ProductType product, Color color, Board board) {
+	public JStore(ProductType product, Color color, JBoard board) {
 		super();
 		this.product = product;
 		this.board = board;
 		this.color = color;
+		addMouseListener(this);
+	}
+	/**
+	 * @param store
+	 */
+	public JStore(queue_game.model.Store store, JBoard board) {
+		this.product = store.productType;
+		this.board = board;
+		this.color = JBoard.defaultColorSet[product.ordinal()];
 		addMouseListener(this);
 	}
 	/* (non-Javadoc)
