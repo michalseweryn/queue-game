@@ -3,7 +3,11 @@
  */
 package queue_game.controller;
 
-import queue_game.model.*;
+import java.util.ArrayList;
+
+import queue_game.model.GamePhase;
+import queue_game.model.GameState;
+import queue_game.model.ProductType;
 import queue_game.view.JBoard;
 
 /**
@@ -18,6 +22,11 @@ public class Game {
 
 	public Game() {
 		gameState = new GameState();
+		gameState.setNumberOfPlayers(2);
+		ArrayList<Integer> tmp = new ArrayList<Integer>();
+		for (int i = 0; i < gameState.getNumberOfPlayers(); i++)
+			tmp.add(5);
+		gameState.setAmountOfPawns(tmp);
 	}
 
 	public GameState getGameState() {
@@ -42,12 +51,18 @@ public class Game {
 		int id = gameState.getActivePlayer();
 		int nPlayers = gameState.getNumberOfPlayers();
 		gameState.setActivePlayer((id + 1) % nPlayers);
-		String queue = (destination != null) ? destination.toString()
-				: "OUTDOOR_MARKET";
-		System.out.println("Player " + playerNo + " selected queue to " + queue
-				+ ".");
-		if (view != null)
+		Integer tmp = gameState.getAmountOfPawns().get(id);
+		if (!tmp.equals(new Integer(0))) {
+			if (gameState.getCurrentGamePhase().equals(GamePhase.QUEUING_UP)) {
+				gameState.getStore(destination).addPawn(id);
+				gameState.getAmountOfPawns().set(id, tmp-1);
+				view.update();
+			}
+		}
+		if (view != null) {
 			view.repaint();
+		}
+
 	}
 
 	/**

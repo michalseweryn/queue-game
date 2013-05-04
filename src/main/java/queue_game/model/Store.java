@@ -9,9 +9,21 @@ import java.util.LinkedList;
 
 public class Store {
 	public final ProductType productType;
-	public LinkedList<Integer> queue=new LinkedList<Integer>();
+	private LinkedList<Integer> queue=new LinkedList<Integer>();
 	private int numberOf[]=new int[5];
+	
+	public LinkedList<Integer> getQueue() {
+		return queue;
+	}
+	
+	public void setQueue(LinkedList<Integer> queue) {
+		this.queue = queue;
+	}
+	
 			
+	public void addPawn(Integer playerNo){ 
+		queue.addLast(playerNo);
+	}
 	/**
 	 * 
 	 * @param productType
