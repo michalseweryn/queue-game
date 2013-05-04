@@ -23,7 +23,6 @@ public class Store {
 			
 	public void addPawn(Integer playerNo){ 
 		queue.addLast(playerNo);
-		System.out.println("Pawn to "+productType+" player's number "+playerNo);
 	}
 	/**
 	 * 

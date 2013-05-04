@@ -49,7 +49,6 @@ public class Pawn extends JComponent implements MouseListener{
 		this.product = product;
 		this.place = place;
 		addMouseListener(this);
-		System.out.println("JESTEM GUPI PIONEK, ze sklepu"+product);
 		//repaint();
 	}
 	
