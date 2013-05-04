@@ -5,9 +5,11 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.LinkedList;
 
 import javax.swing.JComponent;
 
+import queue_game.model.PlayerColor;
 import queue_game.model.ProductType;
 
 public class JStore extends JComponent implements MouseListener{
@@ -15,6 +17,14 @@ public class JStore extends JComponent implements MouseListener{
 	private Color color;
 	private JBoard board;
 	private ProductType product;
+	private LinkedList<Pawn> pawns = new LinkedList<Pawn>();
+	public PlayerColor playerscolors = new PlayerColor();
+	public LinkedList<Pawn> getPawns() {
+		return pawns;
+	}
+	public void setPawns(LinkedList<Pawn> pawns) {
+		this.pawns = pawns;
+	}
 	@Override
 	public Dimension getMinimumSize(){
 		return new Dimension(80, 300);
@@ -61,6 +71,11 @@ public class JStore extends JComponent implements MouseListener{
 	 */
 	public JStore(queue_game.model.Store store, JBoard board) {
 		this.product = store.productType;
+		if(!store.getQueue().isEmpty()){
+			for(int i=0;i<store.getQueue().size();i++){
+				this.pawns.add(new Pawn(this.product,playerscolors.colorOfPlayer(store.getQueue().get(i)),board,store.getQueue().size()-1));
+			}
+		}
 		this.board = board;
 		this.color = JBoard.defaultColorSet[product.ordinal()];
 		addMouseListener(this);
@@ -88,4 +103,5 @@ public class JStore extends JComponent implements MouseListener{
 	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
 	 */
 	public void mouseReleased(MouseEvent e) {}
+	
 }

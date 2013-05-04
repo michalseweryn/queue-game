@@ -43,7 +43,12 @@ public class JBoard extends JComponent {
 	 * 
 	 * @param game
 	 */
-
+	public void update(){
+		removeAll();
+		for (queue_game.model.Store store : gameState.getStores())
+			add(new JStore(store, this));
+		repaint();
+	}
 	@Override
 	public Dimension getMinimumSize() {
 		return new Dimension(480, 360);

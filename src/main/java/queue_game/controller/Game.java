@@ -15,7 +15,6 @@ import queue_game.view.JBoard;
 public class Game {
 	private GameState gameState;
 	private JBoard view = null;
-
 	public Game() {
 		gameState = new GameState();
 	}
@@ -42,12 +41,14 @@ public class Game {
 		int id = gameState.getActivePlayer();
 		int nPlayers = gameState.getNumberOfPlayers();
 		gameState.setActivePlayer((id + 1) % nPlayers);
-		String queue = (destination != null) ? destination.toString()
-				: "OUTDOOR_MARKET";
-		System.out.println("Player " + playerNo + " selected queue to " + queue
-				+ ".");
-		if (view != null)
+		if(gameState.getCurrentGamePhase().equals(GamePhase.QUEUING_UP)){
+			gameState.getStore(destination).addPawn(id);
+			view.update();
+		}
+		if (view != null){
 			view.repaint();
+		}
+			
 	}
 
 	/**

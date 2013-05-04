@@ -13,7 +13,6 @@ public class GameState {
 	private int activePlayer = 0;
 	private Store[] stores;
 	private GamePhase currentGamePhase = null;
-	
 	public GameState(){
 		stores = new Store[ProductType.values().length];
 		int ind = 0;
@@ -28,6 +27,9 @@ public class GameState {
 		return stores;
 	}
 
+	public Store getStore(ProductType product){
+		return stores[product.ordinal()];
+	}
 	public void setNumberOfPlayers(int nPlayers){
 		numberOfPlayers = nPlayers;
 	}
