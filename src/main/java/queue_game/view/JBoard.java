@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import queue_game.controller.Game;
 import queue_game.model.GameState;
+import queue_game.model.Store;
 
 /**
  * @author michal
@@ -23,7 +24,6 @@ public class JBoard extends JPanel {
 			Color.GREEN, Color.PINK, Color.ORANGE, Color.MAGENTA };
 	private Game game = null;
 	private GameState gameState = null;
-	private JStore[] stores = new JStore[5];
 	
 	public JBoard(Game game) {
 		super();
@@ -34,11 +34,11 @@ public class JBoard extends JPanel {
 		layout.setVgap(0);
 		layout.setHgap(0);
 		setLayout(layout);
-		int counter = 0;
-		for (queue_game.model.Store store : gameState.getStores())
-		{
-			stores[counter] = new JStore(store, this);
-			add(stores[counter++]);
+		for (Store store : gameState.getStores()){
+			add(new JStore(store, this));
+		}
+		for (Store store : gameState.getStores()){
+			add(new JQueue(store, game));
 		}
 	}
 
@@ -52,6 +52,9 @@ public class JBoard extends JPanel {
 		removeAll();
 		for (queue_game.model.Store store : gameState.getStores())
 			add(new JStore(store, this));
+		for (Store store : gameState.getStores()){
+			add(new JQueue(store, game));
+		}
 		revalidate();
 	}
 	@Override

@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JComponent;
+
+import queue_game.controller.Game;
 import queue_game.model.ProductType;
 
 /**
@@ -16,9 +18,10 @@ import queue_game.model.ProductType;
 public class JPawn extends JComponent implements MouseListener{
 	private static final long serialVersionUID = 382939404028495740L;
 	private Color color;
-	private JBoard board;
+	private Game game;
 	private ProductType product;
 	private Integer place;
+	private static Color[] pawnColors = new Color[]{Color.BLACK, Color.RED, Color.YELLOW, Color.GRAY, Color.WHITE, Color.DARK_GRAY};
 	@Override
 	public Dimension getMinimumSize(){
 		return new Dimension(2, 2);
@@ -28,7 +31,7 @@ public class JPawn extends JComponent implements MouseListener{
 		if (getParent() == null)
 			return new Dimension(3, 3);
 		Dimension size = getParent().getSize();
-		return new Dimension(size.width / 12,  size.width / 12);
+		return new Dimension(size.width / 3,  size.width / 3);
 	}
 	@Override
 	public Dimension getMaximumSize(){
@@ -43,9 +46,9 @@ public class JPawn extends JComponent implements MouseListener{
 	/**
 	 * @param args
 	 */
-	public JPawn(ProductType product, Color color, JBoard board, int place) {
-		this.board = board;
-		this.color = color;
+	public JPawn(ProductType product, int playerId, Game game, int place) {
+		this.game = game;
+		this.color = pawnColors[playerId + 1];
 		this.product = product;
 		this.place = place;
 		addMouseListener(this);
@@ -53,8 +56,8 @@ public class JPawn extends JComponent implements MouseListener{
 	}
 	
 	public void mouseClicked(MouseEvent e) {
-		if(board != null && board.getGame() != null && board.getGameState() != null){
-			board.getGame().pawnSelected(board.getGameState().getActivePlayer(), product, 0); // numer trzeba zidentyfikowac
+		if(game != null && game != null && game.getGameState() != null){
+			game.pawnSelected(game.getGameState().getActivePlayer(), product, place); // numer trzeba zidentyfikowac
 		}
 			
 		

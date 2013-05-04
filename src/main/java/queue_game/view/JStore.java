@@ -9,7 +9,6 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JComponent;
 
-import queue_game.model.PlayerColor;
 import queue_game.model.ProductType;
 import queue_game.model.Store;
 
@@ -19,7 +18,6 @@ public class JStore extends JComponent implements MouseListener{
 	private JBoard board;
 	private Store store;
 	private ProductType product;
-	public PlayerColor playerscolors = new PlayerColor();
 	private JProductAmountField prAmountField;
 	
 	@Override
@@ -31,7 +29,7 @@ public class JStore extends JComponent implements MouseListener{
 		if (getParent() == null)
 			return new Dimension(120, 420);
 		Dimension size = getParent().getSize();
-		return new Dimension(size.width / 5,  3 * size.height / 4);
+		return new Dimension(size.width / 5,  2 * size.width / 15);
 	}
 	@Override
 	public Dimension getMaximumSize(){
@@ -61,11 +59,6 @@ public class JStore extends JComponent implements MouseListener{
 		layout.setVgap(0);
 		layout.setHgap(0);
 		setLayout(layout);
-		if(!store.getQueue().isEmpty()){
-			for(int i=0;i<store.getQueue().size();i++){
-				this.add(new JPawn(this.product,playerscolors.colorOfPlayer(store.getQueue().get(i)),board,store.getQueue().size()-1));
-			}
-		}
 		this.board = board;
 		this.color = JBoard.defaultColorSet[product.ordinal()];
 		addMouseListener(this);
