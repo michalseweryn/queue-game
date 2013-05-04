@@ -63,7 +63,7 @@ public class JStore extends JComponent implements MouseListener{
 		setLayout(layout);
 		if(!store.getQueue().isEmpty()){
 			for(int i=0;i<store.getQueue().size();i++){
-				this.add(new Pawn(this.product,playerscolors.colorOfPlayer(store.getQueue().get(i)),board,store.getQueue().size()-1));
+				this.add(new JPawn(this.product,playerscolors.colorOfPlayer(store.getQueue().get(i)),board,store.getQueue().size()-1));
 			}
 		}
 		this.board = board;

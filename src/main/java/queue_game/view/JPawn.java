@@ -13,7 +13,7 @@ import queue_game.model.ProductType;
  *  
  */
 
-public class Pawn extends JComponent implements MouseListener{
+public class JPawn extends JComponent implements MouseListener{
 	private static final long serialVersionUID = 382939404028495740L;
 	private Color color;
 	private JBoard board;
@@ -43,7 +43,7 @@ public class Pawn extends JComponent implements MouseListener{
 	/**
 	 * @param args
 	 */
-	public Pawn(ProductType product, Color color, JBoard board, int place) {
+	public JPawn(ProductType product, Color color, JBoard board, int place) {
 		this.board = board;
 		this.color = color;
 		this.product = product;
