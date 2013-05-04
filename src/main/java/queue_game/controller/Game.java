@@ -14,7 +14,7 @@ import queue_game.view.JBoard;
  */
 public class Game {
 	private GameState gameState;
-	private JBoard view;
+	private JBoard view = null;
 
 	public Game() {
 		gameState = new GameState();
@@ -24,7 +24,7 @@ public class Game {
 		return gameState;
 	}
 
-	public void start(int nPlayers){
+	public void start(int nPlayers) {
 		gameState.setNumberOfPlayers(nPlayers);
 		gameState.setCurrentGamePhase(GamePhase.QUEUING_UP);
 	}
@@ -35,7 +35,8 @@ public class Game {
 	 * @param playerNo
 	 *            ID of player selecting a product
 	 * @param product
-	 *            queue destination type or null, when destination is outdoor market.
+	 *            queue destination type or null, when destination is outdoor
+	 *            market.
 	 */
 	public void queueSelected(int playerNo, ProductType destination) {
 		int id = gameState.getActivePlayer();
@@ -43,9 +44,10 @@ public class Game {
 		gameState.setActivePlayer((id + 1) % nPlayers);
 		String queue = (destination != null) ? destination.toString()
 				: "OUTDOOR_MARKET";
-		System.out.println("Player " + playerNo + " selected queue to "
-				+ queue + ".");
-		view.repaint();
+		System.out.println("Player " + playerNo + " selected queue to " + queue
+				+ ".");
+		if (view != null)
+			view.repaint();
 	}
 
 	/**
@@ -60,11 +62,12 @@ public class Game {
 			int position) {
 
 	}
+
 	/**
-	 * Sets object to be informed about changes in model; 
+	 * Sets object to be informed about changes in model;
 	 */
-	public void addView(JBoard view){
+	public void addView(JBoard view) {
 		this.view = view;
 	}
-	
+
 }
