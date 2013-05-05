@@ -62,10 +62,16 @@ public class Game {
 				id= id % nPlayers;
 				while (gameState.getAmountOfPawns().get(id).equals(new Integer(0))) {
 					id = id+1;
-					id =id%nPlayers;
+					id = id%nPlayers;
 					if(tmpid==id){
 						gameState.setCurrentGamePhase(GamePhase.DELIVERY);
-						deliveryPhase();
+						deliveryPhase();												
+					}
+					
+
+					if(tmpid==id){
+						gameState.setCurrentGamePhase(GamePhase.OPENING);
+						openingStoresPhase();
 						break;
 					}
 				}
@@ -98,6 +104,25 @@ public class Game {
 		view.update();
 	}
 		
+	/**
+	 * Randomize one an existing store, products and pawns disappear.
+	 * 
+	 * @author Jan
+	 */
+	public void openingStoresPhase() {
+		Store[] deliveredStore = gameState.getStores();
+		
+		for(int i=0;i<5;i++){
+			while(deliveredStore[i].getNumberOf() != 0 && 
+					!deliveredStore[i].getQueue().isEmpty() ){
+				deliveredStore[i].removeProducts(1);
+				deliveredStore[i].getQueue().removeFirst();
+			}
+			
+		}
+		view.update();
+	}
+	
 	
 	/**
 	 * Method for handling players' pawn selections (e.g. on queue jumping)
