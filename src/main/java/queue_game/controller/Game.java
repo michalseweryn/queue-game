@@ -105,7 +105,7 @@ public class Game {
 	}
 		
 	/**
-	 * Randomize one an existing store, products and pawns disappear.
+	 * For each store with products, removes the right amount of product and pawns.
 	 * 
 	 * @author Jan
 	 */
