@@ -123,7 +123,6 @@ public class Game {
 		view.update();
 	}
 	
-	
 	/**
 	 * Method for handling players' pawn selections (e.g. on queue jumping)
 	 * 
