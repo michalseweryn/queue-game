@@ -21,7 +21,13 @@ public class JPawn extends JComponent implements MouseListener{
 	private Game game;
 	private ProductType product;
 	private Integer place;
-	private static Color[] pawnColors = new Color[]{Color.BLACK, Color.RED, Color.YELLOW, Color.GRAY, Color.WHITE, Color.DARK_GRAY};
+	private static Color[] pawnColors = new Color[]{
+		Color.BLACK, 
+		Color.RED, 
+		Color.YELLOW, 
+		new Color(0, 128, 0), 
+		new Color(192, 128, 0), 
+		Color.BLUE};
 	@Override
 	public Dimension getMinimumSize(){
 		return new Dimension(2, 2);

@@ -34,6 +34,9 @@ public class GameState {
 		return stores[product.ordinal()];
 	}
 	public void setNumberOfPlayers(int nPlayers){
+		amountOfPawns = new ArrayList<Integer>();
+		for(int i = 0; i < nPlayers; i++)
+			amountOfPawns.add(5);
 		numberOfPlayers = nPlayers;
 	}
 	
