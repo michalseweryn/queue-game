@@ -4,11 +4,11 @@
 package queue_game.view;
 
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 
 import queue_game.controller.Game;
@@ -40,10 +40,11 @@ public class JQueue extends JComponent implements MouseListener{
 	public JQueue(Store store, Game game){
 		this.game = game;
 		this.product = store.productType;
-		setLayout(new FlowLayout());
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		int ind = 0;
+		int length = store.getQueue().size();
 		for(int p : store.getQueue()){
-			add(new JPawn(store.productType, p, game, ind++));
+			add(new JPawn(store.productType, p, game, ind++, length));
 		}
 		addMouseListener(this);
 	}

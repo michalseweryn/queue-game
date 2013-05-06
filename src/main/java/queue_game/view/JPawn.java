@@ -3,8 +3,11 @@ package queue_game.view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import javax.swing.JComponent;
 
 import queue_game.controller.Game;
@@ -21,6 +24,7 @@ public class JPawn extends JComponent implements MouseListener{
 	private Game game;
 	private ProductType product;
 	private Integer place;
+	private int length;
 	private static Color[] pawnColors = new Color[]{
 		Color.BLACK, 
 		Color.RED, 
@@ -30,33 +34,45 @@ public class JPawn extends JComponent implements MouseListener{
 		Color.BLUE};
 	@Override
 	public Dimension getMinimumSize(){
-		return new Dimension(2, 2);
+		return getPreferredSize();
 	}
 	@Override
 	public Dimension getPreferredSize(){
 		if (getParent() == null)
 			return new Dimension(3, 3);
 		Dimension size = getParent().getSize();
-		return new Dimension(size.width / 3,  size.width / 3);
+		int diameter = size.width / 3;
+		if(diameter * length > size.getHeight())
+			diameter = (int) (size.getHeight() / length);
+		return new Dimension(diameter,  diameter);
 	}
 	@Override
 	public Dimension getMaximumSize(){
-		return new Dimension(100, 100);
+		return getPreferredSize();
 	}
 	@Override
     protected void paintComponent(Graphics g) {
-		g.setColor(color);
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				  RenderingHints.VALUE_ANTIALIAS_ON);
 		Dimension size = getSize();
-		g.fillOval(0, 0, size.width, size.height);
+		int c = size.height / 15;
+		if(c == 0)
+			c = 1;
+		g2d.setColor(Color.BLACK);
+		g2d.fillOval(0, 0, size.width, size.height);
+		g2d.setColor(color);
+		g.fillOval(c, c, size.width - 2 * c, size.height - 2 * c);
 	}
 	/**
 	 * @param args
 	 */
-	public JPawn(ProductType product, int playerId, Game game, int place) {
+	public JPawn(ProductType product, int playerId, Game game, int place, int length) {
 		this.game = game;
 		this.color = pawnColors[playerId + 1];
 		this.product = product;
 		this.place = place;
+		this.length = length;
 		addMouseListener(this);
 		//repaint();
 	}
