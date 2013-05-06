@@ -17,26 +17,15 @@ import queue_game.model.Store;
 
 /**
  * @author michal
- *
+ * 
+ * Container of Pawns
  */
 public class JQueue extends JComponent implements MouseListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6097243419792508941L;
 	private ProductType product;
 	private Game game;
-	@Override
-	public Dimension getPreferredSize(){
-		if(getParent() == null)
-			return null;
-		Dimension size = getParent().getSize();
-		int x = size.width / 5;
-		int y = (3 * (2 * x / 3) > size.height)?(2 * x / 3):size.height - (2 * (2 * x / 3));
-		return new Dimension(x, y);
-		
-	}
+	
 	public JQueue(Store store, Game game){
 		this.game = game;
 		this.product = store.productType;
@@ -48,45 +37,33 @@ public class JQueue extends JComponent implements MouseListener{
 		}
 		addMouseListener(this);
 	}
+	
+	@Override
+	public Dimension getPreferredSize(){
+		if(getParent() == null)
+			return null;
+		Dimension size = getParent().getSize();
+		int x = size.width / 5;
+		int y = (3 * (2 * x / 3) > size.height)?(2 * x / 3):size.height - (2 * (2 * x / 3));
+		return new Dimension(x, y);
+	}
+	
 	@Override
 	public void paintComponent(Graphics g){
 		Dimension size = getSize();
 		g.drawRect(0, 0, size.width - 1, size.height - 1);
-		
 	}
-	/* (non-Javadoc)
-	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
-	 */
+	
 	public void mouseClicked(MouseEvent arg0) {
 		game.queueSelected(game.getGameState().getActivePlayer(), product);
 	}
-	/* (non-Javadoc)
-	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
-	 */
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	/* (non-Javadoc)
-	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
-	 */
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	/* (non-Javadoc)
-	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
-	 */
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	/* (non-Javadoc)
-	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
-	 */
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+
+	public void mouseEntered(MouseEvent arg0) {}
+	
+	public void mouseExited(MouseEvent arg0) {}
+	
+	public void mousePressed(MouseEvent arg0) {}
+	
+	public void mouseReleased(MouseEvent arg0) {}
 	
 }

@@ -19,6 +19,7 @@ import queue_game.model.ProductType;
  */
 
 public class JPawn extends JComponent implements MouseListener{
+	
 	private static final long serialVersionUID = 382939404028495740L;
 	private Color color;
 	private Game game;
@@ -32,10 +33,21 @@ public class JPawn extends JComponent implements MouseListener{
 		new Color(0, 128, 0), 
 		new Color(192, 128, 0), 
 		Color.BLUE};
+	
+	public JPawn(ProductType product, int playerId, Game game, int place, int length) {
+		this.game = game;
+		this.color = pawnColors[playerId + 1];
+		this.product = product;
+		this.place = place;
+		this.length = length;
+		addMouseListener(this);
+	}
+	
 	@Override
 	public Dimension getMinimumSize(){
 		return getPreferredSize();
 	}
+	
 	@Override
 	public Dimension getPreferredSize(){
 		if (getParent() == null)
@@ -46,10 +58,12 @@ public class JPawn extends JComponent implements MouseListener{
 			diameter = (int) (size.getHeight() / length);
 		return new Dimension(diameter,  diameter);
 	}
+	
 	@Override
 	public Dimension getMaximumSize(){
 		return getPreferredSize();
 	}
+	
 	@Override
     protected void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
@@ -62,44 +76,22 @@ public class JPawn extends JComponent implements MouseListener{
 		g2d.setColor(Color.BLACK);
 		g2d.fillOval(0, 0, size.width, size.height);
 		g2d.setColor(color);
-		g.fillOval(c, c, size.width - 2 * c, size.height - 2 * c);
-	}
-	/**
-	 * @param args
-	 */
-	public JPawn(ProductType product, int playerId, Game game, int place, int length) {
-		this.game = game;
-		this.color = pawnColors[playerId + 1];
-		this.product = product;
-		this.place = place;
-		this.length = length;
-		addMouseListener(this);
-		//repaint();
+		g2d.fillOval(c, c, size.width - 2 * c, size.height - 2 * c);
 	}
 	
 	public void mouseClicked(MouseEvent e) {
 		if(game != null && game != null && game.getGameState() != null){
-			game.pawnSelected(game.getGameState().getActivePlayer(), product, place); // numer trzeba zidentyfikowac
+			game.pawnSelected(game.getGameState().getActivePlayer(), product, place);
 		}
-			
-		
 	}
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	
+	public void mouseEntered(MouseEvent e) {}
+	
+	public void mouseExited(MouseEvent e) {}
+	
+	public void mousePressed(MouseEvent e) {}
+	
+	public void mouseReleased(MouseEvent e) {}
 
 }
 
