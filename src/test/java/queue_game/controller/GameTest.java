@@ -10,7 +10,7 @@ public class GameTest extends TestCase {
 	JBoard b = new JBoard(g);
 	public void testQueueSelected() {
 		g.addView(b);
-		g.start(2);
+		g.startGame(2);
 		g.queueSelected(0, ProductType.KIOSK);
 		g.queueSelected(1, ProductType.RTV_AGD);
 		g.queueSelected(0, ProductType.KIOSK);

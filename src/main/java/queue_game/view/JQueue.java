@@ -55,6 +55,7 @@ public class JQueue extends JComponent implements MouseListener{
 	}
 	
 	public void mouseClicked(MouseEvent arg0) {
+		System.out.println("KLIK");
 		game.queueSelected(game.getGameState().getActivePlayer(), product);
 	}
 
