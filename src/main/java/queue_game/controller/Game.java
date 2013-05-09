@@ -227,7 +227,7 @@ public class Game implements Runnable {
 	 */
 	public void openingStoresPhase() {
 		for(ProductType type : ProductType.values())
-			while(gameState.getStore(type).getNumberOf() > 0)
+			while(gameState.getStore(type).getQueue().size() > 0 && gameState.getStore(type).getNumberOf() > 0)
 				gameState.sell(type);
 		view.update();
 	}
