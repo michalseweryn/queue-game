@@ -18,6 +18,7 @@ public class GameState {
 	private Store[] stores;
 	private ArrayList<Integer> numberOfPawns=new ArrayList<Integer>();
 	private GamePhase currentGamePhase = null;
+	private DeckOfCards decks[]=new DeckOfCards[6];
 	public GameState(){
 		stores = new Store[ProductType.values().length];
 		int ind = 0;
@@ -32,6 +33,7 @@ public class GameState {
 		currentGamePhase = null;
 		gameOver = false;
 		stores = new Store[ProductType.values().length];
+		decks=new DeckOfCards[6];
 		int ind = 0;
 		for(ProductType product : ProductType.values())
 			stores[ind++] = new Store(product);
@@ -51,6 +53,10 @@ public class GameState {
 	 */
 	public int getGameOpeningMarker() {
 		return gameOpeningMarker;
+	}
+	
+	public DeckOfCards getDeck(int player){
+		return decks[player];
 	}
 
 	/**
