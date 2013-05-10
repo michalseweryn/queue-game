@@ -9,6 +9,7 @@ import queue_game.model.GamePhase;
 import queue_game.model.GameState;
 import queue_game.model.ProductType;
 import queue_game.model.Store;
+import queue_game.model.QueuingCard;
 import queue_game.view.JBoard;
 
 /**
@@ -24,6 +25,9 @@ public class Game implements Runnable {
 	private Product selectedProduct = null;
 	private Pawn selectedPawn = null;
 	private ProductType selectedQueue = null;
+	private QueuingCard selectedQueuingCard = null;
+	private boolean iPass[]=new boolean[6];
+	private boolean pass = false;
 
 	/**
 	 * Mini-class representing Products from stores selected by users.
@@ -115,7 +119,7 @@ public class Game implements Runnable {
 	 */
 	private synchronized Product requestProduct(){
 		expectedType = Product.class;
-		while(selectedQueue == null)
+		while(selectedQueue == null && !pass)
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -127,6 +131,20 @@ public class Game implements Runnable {
 		return product;
 		
 	}
+	private synchronized QueuingCard requestQueuingCard(){
+		expectedType = QueuingCard.class;
+		while(selectedQueuingCard==null){
+			try{
+				wait();
+			} catch(InterruptedException e){
+				e.printStackTrace();
+			}
+		}
+		expectedType=null;
+		QueuingCard card=selectedQueuingCard;
+		selectedQueuingCard=null;
+		return card;
+	}
 	/**
 	 *  Waits for selection of pawn by active player.
 	 *  
@@ -134,7 +152,7 @@ public class Game implements Runnable {
 	 */
 	private synchronized Pawn requestPawn(){
 		expectedType = Product.class;
-		while(selectedQueue == null)
+		while(selectedQueue == null && !pass)
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -143,6 +161,7 @@ public class Game implements Runnable {
 		expectedType = null;
 		Pawn pawn = selectedPawn;
 		selectedPawn = null;
+		pass=false;
 		return pawn;
 		
 	}
@@ -168,7 +187,13 @@ public class Game implements Runnable {
 					break outer;
 			}
 		}
-
+	}
+	
+	private void  queueJumping(){
+		gameState.setCurrentGamePhase(GamePhase.JUMPING);
+		
+			
+		
 	}
 
 	/**
@@ -292,6 +317,22 @@ public class Game implements Runnable {
 			notifyAll();
 		}
 
+	}
+	public void queuingCardSelected(int playerNo, QueuingCard card){
+		if(playerNo != gameState.getActivePlayer())
+			return;
+		if(expectedType==QueuingCard.class){
+			if(card==null){
+				iPass[playerNo]=true;
+				pass=true;
+			}
+			selectedQueuingCard=card;
+			try{
+				return;
+			}finally{
+				notifyAll();
+			}
+		}
 	}
 
 	/**
