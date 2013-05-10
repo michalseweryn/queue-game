@@ -36,7 +36,7 @@ public class JProductAmountField extends JComponent implements MouseListener{
 			return new Dimension(120, 420);
 		System.out.println(getParent());
 		Dimension size = getParent().getSize();
-		return new Dimension(size.width, size.height/5);
+		return new Dimension(size.width, size.height);
 	}
 	@Override
 	public Dimension getMaximumSize(){
@@ -48,7 +48,9 @@ public class JProductAmountField extends JComponent implements MouseListener{
 		Dimension size = getSize();
 		g.setColor(Color.cyan);
 		g.fillRect(size.width/4, size.height /6, 2*size.width/4, 4*size.height/ 6);
-		
+		g.setColor(Color.BLACK);
+		g.setFont(g.getFont().deriveFont(50f));
+		g.drawString(Integer.toString(store.getStore().getNumberOf()), 50, 60);
 	}
 	/**
 	 * 

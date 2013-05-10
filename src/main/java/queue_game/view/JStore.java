@@ -40,13 +40,13 @@ public class JStore extends JComponent implements MouseListener{
 		super.paintComponent(g);
 		Dimension size = getSize();
 		g.setColor(color);
-		g.fillRect(0, 0, size.width - 1, size.height / 5);
-		int initialHeight = size.height / 5 + 2;
+		g.fillRect(1, 0, size.width - 2, size.height);
+		/*int initialHeight = size.height / 5 + 2;
 		int remainingHeight = size.height - initialHeight;
 		//When there are more than 10 pawns, you should resize the rectangles
 		for(int i = 0; i < 10; ++i) {
 			g.fillRect(size.width / 3, initialHeight + i * (remainingHeight / 10 + 1), size.width / 3, remainingHeight / 10 - 2);
-		}
+		}*/
 	}
 	
 	/**
