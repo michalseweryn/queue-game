@@ -191,9 +191,43 @@ public class Game implements Runnable {
 	
 	private void  queueJumping(){
 		gameState.setCurrentGamePhase(GamePhase.JUMPING);
-		
+		int numOfPlayers=gameState.getNumberOfPlayers();
+		QueuingCard current;
+		for(int i=0; i<3; i++){
+			for (int player=0; player<numOfPlayers; player=(player+1)%numOfPlayers){
+				if(!iPass[player]){
+					gameState.setActivePlayer(player);
+					current=requestQueuingCard();
+					switch(current){
+					case CLOSED_FOR_STOCKTAKING:
+						break;
+					case COMMUNITY_LIST:
+						break;
+					case CRITISIZING_AUTHORITIES:
+						break;
+					case DELIVERY_ERROR:
+						break;
+					case INCREASED_DELIVERY:
+						break;
+					case LUCKY_STRIKE:
+						break;
+					case MOTHER_WITH_CHILD:
+						break;
+					case NOT_YOUR_PLACE:
+						break;
+					case TIPPING_FRIEND:
+						break;
+					case UNDER_THE_COUNTER_GOODS:
+						break;
+					default:
+						break;
+
+					}
+				}
+			}
+		}
 			
-		
+		//NA KONCU ODSWIERZYC LISTE IPASS[]. I ZEBY WSZYSTKO STYKALO
 	}
 
 	/**
