@@ -40,7 +40,7 @@ public class GameState {
 	public void setNumberOfPlayers(int nPlayers){
 		amountOfPawns = new ArrayList<Integer>();
 		for(int i = 0; i < nPlayers; i++)
-			amountOfPawns.add(2);
+			amountOfPawns.add(5);
 		numberOfPlayers = nPlayers;
 	}
 	
