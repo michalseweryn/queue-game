@@ -16,6 +16,7 @@ public class GameState {
 	private Store[] stores;
 	private ArrayList<Integer> amountOfPawns=new ArrayList<Integer>();
 	private GamePhase currentGamePhase = null;
+	private DeckOfCards decks[]=new DeckOfCards[6];
 	public GameState(){
 		stores = new Store[ProductType.values().length];
 		int ind = 0;
@@ -32,6 +33,9 @@ public class GameState {
 
 	public Store getStore(ProductType product){
 		return stores[product.ordinal()];
+	}
+	public DeckOfCards getDeck(int player){
+		return decks[player];
 	}
 	public void setNumberOfPlayers(int nPlayers){
 		amountOfPawns = new ArrayList<Integer>();
