@@ -41,7 +41,7 @@ public class Game implements Runnable {
 		}
 	}
 
-	/**
+	/** 
 	 * Mini-class representing Pawns from queues selected by users.
 	 * 
 	 * @author michal
