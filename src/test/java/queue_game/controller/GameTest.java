@@ -20,10 +20,6 @@ public class GameTest extends TestCase {
 			game.queueSelected(player, type);
 		}
 		public void update() {
-<<<<<<< HEAD
-=======
-			System.out.println("update " + updatesCounter);
->>>>>>> branch 'master' of https://github.com/michalseweryn/queue-game.git
 			switch(updatesCounter){
 			case 0:
 			case 1:
