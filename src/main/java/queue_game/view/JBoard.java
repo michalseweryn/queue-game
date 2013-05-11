@@ -36,7 +36,7 @@ public class JBoard extends JPanel implements View{
 		layout.setVgap(0);
 		layout.setHgap(0);
 		setLayout(layout);
-		add(new ProductPanel(game));
+		add(new ProductPanel(game,this));
 		for (Store store : gameState.getStores()){
 			add(new JStore(store, this));
 		}
@@ -53,7 +53,7 @@ public class JBoard extends JPanel implements View{
 	 */
 	public void update(){
 		removeAll();
-		add(new ProductPanel(game));
+		add(new ProductPanel(game,this));
 		for (queue_game.model.Store store : gameState.getStores())
 			add(new JStore(store, this));
 		for (Store store : gameState.getStores()){
