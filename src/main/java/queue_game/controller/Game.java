@@ -113,9 +113,17 @@ public class Game implements Runnable {
 	 */
 	private synchronized ProductType requestQueue() throws InterruptedException{
 		expectedType = ProductType.class;
+<<<<<<< HEAD
+=======
+		System.out.println(expectedType);
+>>>>>>> branch 'master' of https://github.com/michalseweryn/queue-game.git
 		updateViews();
 		while(selectedQueue == null)
 				wait();
+<<<<<<< HEAD
+=======
+		System.out.println("jest");
+>>>>>>> branch 'master' of https://github.com/michalseweryn/queue-game.git
 		expectedType = null;
 		ProductType queue = selectedQueue;
 		selectedQueue = null;
@@ -171,8 +179,10 @@ public class Game implements Runnable {
 					.getNumberOfPlayers(); player = (player + 1)
 					% gameState.getNumberOfPlayers()){
 				if(gameState.getNumberOfPawns(player) > 0){
+					System.out.println("kolejkę od " + player);
 					gameState.setActivePlayer(player);
 					gameState.putPlayerPawn(player, requestQueue());
+					System.out.println("mam");
 					timeSinceLastPawnLocation = 0;
 				} else {
 					timeSinceLastPawnLocation++;
@@ -231,17 +241,32 @@ public class Game implements Runnable {
 	 *            market.
 	 */
 	public synchronized void queueSelected(int playerNo, ProductType destination) {
+<<<<<<< HEAD
 		if (playerNo != gameState.getActivePlayer())
+=======
+		System.out.println("selected queue");
+		if (playerNo != gameState.getActivePlayer()){
+			System.out.println("Zły");
+>>>>>>> branch 'master' of https://github.com/michalseweryn/queue-game.git
 			return;
+<<<<<<< HEAD
+=======
+		}
+>>>>>>> branch 'master' of https://github.com/michalseweryn/queue-game.git
 		
 		if (expectedType == ProductType.class) {
 			
 			selectedQueue = destination;
 			try {
+<<<<<<< HEAD
+=======
+				System.out.println("notify");
+>>>>>>> branch 'master' of https://github.com/michalseweryn/queue-game.git
 				notifyAll();
 				return;
 			} finally {}
 		}
+		else System.out.println("chciałem " + expectedType);
 	}
 
 	/**
