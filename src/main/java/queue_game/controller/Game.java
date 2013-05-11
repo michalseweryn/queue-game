@@ -3,8 +3,11 @@
  */
 package queue_game.controller;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
+import queue_game.View;
 import queue_game.model.GamePhase;
 import queue_game.model.GameState;
 import queue_game.model.ProductType;
@@ -19,7 +22,7 @@ import queue_game.view.JBoard;
  */
 public class Game implements Runnable {
 	private GameState gameState;
-	private JBoard view = null;
+	private List<View> views = new LinkedList<View>();
 	private Class<?> expectedType = null;
 	private Product selectedProduct = null;
 	private Pawn selectedPawn = null;
@@ -70,7 +73,7 @@ public class Game implements Runnable {
 		new Thread(this).start();
 	}
 	private void updateViews(){
-		if(view != null)
+		for(View view : views)
 			view.update();
 	}
 
@@ -216,7 +219,7 @@ public class Game implements Runnable {
 					.getStore(ProductType.values()[rand]);
 			deliveredStore.addProducts(1);
 		}
-		view.update();
+		updateViews();
 	}
 
 	/**
@@ -229,7 +232,7 @@ public class Game implements Runnable {
 		for(ProductType type : ProductType.values())
 			while(gameState.getStore(type).getQueue().size() > 0 && gameState.getStore(type).getNumberOf() > 0)
 				gameState.sell(type);
-		view.update();
+		updateViews();
 	}
 
 	/**
@@ -298,7 +301,7 @@ public class Game implements Runnable {
 	 * Sets object to be informed about changes in model;
 	 */
 	public void addView(JBoard view) {
-		this.view = view;
+		views.add(view);
 	}
 
 }

@@ -10,6 +10,7 @@ import java.awt.Rectangle;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import queue_game.View;
 import queue_game.controller.Game;
 import queue_game.model.GameState;
 import queue_game.model.Store;
@@ -19,7 +20,7 @@ import queue_game.model.Store;
  * 
  *         User interface containing game board.
  */
-public class JBoard extends JPanel {
+public class JBoard extends JPanel implements View{
 	private static final long serialVersionUID = -2270325617374583365L;
 	public static final Color[] defaultColorSet = new Color[] { Color.BLUE,
 			Color.GREEN, Color.PINK, Color.ORANGE, Color.MAGENTA };
