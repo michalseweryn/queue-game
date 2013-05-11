@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.Random;
 
 import queue_game.View;
+import queue_game.model.DeckOfCards;
 import queue_game.model.GamePhase;
 import queue_game.model.GameState;
 import queue_game.model.ProductType;
 import queue_game.model.Store;
+import queue_game.model.QueuingCard;
 import queue_game.view.JBoard;
 
 /**
@@ -28,6 +30,9 @@ public class Game implements Runnable {
 	private Pawn selectedPawn = null;
 	private ProductType selectedQueue = null;
 	private Thread gameThread = null;
+	private QueuingCard selectedQueuingCard = null;
+	private boolean iPass[]=new boolean[6];
+	private boolean pass = false;
 
 	/**
 	 * Mini-class representing Products from stores selected by users.
@@ -129,7 +134,7 @@ public class Game implements Runnable {
 	 */
 	private synchronized Product requestProduct(){
 		expectedType = Product.class;
-		while(selectedQueue == null)
+		while(selectedQueue == null && !pass)
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -141,6 +146,21 @@ public class Game implements Runnable {
 		return product;
 		
 	}
+	public synchronized QueuingCard requestQueuingCard(){
+		expectedType = QueuingCard.class;
+		while(selectedQueuingCard==null && !pass){
+			try{
+				wait();
+			} catch(InterruptedException e){
+				e.printStackTrace();
+			}
+		}
+		expectedType=null;
+		QueuingCard card=selectedQueuingCard;
+		selectedQueuingCard=null;
+		pass=false;
+		return card;
+	}
 	/**
 	 *  Waits for selection of pawn by active player.
 	 *  
@@ -148,7 +168,7 @@ public class Game implements Runnable {
 	 */
 	private synchronized Pawn requestPawn(){
 		expectedType = Product.class;
-		while(selectedQueue == null)
+		while(selectedQueue == null && !pass)
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -157,6 +177,7 @@ public class Game implements Runnable {
 		expectedType = null;
 		Pawn pawn = selectedPawn;
 		selectedPawn = null;
+		pass=false;
 		return pawn;
 	}
 	/**
@@ -181,7 +202,64 @@ public class Game implements Runnable {
 					break outer;
 			}
 		}
+	}
+	
+	public void  queueJumping(){
+		gameState.setCurrentGamePhase(GamePhase.JUMPING);
+		final int numOfPlayers=gameState.getNumberOfPlayers();
+		QueuingCard current;
+		while(true){
+			boolean allPassed=true;
+			for (int player=gameState.getGameOpeningMarker(),  i=0;
+			i<numOfPlayers; 
+			i++, player=(player+1)%numOfPlayers){
+				DeckOfCards myDeck=this.getGameState().getDeck(player);
+				if(!iPass[player] && myDeck.numOfCardsOnHand()>0){
+					gameState.setActivePlayer(player);
+					current=requestQueuingCard();
+					if(current==null){
+						myDeck.iPass();
+						continue;
+					}
+					myDeck.iUseCard(current);
+					allPassed=false;
+					switch(current){
+					case CLOSED_FOR_STOCKTAKING:
+						break;
+					case COMMUNITY_LIST:
+						System.out.println("USING COMMUNITY LIST");
+						break;
+					case CRITISIZING_AUTHORITIES:
+						break;
+					case DELIVERY_ERROR:
+						break;
+					case INCREASED_DELIVERY:
+						break;
+					case LUCKY_STRIKE:
+						break;
+					case MOTHER_WITH_CHILD:
+						break;
+					case NOT_YOUR_PLACE:
+						break;
+					case TIPPING_FRIEND:
+						break;
+					case UNDER_THE_COUNTER_GOODS:
+						break;
+					default:
+						break;
 
+					}
+				}
+			}
+			if(allPassed){
+				break;
+			}
+		}
+			
+		//NA KONCU ODSWIERZYC LISTE IPASS[]. I ZEBY WSZYSTKO STYKALO
+		for (int i=0; i<6; i++){
+			iPass[i]=false;
+		}
 	}
 
 	/**
@@ -283,12 +361,28 @@ public class Game implements Runnable {
 		}
 
 	}
+	public void queuingCardSelected(int playerNo, QueuingCard card){
+		if(playerNo != gameState.getActivePlayer())
+			return;
+		if(expectedType==QueuingCard.class){
+			if(card==null){
+				iPass[playerNo]=true;
+				pass=true;
+			}
+			selectedQueuingCard=card;
+			try{
+				return;
+			}finally{
+				notifyAll();
+			}
+		}
+	}
 
 	/**
 	 * Sets object to be informed about changes in model;
 	 */
-	public void addView(View fakeView) {
-		views.add(fakeView);
+	public void addView(View view) {
+		views.add(view);
 	}
 
 }

@@ -24,6 +24,9 @@ public class GameState {
 		int ind = 0;
 		for(ProductType product : ProductType.values())
 			stores[ind++] = new Store(product);
+		for(int i=0; i<6; i++){
+			decks[i]=new DeckOfCards();
+		}
 	}
 	public void reset(int nPlayers){
 		dayNumber = 0;
@@ -33,6 +36,7 @@ public class GameState {
 		currentGamePhase = null;
 		gameOver = false;
 		stores = new Store[ProductType.values().length];
+		decks=new DeckOfCards[6];
 		int ind = 0;
 		for(ProductType product : ProductType.values())
 			stores[ind++] = new Store(product);
@@ -54,6 +58,10 @@ public class GameState {
 	 */
 	public int getGameOpeningMarker() {
 		return gameOpeningMarker;
+	}
+	
+	public DeckOfCards getDeck(int player){
+		return decks[player];
 	}
 
 	/**
@@ -86,9 +94,6 @@ public class GameState {
 
 	public Store getStore(ProductType product){
 		return stores[product.ordinal()];
-	}
-	public DeckOfCards getDeck(int player){
-		return decks[player];
 	}
 	public void setNumberOfPlayers(int nPlayers){
 		numberOfPlayers = nPlayers;
