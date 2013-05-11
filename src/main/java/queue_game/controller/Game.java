@@ -27,6 +27,7 @@ public class Game implements Runnable {
 	private Product selectedProduct = null;
 	private Pawn selectedPawn = null;
 	private ProductType selectedQueue = null;
+	private Thread gameThread = null;
 
 	/**
 	 * Mini-class representing Products from stores selected by users.
@@ -68,9 +69,17 @@ public class Game implements Runnable {
 		return gameState;
 	}
 
+	/**
+	 * @return the gameThread
+	 */
+	public Thread getGameThread() {
+		return gameThread;
+	}
+
 	public void startGame(int nPlayers) {
 		gameState.reset(nPlayers);
-		new Thread(this).start();
+		gameThread = new Thread(this);
+		gameThread.start();
 	}
 	private void updateViews(){
 		for(View view : views)
@@ -80,12 +89,16 @@ public class Game implements Runnable {
 	public void run() {
 		for (int day = 0; !gameOver(); day++) {
 			gameState.setDayNumber(day);
-			queuingUpPhase();
+			try {
+				queuingUpPhase();
+			} catch (InterruptedException e) {
+				return;
+			}
 			deliveryPhase();
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				return;
 			}
 			openingStoresPhase();
 		}
@@ -96,15 +109,15 @@ public class Game implements Runnable {
 	 *  Waits for selection of  queue by active player.
 	 *  
 	 * @return destination of selected queue.
+	 * @throws InterruptedException 
 	 */
-	private synchronized ProductType requestQueue(){
+	private synchronized ProductType requestQueue() throws InterruptedException{
 		expectedType = ProductType.class;
+		System.out.println(expectedType);
+		updateViews();
 		while(selectedQueue == null)
-			try {
 				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+		System.out.println("jest");
 		expectedType = null;
 		ProductType queue = selectedQueue;
 		selectedQueue = null;
@@ -147,12 +160,12 @@ public class Game implements Runnable {
 		Pawn pawn = selectedPawn;
 		selectedPawn = null;
 		return pawn;
-		
 	}
 	/**
 	 * First Phase of Day.
+	 * @throws InterruptedException 
 	 */
-	private void queuingUpPhase() {
+	private void queuingUpPhase() throws InterruptedException {
 		gameState.setCurrentGamePhase(GamePhase.QUEUING_UP);
 		int timeSinceLastPawnLocation = 0;
 		outer: while (true) {
@@ -160,10 +173,11 @@ public class Game implements Runnable {
 					.getNumberOfPlayers(); player = (player + 1)
 					% gameState.getNumberOfPlayers()){
 				if(gameState.getNumberOfPawns(player) > 0){
+					System.out.println("kolejkę od " + player);
 					gameState.setActivePlayer(player);
 					gameState.putPlayerPawn(player, requestQueue());
+					System.out.println("mam");
 					timeSinceLastPawnLocation = 0;
-					updateViews();
 				} else {
 					timeSinceLastPawnLocation++;
 				}
@@ -246,15 +260,21 @@ public class Game implements Runnable {
 	 */
 	public synchronized void queueSelected(int playerNo, ProductType destination) {
 		System.out.println("selected queue");
-		if (playerNo != gameState.getActivePlayer())
+		if (playerNo != gameState.getActivePlayer()){
+			System.out.println("Zły");
 			return;
+		}
+		
 		if (expectedType == ProductType.class) {
 			
 			selectedQueue = destination;
 			try {
+				System.out.println("notify");
+				notifyAll();
 				return;
-			} finally {notifyAll();}
+			} finally {}
 		}
+		else System.out.println("chciałem " + expectedType);
 	}
 
 	/**
@@ -300,8 +320,8 @@ public class Game implements Runnable {
 	/**
 	 * Sets object to be informed about changes in model;
 	 */
-	public void addView(JBoard view) {
-		views.add(view);
+	public void addView(View fakeView) {
+		views.add(fakeView);
 	}
 
 }
