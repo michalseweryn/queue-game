@@ -16,7 +16,7 @@ public class GameState {
 	private int activePlayer = 0;
 	private boolean gameOver;
 	private Store[] stores;
-	private int numberOfProducts[]= new int[5];
+	private Integer numberOfProducts[]= new Integer[5];
 	private ArrayList<Integer> numberOfPawns=new ArrayList<Integer>();
 	private GamePhase currentGamePhase = null;
 	private DeckOfCards decks[]=new DeckOfCards[6];
@@ -136,6 +136,12 @@ public class GameState {
 		return numberOfPawns.get(player);
 	}
 	
+	public Integer[] getNumberOfProducts() {
+		return numberOfProducts;
+	}
+	public void setNumberOfProducts(Integer[] numberOfProducts) {
+		this.numberOfProducts = numberOfProducts;
+	}
 	/**
 	 *  Puts pawn of one player to given queue
 	 * @param player
