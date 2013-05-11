@@ -34,7 +34,6 @@ public class JProductAmountField extends JComponent implements MouseListener{
 	public Dimension getPreferredSize(){
 		if (getParent() == null)
 			return new Dimension(120, 420);
-		System.out.println(getParent());
 		Dimension size = getParent().getSize();
 		return new Dimension(size.width, size.height);
 	}

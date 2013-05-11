@@ -60,9 +60,9 @@ public class JQueue extends JComponent implements MouseListener{
 
 	public void mouseEntered(MouseEvent arg0) {}
 	
-	public void mouseExited(MouseEvent arg0) {mouseFlag = false;System.out.println("exit");}
+	public void mouseExited(MouseEvent arg0) {mouseFlag = false;}
 	
-	public void mousePressed(MouseEvent arg0) {mouseFlag = true;System.out.println("press");}
+	public void mousePressed(MouseEvent arg0) {mouseFlag = true;}
 	
 	public void mouseReleased(MouseEvent arg0) {
 		if(mouseFlag)

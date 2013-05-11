@@ -113,11 +113,9 @@ public class Game implements Runnable {
 	 */
 	private synchronized ProductType requestQueue() throws InterruptedException{
 		expectedType = ProductType.class;
-		System.out.println(expectedType);
 		updateViews();
 		while(selectedQueue == null)
 				wait();
-		System.out.println("jest");
 		expectedType = null;
 		ProductType queue = selectedQueue;
 		selectedQueue = null;
