@@ -25,9 +25,11 @@ public class JQueue extends JComponent implements MouseListener{
 	private static final long serialVersionUID = 6097243419792508941L;
 	private ProductType product;
 	private Game game;
+	private boolean mouseFlag;
 	
 	public JQueue(Store store, Game game){
 		this.game = game;
+		mouseFlag = false;
 		this.product = store.productType;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		int ind = 0;
@@ -54,16 +56,17 @@ public class JQueue extends JComponent implements MouseListener{
 		g.drawRect(0, 0, size.width - 1, size.height - 1);
 	}
 	
-	public void mouseClicked(MouseEvent arg0) {
-		game.queueSelected(game.getGameState().getActivePlayer(), product);
-	}
+	public void mouseClicked(MouseEvent arg0) {}
 
 	public void mouseEntered(MouseEvent arg0) {}
 	
-	public void mouseExited(MouseEvent arg0) {}
+	public void mouseExited(MouseEvent arg0) {mouseFlag = false;System.out.println("exit");}
 	
-	public void mousePressed(MouseEvent arg0) {}
+	public void mousePressed(MouseEvent arg0) {mouseFlag = true;System.out.println("press");}
 	
-	public void mouseReleased(MouseEvent arg0) {}
+	public void mouseReleased(MouseEvent arg0) {
+		if(mouseFlag)
+			game.queueSelected(game.getGameState().getActivePlayer(), product);
+	}
 	
 }

@@ -25,7 +25,7 @@ public class App {
     public static void main( String[] args )
     {
         final Game game = new Game();
-        game.start(5);
+        game.startGame(5);
         SwingUtilities.invokeLater(new Runnable() {
 			
 			public void run() {

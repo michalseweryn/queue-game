@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import queue_game.controller.Game;
@@ -56,6 +57,10 @@ public class JBoard extends JPanel {
 			add(new JQueue(store, game));
 		}
 		revalidate();
+		if(gameState.isGameOver()){
+			JOptionPane.showMessageDialog(this, "KONIEC GRY");
+		}
+			
 	}
 	@Override
 	public Dimension getMinimumSize() {
