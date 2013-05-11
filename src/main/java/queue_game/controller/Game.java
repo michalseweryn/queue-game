@@ -195,30 +195,6 @@ public class Game implements Runnable {
 		return gameState.getDayNumber() > 5;
 	}
 
-	/*
-	 * int nPlayers = gameState.getNumberOfPlayers(); int id =
-	 * gameState.getActivePlayer(); int tmpid =id; Integer tmp =
-	 * gameState.getAmountOfPawns().get(id); if
-	 * (gameState.getCurrentGamePhase().equals(GamePhase.QUEUING_UP)) { if
-	 * (!tmp.equals(new Integer(0))) {
-	 * gameState.getStore(destination).addPawn(id);
-	 * gameState.getAmountOfPawns().set(id, tmp - 1); id=id+1; id= id %
-	 * nPlayers; while (gameState.getAmountOfPawns().get(id).equals(new
-	 * Integer(0))) { id = id+1; id = id%nPlayers; if(tmpid==id){
-	 * gameState.setCurrentGamePhase(GamePhase.DELIVERY); deliveryPhase(); }
-	 * 
-	 * 
-	 * if(tmpid==id){ gameState.setCurrentGamePhase(GamePhase.OPENING);
-	 * openingStoresPhase(); break; } } gameState.setActivePlayer((id) %
-	 * nPlayers); view.update();
-	 * 
-	 * }
-	 * 
-	 * } if (view != null) { view.repaint(); }
-	 * 
-	 * }
-	 */
-
 	/**
 	 * Randomizes 3 stores with repetitions and delivers products to them.
 	 * 
