@@ -24,6 +24,9 @@ public class GameState {
 		int ind = 0;
 		for(ProductType product : ProductType.values())
 			stores[ind++] = new Store(product);
+		for(int i=0; i<6; i++){
+			decks[i]=new DeckOfCards();
+		}
 	}
 	public void reset(int nPlayers){
 		dayNumber = 0;

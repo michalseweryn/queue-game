@@ -5,6 +5,7 @@ package queue_game.controller;
 
 import java.util.Random;
 
+import queue_game.model.DeckOfCards;
 import queue_game.model.GamePhase;
 import queue_game.model.GameState;
 import queue_game.model.ProductType;
@@ -131,9 +132,9 @@ public class Game implements Runnable {
 		return product;
 		
 	}
-	private synchronized QueuingCard requestQueuingCard(){
+	public synchronized QueuingCard requestQueuingCard(){
 		expectedType = QueuingCard.class;
-		while(selectedQueuingCard==null){
+		while(selectedQueuingCard==null && !pass){
 			try{
 				wait();
 			} catch(InterruptedException e){
@@ -143,6 +144,7 @@ public class Game implements Runnable {
 		expectedType=null;
 		QueuingCard card=selectedQueuingCard;
 		selectedQueuingCard=null;
+		pass=false;
 		return card;
 	}
 	/**
@@ -189,19 +191,30 @@ public class Game implements Runnable {
 		}
 	}
 	
-	private void  queueJumping(){
+	public void  queueJumping(){
 		gameState.setCurrentGamePhase(GamePhase.JUMPING);
-		int numOfPlayers=gameState.getNumberOfPlayers();
+		final int numOfPlayers=gameState.getNumberOfPlayers();
 		QueuingCard current;
-		for(int i=0; i<3; i++){
-			for (int player=0; player<numOfPlayers; player=(player+1)%numOfPlayers){
-				if(!iPass[player]){
+		while(true){
+			boolean allPassed=true;
+			for (int player=gameState.getGameOpeningMarker(),  i=0;
+			i<numOfPlayers; 
+			i++, player=(player+1)%numOfPlayers){
+				DeckOfCards myDeck=this.getGameState().getDeck(player);
+				if(!iPass[player] && myDeck.numOfCardsOnHand()>0){
 					gameState.setActivePlayer(player);
 					current=requestQueuingCard();
+					if(current==null){
+						myDeck.iPass();
+						continue;
+					}
+					myDeck.iUseCard(current);
+					allPassed=false;
 					switch(current){
 					case CLOSED_FOR_STOCKTAKING:
 						break;
 					case COMMUNITY_LIST:
+						System.out.println("USING COMMUNITY LIST");
 						break;
 					case CRITISIZING_AUTHORITIES:
 						break;
@@ -225,9 +238,15 @@ public class Game implements Runnable {
 					}
 				}
 			}
+			if(allPassed){
+				break;
+			}
 		}
 			
 		//NA KONCU ODSWIERZYC LISTE IPASS[]. I ZEBY WSZYSTKO STYKALO
+		for (int i=0; i<6; i++){
+			iPass[i]=false;
+		}
 	}
 
 	/**
