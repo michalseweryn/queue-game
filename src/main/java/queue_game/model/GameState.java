@@ -167,7 +167,7 @@ public class GameState {
 			int nPawns = getNumberOfPawns(player);
 			players.get(player).setNumberOfPawns(nPawns + 1);
 		}
-			
+		numberOfProducts[type.ordinal()]--;	
 			
 		
 	}
