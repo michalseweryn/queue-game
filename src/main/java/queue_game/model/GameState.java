@@ -41,9 +41,11 @@ public class GameState {
 			numberOfPawns.add(5);
 		
 	}
+	
 	public void setGameOver(){
 		gameOver = true;
 	}
+	
 	public boolean isGameOver(){
 		return gameOver;
 	}
