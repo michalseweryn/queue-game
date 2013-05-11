@@ -13,22 +13,21 @@ public class GameState {
 	private int dayNumber;
 	private int gameOpeningMarker;
 	private int numberOfPlayers;
+	private int initialNumberOfPawns = 5;
 	private int activePlayer = 0;
 	private boolean gameOver;
 	private Store[] stores;
 	private Integer numberOfProducts[]= new Integer[5];
-	private ArrayList<Integer> numberOfPawns=new ArrayList<Integer>();
+	private ArrayList<Player> players=new ArrayList<Player>();
 	private GamePhase currentGamePhase = null;
-	private DeckOfCards decks[]=new DeckOfCards[6];
+	
 	public GameState(){
 		stores = new Store[ProductType.values().length];
 		int ind = 0;
 		for(ProductType product : ProductType.values())
 			stores[ind++] = new Store(product);
-		for(int i=0; i<6; i++){
-			decks[i]=new DeckOfCards();
-		}
 	}
+	
 	public void reset(int nPlayers){
 		dayNumber = 0;
 		gameOpeningMarker = 0;
@@ -37,20 +36,17 @@ public class GameState {
 		currentGamePhase = null;
 		gameOver = false;
 		stores = new Store[ProductType.values().length];
-		decks=new DeckOfCards[6];
-		for(int i=0; i<6; i++){
-			decks[i]=new DeckOfCards();
-		}
-		for(ProductType i : ProductType.values()){
-			numberOfProducts[i.ordinal()]=50;
-		}
 		int ind = 0;
 		for(ProductType product : ProductType.values())
 			stores[ind++] = new Store(product);
-		numberOfPawns = new ArrayList<Integer>();
-		for(int i = 0; i < numberOfPlayers; i++)
-			numberOfPawns.add(5);
 		
+		for(ProductType i : ProductType.values()){
+			numberOfProducts[i.ordinal()]=50;
+		}
+		for(int i = 0; i < numberOfPlayers; i++){
+			players.add(new Player());
+			players.get(i).setNumberOfPawns(initialNumberOfPawns);
+		}
 	}
 	
 	public void setGameOver(){
@@ -67,10 +63,7 @@ public class GameState {
 		return gameOpeningMarker;
 	}
 	
-	public DeckOfCards getDeck(int player){
-		return decks[player];
-	}
-
+	
 	/**
 	 * @param gameOpeningMarker the gameOpeningMarker to set
 	 */
@@ -97,6 +90,10 @@ public class GameState {
 	 */
 	public Store[] getStores() {
 		return stores;
+	}
+	
+	public DeckOfCards getDeck(int playerNr){
+		return players.get(playerNr).getDeck();
 	}
 
 	public Store getStore(ProductType product){
@@ -133,7 +130,7 @@ public class GameState {
 	}
 
 	public int getNumberOfPawns(int player) {
-		return numberOfPawns.get(player);
+		return players.get(player).getNumberOfPawns();
 	}
 	
 	public Integer[] getNumberOfProducts() {
@@ -154,7 +151,7 @@ public class GameState {
 		int nPawns = getNumberOfPawns(player);
 		if(nPawns == 0)
 			throw new IllegalArgumentException("Player has no more pawns: " + player);
-		numberOfPawns.set(player, nPawns - 1);
+		players.get(player).setNumberOfPawns(nPawns - 1);
 		this.getStore(destination).getQueue().add(player);
 	}
 	/**
@@ -168,13 +165,12 @@ public class GameState {
 		store.removeProducts(1);
 		if(player >= 0 && player < numberOfPlayers){
 			int nPawns = getNumberOfPawns(player);
-			numberOfPawns.set(player, nPawns + 1);
+			players.get(player).setNumberOfPawns(nPawns + 1);
 		}
-		numberOfProducts[type.ordinal()]--;	
+			
 			
 		
 	}
-
 	
 
 }
