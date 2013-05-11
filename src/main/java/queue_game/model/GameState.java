@@ -16,6 +16,7 @@ public class GameState {
 	private int activePlayer = 0;
 	private boolean gameOver;
 	private Store[] stores;
+	private int numberOfProducts[]= new int[5];
 	private ArrayList<Integer> numberOfPawns=new ArrayList<Integer>();
 	private GamePhase currentGamePhase = null;
 	private DeckOfCards decks[]=new DeckOfCards[6];
@@ -39,6 +40,9 @@ public class GameState {
 		decks=new DeckOfCards[6];
 		for(int i=0; i<6; i++){
 			decks[i]=new DeckOfCards();
+		}
+		for(ProductType i : ProductType.values()){
+			numberOfProducts[i.ordinal()]=50;
 		}
 		int ind = 0;
 		for(ProductType product : ProductType.values())
@@ -160,7 +164,7 @@ public class GameState {
 			int nPawns = getNumberOfPawns(player);
 			numberOfPawns.set(player, nPawns + 1);
 		}
-			
+		numberOfProducts[type.ordinal()]--;	
 			
 		
 	}
