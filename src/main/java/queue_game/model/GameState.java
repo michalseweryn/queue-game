@@ -37,6 +37,9 @@ public class GameState {
 		gameOver = false;
 		stores = new Store[ProductType.values().length];
 		decks=new DeckOfCards[6];
+		for(int i=0; i<6; i++){
+			decks[i]=new DeckOfCards();
+		}
 		int ind = 0;
 		for(ProductType product : ProductType.values())
 			stores[ind++] = new Store(product);
