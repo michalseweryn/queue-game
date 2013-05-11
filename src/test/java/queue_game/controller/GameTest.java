@@ -20,7 +20,6 @@ public class GameTest extends TestCase {
 			game.queueSelected(player, type);
 		}
 		public void update() {
-			System.out.println("update " + updatesCounter);
 			switch(updatesCounter){
 			case 0:
 			case 1:

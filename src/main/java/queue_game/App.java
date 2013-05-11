@@ -16,9 +16,9 @@ public class App {
 	public static void createAndShowGUI(Game game){
 		JFrame frame = new JFrame("Kolejka");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
+        frame.getContentPane().setLayout(new BorderLayout());
         JBoard board = new JBoard(game);
-        frame.add(board);
+        frame.getContentPane().add(board);
 		frame.pack();
 		frame.setVisible(true);
 	}

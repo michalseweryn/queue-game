@@ -173,10 +173,8 @@ public class Game implements Runnable {
 					.getNumberOfPlayers(); player = (player + 1)
 					% gameState.getNumberOfPlayers()){
 				if(gameState.getNumberOfPawns(player) > 0){
-					System.out.println("kolejkę od " + player);
 					gameState.setActivePlayer(player);
 					gameState.putPlayerPawn(player, requestQueue());
-					System.out.println("mam");
 					timeSinceLastPawnLocation = 0;
 				} else {
 					timeSinceLastPawnLocation++;
@@ -235,22 +233,17 @@ public class Game implements Runnable {
 	 *            market.
 	 */
 	public synchronized void queueSelected(int playerNo, ProductType destination) {
-		System.out.println("selected queue");
-		if (playerNo != gameState.getActivePlayer()){
-			System.out.println("Zły");
+		if (playerNo != gameState.getActivePlayer())
 			return;
-		}
 		
 		if (expectedType == ProductType.class) {
 			
 			selectedQueue = destination;
 			try {
-				System.out.println("notify");
 				notifyAll();
 				return;
 			} finally {}
 		}
-		else System.out.println("chciałem " + expectedType);
 	}
 
 	/**
