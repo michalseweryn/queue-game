@@ -19,7 +19,7 @@ public class GameState {
 		Color.GREEN, Color.PINK, Color.ORANGE, Color.MAGENTA };
 	
 	/**
-	 * ACHTUNG! Counted from 1, 0 is speculator.
+	 * Counted from 1, 0 is speculator.
 	 */
 	public static final Color[] playerColors = new Color[]{
 		Color.BLACK, Color.RED,  Color.YELLOW, 
