@@ -20,6 +20,7 @@ import queue_game.model.GameState;
  * 
  */
 public class ProductPanel extends JComponent{
+	private static final long serialVersionUID = -3084430883046487464L;
 	private Integer numberOfProducts[]= new Integer[5];
 	public Color[] colors;
 	public ProductPanel(Game game,JBoard board){

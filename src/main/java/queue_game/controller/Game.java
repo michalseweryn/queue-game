@@ -12,9 +12,8 @@ import queue_game.model.DeckOfCards;
 import queue_game.model.GamePhase;
 import queue_game.model.GameState;
 import queue_game.model.ProductType;
-import queue_game.model.Store;
 import queue_game.model.QueuingCard;
-import queue_game.view.JBoard;
+import queue_game.model.Store;
 
 /**
  * @author michal

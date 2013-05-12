@@ -7,8 +7,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JComponent;
-
-import queue_game.model.ProductType;
 /**
  * A class which generates a square on each store (by now all of them cyan, cause 
  * stores' colors are not chosen yet), which contains the amount of this-store-products
@@ -20,9 +18,7 @@ import queue_game.model.ProductType;
 public class JProductAmountField extends JComponent implements MouseListener{
 	
 	private static final long serialVersionUID = 7459675797433335680L;
-	private Color color;
 	private JStore store;
-	private ProductType product;
 	@Override
 	public Dimension getMinimumSize(){
 		return new Dimension(1, 1);
@@ -58,7 +54,6 @@ public class JProductAmountField extends JComponent implements MouseListener{
 	 */
 	public JProductAmountField (Color color, JStore store) {
 		super();
-		this.color = color;
 		this.store = store;
 		addMouseListener(this);
 		if(store.getStore().getNumberOf()>0)

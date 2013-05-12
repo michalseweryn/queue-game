@@ -4,7 +4,6 @@
 package queue_game.model;
 
 import java.awt.Color;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**

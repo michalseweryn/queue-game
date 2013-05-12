@@ -13,11 +13,8 @@ import queue_game.model.Player;
 
 public class JPlayerInfo extends JPanel {
 	private static final long serialVersionUID = 557224757921396872L;
-	private JPlayerList playerList;
 	private Player player;
-	private Graphics graphics;
-	public JPlayerInfo(JPlayerList playerList, Player player) {
-		this.playerList = playerList;
+	public JPlayerInfo(Player player) {
 		this.player = player;
 	}
 	
@@ -28,7 +25,7 @@ public class JPlayerInfo extends JPanel {
 
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(playerList.size().width, playerList.size().height/5);
+		return new Dimension(getParent().getSize().width, getParent().getSize().height/5);
 	}
 
 	@Override
@@ -41,7 +38,6 @@ public class JPlayerInfo extends JPanel {
 		Dimension size = getSize();
 		Rectangle rect = new Rectangle(0, 0, size.width - 1, size.height - 1);
 		g2d.draw(rect);
-		graphics = g;
 		paintingComponentActualFunction(g);
 	}
 	

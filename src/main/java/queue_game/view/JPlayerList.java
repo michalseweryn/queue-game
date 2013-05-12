@@ -17,12 +17,10 @@ import queue_game.model.Player;
 
 public class JPlayerList extends JPanel implements View {
 	private static final long serialVersionUID = 6386690129053320221L;
-	private Game game;
 	private GameState gameState; 
 	private ArrayList<JPlayerInfo> list = new ArrayList<JPlayerInfo>();
 	public JPlayerList(Game game) {
 		super();
-		this.game = game;
 		this.gameState = game.getGameState();
 		game.addView(this);
 		FlowLayout layout = new FlowLayout();
@@ -39,7 +37,7 @@ public class JPlayerList extends JPanel implements View {
 		ArrayList<Player> players= gameState.getPlayersList();
 		for (Player p : players)
 		{
-			JPlayerInfo temp = new JPlayerInfo(this, p);
+			JPlayerInfo temp = new JPlayerInfo(p);
 			add(temp);
 			list.add(temp);
 		}
