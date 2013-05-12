@@ -46,7 +46,6 @@ public class JPlayerInfo extends JPanel {
 	}
 	
 	protected void paintingComponentActualFunction(Graphics g) {
-		System.out.println("aaaasss");
 		int indexInColorArray = player.getID()+1;
 		if(indexInColorArray >= GameState.playerColors.length) throw new ArrayIndexOutOfBoundsException("players' list is " +
 					"longer than colors' number");
