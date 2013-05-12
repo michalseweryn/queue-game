@@ -46,7 +46,7 @@ public class JQueue extends JComponent implements MouseListener{
 			return null;
 		Dimension size = getParent().getSize();
 		int x = size.width / 5;
-		int y = (3 * (2 * x / 3) > size.height)?(2 * x / 3):size.height - (2 * (2 * x / 3));
+		int y = (3 * (2 * x / 3) > size.height)?(2 * x / 9 ):size.height - (9 * (2 * x / 9));
 		return new Dimension(x, y);
 	}
 	
