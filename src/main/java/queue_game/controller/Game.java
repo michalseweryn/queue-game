@@ -28,89 +28,50 @@ public class Game implements Runnable {
 	private ProductType selectedQueue = null;
 	private Thread gameThread = null;
 	private QueuingCard selectedQueuingCard = null;
-	private boolean iPass[]=new boolean[6];
+	private boolean iPass[] = new boolean[6];
 	private boolean pass = false;
 
 	public Game() {
 		gameState = new GameState();
 	}
-
-	public GameState getGameState() {
-		return gameState;
-	}
-
 	/**
-	 * @return the gameThread
+	 * Creates new thread for the game.
 	 */
-	public Thread getGameThread() {
-		return gameThread;
-	}
-
 	public void startGame(int nPlayers) {
 		gameState.reset(nPlayers);
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
-	private void updateViews(){
-		for(View view : views)
-			view.update();
+	
+	/**
+	 * All Phases of all days.
+	 */
+	public void run() {
+		try {
+			for (int day = 0; !gameOver(); day++) {
+				gameState.setDayNumber(day);
+				queuingUpPhase();
+				deliveryPhase();
+				queueJumpingPhase();
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					return;
+				}
+				openingStoresPhase();
+			}
+			gameState.setGameOver();
+			updateViews();
+		} catch (InterruptedException e) {
+			return;
+		}
 	}
 
-	public void run() {
-		for (int day = 0; !gameOver(); day++) {
-			gameState.setDayNumber(day);
-			try {
-				queuingUpPhase();
-			} catch (InterruptedException e) {
-				return;
-			}
-			deliveryPhase();
-			queueJumping();
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				return;
-			}
-			openingStoresPhase();
-		}
-		gameState.setGameOver();
-		updateViews();
-	}
 	/**
-	 *  Waits for selection of queue by active player.
-	 *  
-	 * @return destination of selected queue.
-	 * @throws InterruptedException 
-	 */
-	private synchronized ProductType requestQueue() throws InterruptedException{
-		expectedType = ProductType.class;
-		updateViews();
-		while(selectedQueue == null)
-				wait();
-		expectedType = null;
-		ProductType queue = selectedQueue;
-		selectedQueue = null;
-		return queue;
-		
-	}
-	public synchronized QueuingCard requestQueuingCard(){
-		expectedType = QueuingCard.class;
-		while(selectedQueuingCard==null && !pass){
-			try{
-				wait();
-			} catch(InterruptedException e){
-				e.printStackTrace();
-			}
-		}
-		expectedType=null;
-		QueuingCard card=selectedQueuingCard;
-		selectedQueuingCard=null;
-		pass=false;
-		return card;
-	}
-	/**
-	 * First Phase of Day.
-	 * @throws InterruptedException 
+	 * First Phase of Day. Players select queues to place their pawns while
+	 * there are any pawns left.
+	 * 
+	 * @throws InterruptedException
 	 */
 	private void queuingUpPhase() throws InterruptedException {
 		gameState.setCurrentGamePhase(GamePhase.QUEUING_UP);
@@ -118,40 +79,65 @@ public class Game implements Runnable {
 		outer: while (true) {
 			for (int player = gameState.getGameOpeningMarker(); player < gameState
 					.getNumberOfPlayers(); player = (player + 1)
-					% gameState.getNumberOfPlayers()){
-				if(gameState.getNumberOfPawns(player) > 0){
+					% gameState.getNumberOfPlayers()) {
+				if (gameState.getNumberOfPawns(player) > 0) {
 					gameState.setActivePlayer(player);
 					gameState.putPlayerPawn(player, requestQueue());
 					timeSinceLastPawnLocation = 0;
 				} else {
 					timeSinceLastPawnLocation++;
 				}
-				if(timeSinceLastPawnLocation > gameState.getNumberOfPlayers())
+				if (timeSinceLastPawnLocation > gameState.getNumberOfPlayers())
 					break outer;
 			}
 		}
 	}
-	
-	public void  queueJumping(){
+
+	/**
+	 * Second Phase of Day. Randomizes 3 stores with repetitions and delivers
+	 * products to them and decreases number of products.
+	 * 
+	 * @author krzysiek & Helena
+	 */
+	public void deliveryPhase() {
+		int rand;
+		Random rG = new Random();
+		for (int i = 0; i < 3; i++) {
+			rand = rG.nextInt(5);
+			ProductType type = ProductType.values()[rand];
+			Store deliveredStore = gameState.getStore(type);
+			deliveredStore.addProducts(1);
+			Integer numberOfProducts[] = gameState.getNumberOfProducts();
+			numberOfProducts[type.ordinal()] = numberOfProducts[type.ordinal()] - 1;
+			gameState.setNumberOfProducts(numberOfProducts);
+		}
+		updateViews();
+	}
+
+	/**
+	 * Third Phase of Day. Each player either plays card or passes. 
+	 * Phase is over when all players have passed or there are no
+	 * cards left.
+	 */
+	public void queueJumpingPhase() {
 		gameState.setCurrentGamePhase(GamePhase.JUMPING);
-		final int numOfPlayers=gameState.getNumberOfPlayers();
+		final int numOfPlayers = gameState.getNumberOfPlayers();
 		QueuingCard current;
-		while(true){
-			boolean allPassed=true;
-			for (int player=gameState.getGameOpeningMarker(),  i=0;
-			i<numOfPlayers; 
-			i++, player=(player+1)%numOfPlayers){
-				DeckOfCards myDeck=this.getGameState().getDeck(player);
-				if(!iPass[player] && myDeck.numOfCardsOnHand()>0){
+		while (true) {
+			boolean allPassed = true;
+			for (int player = gameState.getGameOpeningMarker(), i = 0; i < numOfPlayers; i++, player = (player + 1)
+					% numOfPlayers) {
+				DeckOfCards myDeck = this.getGameState().getDeck(player);
+				if (!iPass[player] && myDeck.numOfCardsOnHand() > 0) {
 					gameState.setActivePlayer(player);
-					current=requestQueuingCard();
-					if(current==null){
+					current = requestQueuingCard();
+					if (current == null) {
 						myDeck.iPass();
 						continue;
 					}
 					myDeck.iUseCard(current);
-					allPassed=false;
-					switch(current){
+					allPassed = false;
+					switch (current) {
 					case CLOSED_FOR_STOCKTAKING:
 						break;
 					case COMMUNITY_LIST:
@@ -179,15 +165,69 @@ public class Game implements Runnable {
 					}
 				}
 			}
-			if(allPassed){
+			if (allPassed) {
 				break;
 			}
 		}
-			
-		//NA KONCU ODSWIERZYC LISTE IPASS[]. I ZEBY WSZYSTKO STYKALO
-		for (int i=0; i<6; i++){
-			iPass[i]=false;
+
+		// NA KONCU ODSWIEŻYC LISTE IPASS[]. I ZEBY WSZYSTKO STYKALO
+		for (int i = 0; i < 6; i++) {
+			iPass[i] = false;
 		}
+	}
+
+	/**
+	 * Fourth Phase of Day. For each store with products, removes the right amount of product and
+	 * pawns.
+	 * 
+	 * @author Jan
+	 */
+	public void openingStoresPhase() {
+		for (ProductType type : ProductType.values())
+			while (gameState.getStore(type).getQueue().size() > 0
+					&& gameState.getStore(type).getNumberOf() > 0)
+				gameState.sell(type);
+		updateViews();
+	}
+
+	/**
+	 * Waits for selection of queue by active player and returns selected queue.
+	 * 
+	 * @return destination of selected queue.
+	 * @throws InterruptedException
+	 */
+	private synchronized ProductType requestQueue() throws InterruptedException {
+		expectedType = ProductType.class;
+		updateViews();
+		while (selectedQueue == null)
+			wait();
+		expectedType = null;
+		ProductType queue = selectedQueue;
+		selectedQueue = null;
+		return queue;
+
+	}
+
+	/**
+	 * Waits for selection of queue by active player and returns selected queue.
+	 * 
+	 * @return destination of selected queue.
+	 * @throws InterruptedException
+	 */
+	public synchronized QueuingCard requestQueuingCard() {
+		expectedType = QueuingCard.class;
+		while (selectedQueuingCard == null && !pass) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		expectedType = null;
+		QueuingCard card = selectedQueuingCard;
+		selectedQueuingCard = null;
+		pass = false;
+		return card;
 	}
 
 	/**
@@ -195,41 +235,6 @@ public class Game implements Runnable {
 	 */
 	private boolean gameOver() {
 		return gameState.getDayNumber() > 5;
-	}
-
-	/**
-	 * Randomizes 3 stores with repetitions and delivers products to them
-	 * and decreases number of products.
-	 * 
-	 * @author krzysiek & Helena
-	 */
-	public void deliveryPhase() {
-		int rand;
-		Random rG = new Random();
-		for (int i = 0; i < 3; i++) {
-			rand = rG.nextInt(5);
-			ProductType type =ProductType.values()[rand];
-			Store deliveredStore = gameState
-					.getStore(type);
-			deliveredStore.addProducts(1);
-			Integer numberOfProducts[] = gameState.getNumberOfProducts();
-			numberOfProducts[type.ordinal()]=numberOfProducts[type.ordinal()]-1;
-			gameState.setNumberOfProducts(numberOfProducts);
-		}
-		updateViews();
-	}
-
-	/**
-	 * For each store with products, removes the right amount of product and
-	 * pawns.
-	 * 
-	 * @author Jan
-	 */
-	public void openingStoresPhase() {
-		for(ProductType type : ProductType.values())
-			while(gameState.getStore(type).getQueue().size() > 0 && gameState.getStore(type).getNumberOf() > 0)
-				gameState.sell(type);
-		updateViews();
 	}
 
 	/**
@@ -244,28 +249,30 @@ public class Game implements Runnable {
 	public synchronized void queueSelected(int playerNo, ProductType destination) {
 		if (playerNo != gameState.getActivePlayer())
 			return;
-		
+
 		if (expectedType == ProductType.class) {
-			
+
 			selectedQueue = destination;
 			try {
 				notifyAll();
 				return;
-			} finally {}
+			} finally {
+			}
 		}
 	}
-	public void queuingCardSelected(int playerNo, QueuingCard card){
-		if(playerNo != gameState.getActivePlayer())
+
+	public void queuingCardSelected(int playerNo, QueuingCard card) {
+		if (playerNo != gameState.getActivePlayer())
 			return;
-		if(expectedType==QueuingCard.class){
-			if(card==null){
-				iPass[playerNo]=true;
-				pass=true;
+		if (expectedType == QueuingCard.class) {
+			if (card == null) {
+				iPass[playerNo] = true;
+				pass = true;
 			}
-			selectedQueuingCard=card;
-			try{
+			selectedQueuingCard = card;
+			try {
 				return;
-			}finally{
+			} finally {
 				notifyAll();
 			}
 		}
@@ -276,6 +283,28 @@ public class Game implements Runnable {
 	 */
 	public void addView(View view) {
 		views.add(view);
+	}
+	
+	/**
+	 * Informs all views about changes in model.
+	 */
+	private void updateViews() {
+		for (View view : views)
+			view.update();
+	}
+
+	/**
+	 * @return state of the game (model).
+	 */
+	public GameState getGameState() {
+		return gameState;
+	}
+
+	/**
+	 * @return main thread of game.
+	 */
+	public Thread getGameThread() {
+		return gameThread;
 	}
 
 }
