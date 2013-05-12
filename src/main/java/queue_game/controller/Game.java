@@ -270,18 +270,23 @@ public class Game implements Runnable {
 	}
 
 	/**
-	 * Randomizes 3 stores with repetitions and delivers products to them.
+	 * Randomizes 3 stores with repetitions and delivers products to them
+	 * and decreases number of products.
 	 * 
-	 * @author krzysiek
+	 * @author krzysiek & Helena
 	 */
 	public void deliveryPhase() {
 		int rand;
 		Random rG = new Random();
 		for (int i = 0; i < 3; i++) {
 			rand = rG.nextInt(5);
+			ProductType type =ProductType.values()[rand];
 			Store deliveredStore = gameState
-					.getStore(ProductType.values()[rand]);
+					.getStore(type);
 			deliveredStore.addProducts(1);
+			Integer numberOfProducts[] = gameState.getNumberOfProducts();
+			numberOfProducts[type.ordinal()]=numberOfProducts[type.ordinal()]-1;
+			gameState.setNumberOfProducts(numberOfProducts);
 		}
 		updateViews();
 	}

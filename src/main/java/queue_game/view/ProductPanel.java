@@ -12,6 +12,13 @@ import javax.swing.JComponent;
 
 import queue_game.controller.Game;
 
+/**
+ * 
+ * @author Helena
+ * 
+ * Panel with number of products which left in the trucks.
+ * 
+ */
 public class ProductPanel extends JComponent{
 	private Integer numberOfProducts[]= new Integer[5];
 	public Color[] colors;
