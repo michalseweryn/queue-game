@@ -3,6 +3,8 @@
  */
 package queue_game.model;
 
+import java.awt.Color;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -10,6 +12,20 @@ import java.util.ArrayList;
  * A model part of MVC. Illustrates current situation on Board.
  */
 public class GameState {
+	
+	/**
+	 * Counted from 0.
+	 */
+	public static final Color[] productColors = new Color[] { Color.BLUE,
+		Color.GREEN, Color.PINK, Color.ORANGE, Color.MAGENTA };
+	
+	/**
+	 * ACHTUNG! Counted from 1, 0 is speculator.
+	 */
+	public static final Color[] playerColors = new Color[]{
+		Color.BLACK, Color.RED,  Color.YELLOW, 
+		new Color(0, 128, 0), new Color(192, 128, 0), Color.BLUE};
+	
 	private int dayNumber;
 	private int gameOpeningMarker;
 	private int numberOfPlayers;
@@ -44,8 +60,9 @@ public class GameState {
 			numberOfProducts[i.ordinal()]=50;
 		}
 		for(int i = 0; i < numberOfPlayers; i++){
-			players.add(new Player());
+			players.add(new Player(i, "Gracz "+(i+1)));
 			players.get(i).setNumberOfPawns(initialNumberOfPawns);
+			players.get(i).setShoppingList(new int[]{1, 1, 1, 1, 1});
 		}
 	}
 	
@@ -139,6 +156,11 @@ public class GameState {
 	public void setNumberOfProducts(Integer[] numberOfProducts) {
 		this.numberOfProducts = numberOfProducts;
 	}
+	
+	public ArrayList<Player> getPlayersList(){
+		return players;
+	}
+	
 	/**
 	 *  Puts pawn of one player to given queue
 	 * @param player
@@ -166,6 +188,7 @@ public class GameState {
 		if(player >= 0 && player < numberOfPlayers){
 			int nPawns = getNumberOfPawns(player);
 			players.get(player).setNumberOfPawns(nPawns + 1);
+			players.get(player).addProduct(type);
 		}
 			
 		

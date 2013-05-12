@@ -9,10 +9,27 @@ public class Player {
 	private int numberOfPawns;
 	private DeckOfCards deck=null;
 	private int[] shoppingList = null;
+	private int[] boughtProducts = {0, 0, 0, 0, 0};
+	private String name;
+	private int ID;
 	
+	/**
+	 * 
+	 * @param index from 0 to number of players-1
+	 * @param name
+	 */
+	public Player(int ID, String name) {
+		this.name = name;
+		this.ID = ID;
+	}
 	
+	public String getName(){
+		return name;
+	}
 	
-	
+	public int getID(){
+		return ID;
+	}
 	/**
 	 * 
 	 * @param shoppingList an array with the number of needed products from
@@ -49,5 +66,13 @@ public class Player {
 		return numberOfPawns;
 	}
 	
+	
+	public void addProduct(ProductType type){
+		boughtProducts[type.ordinal()]++;
+	}
+	
+	public int[] getBoughtProducts() {
+		return boughtProducts;
+	}
 	
 }

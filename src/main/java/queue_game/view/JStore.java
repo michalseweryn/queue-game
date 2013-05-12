@@ -9,6 +9,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JComponent;
 
+import queue_game.model.GameState;
 import queue_game.model.ProductType;
 import queue_game.model.Store;
 
@@ -60,7 +61,7 @@ public class JStore extends JComponent implements MouseListener{
 		layout.setHgap(0);
 		setLayout(layout);
 		this.board = board;
-		this.color = JBoard.defaultColorSet[product.ordinal()];
+		this.color = GameState.productColors[product.ordinal()];
 		addMouseListener(this);
 		addProductAmountField();
 	}

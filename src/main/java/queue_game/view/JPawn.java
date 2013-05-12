@@ -11,6 +11,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JComponent;
 
 import queue_game.controller.Game;
+import queue_game.model.GameState;
 import queue_game.model.ProductType;
 
 /**
@@ -26,13 +27,7 @@ public class JPawn extends JComponent implements MouseListener{
 	private ProductType product;
 	private Integer place;
 	private int length;
-	private static Color[] pawnColors = new Color[]{
-		Color.BLACK, 
-		Color.RED, 
-		Color.YELLOW, 
-		new Color(0, 128, 0), 
-		new Color(192, 128, 0), 
-		Color.BLUE};
+	private final static Color[] pawnColors = GameState.playerColors;
 	
 	public JPawn(ProductType product, int playerId, Game game, int place, int length) {
 		this.game = game;

@@ -22,8 +22,7 @@ import queue_game.model.Store;
  */
 public class JBoard extends JPanel implements View{
 	private static final long serialVersionUID = -2270325617374583365L;
-	public static final Color[] defaultColorSet = new Color[] { Color.BLUE,
-			Color.GREEN, Color.PINK, Color.ORANGE, Color.MAGENTA };
+	
 	private Game game = null;
 	private GameState gameState = null;
 	
@@ -31,7 +30,7 @@ public class JBoard extends JPanel implements View{
 		super();
 		this.game = game;
 		this.gameState = game.getGameState();
-		game.addView(this);
+		
 		FlowLayout layout = new FlowLayout();
 		layout.setVgap(0);
 		layout.setHgap(0);

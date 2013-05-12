@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities;
 
 import queue_game.controller.Game;
 import queue_game.view.JBoard;
+import queue_game.view.JPlayerList;
 
 /**
  * Main window of game.
@@ -18,8 +19,14 @@ public class App {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BorderLayout());
         JBoard board = new JBoard(game);
+        game.addView(board);
+        
+        JPlayerList playerList = new JPlayerList(game);
+        game.addView(playerList);
+
         frame.getContentPane().add(board);
-		frame.pack();
+        frame.getContentPane().add(playerList, BorderLayout.EAST);
+        frame.pack();
 		frame.setVisible(true);
 	}
     public static void main( String[] args )

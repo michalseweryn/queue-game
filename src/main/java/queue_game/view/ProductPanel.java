@@ -1,6 +1,5 @@
 package queue_game.view;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -11,6 +10,7 @@ import java.awt.Rectangle;
 import javax.swing.JComponent;
 
 import queue_game.controller.Game;
+import queue_game.model.GameState;
 
 /**
  * 
@@ -24,7 +24,7 @@ public class ProductPanel extends JComponent{
 	public Color[] colors;
 	public ProductPanel(Game game,JBoard board){
 		numberOfProducts = game.getGameState().getNumberOfProducts();
-		colors=board.defaultColorSet;
+		colors=GameState.productColors;
 	}
 	@Override
 	public Dimension getMinimumSize(){
