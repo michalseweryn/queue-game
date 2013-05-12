@@ -75,9 +75,6 @@ public class JPawn extends JComponent implements MouseListener{
 	}
 	
 	public void mouseClicked(MouseEvent e) {
-		if(game != null && game != null && game.getGameState() != null){
-			game.pawnSelected(game.getGameState().getActivePlayer(), product, place);
-		}
 	}
 	
 	public void mouseEntered(MouseEvent e) {}
