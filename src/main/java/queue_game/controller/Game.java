@@ -25,45 +25,11 @@ public class Game implements Runnable {
 	private GameState gameState;
 	private List<View> views = new LinkedList<View>();
 	private Class<?> expectedType = null;
-	private Product selectedProduct = null;
-	private Pawn selectedPawn = null;
 	private ProductType selectedQueue = null;
 	private Thread gameThread = null;
 	private QueuingCard selectedQueuingCard = null;
 	private boolean iPass[]=new boolean[6];
 	private boolean pass = false;
-
-	/**
-	 * Mini-class representing Products from stores selected by users.
-	 * 
-	 * @author michal
-	 * 
-	 */
-	private static class Product {
-		ProductType store;
-		ProductType type;
-
-		public Product(ProductType store, ProductType type) {
-			this.store = store;
-			this.type = type;
-		}
-	}
-
-	/** 
-	 * Mini-class representing Pawns from queues selected by users.
-	 * 
-	 * @author michal
-	 * 
-	 */
-	private static class Pawn {
-		ProductType queue;
-		int position;
-
-		public Pawn(ProductType queue, int position) {
-			this.queue = queue;
-			this.position = position;
-		}
-	}
 
 	public Game() {
 		gameState = new GameState();
@@ -99,6 +65,7 @@ public class Game implements Runnable {
 				return;
 			}
 			deliveryPhase();
+			queueJumping();
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -110,7 +77,7 @@ public class Game implements Runnable {
 		updateViews();
 	}
 	/**
-	 *  Waits for selection of  queue by active player.
+	 *  Waits for selection of queue by active player.
 	 *  
 	 * @return destination of selected queue.
 	 * @throws InterruptedException 
@@ -124,25 +91,6 @@ public class Game implements Runnable {
 		ProductType queue = selectedQueue;
 		selectedQueue = null;
 		return queue;
-		
-	}
-	/**
-	 *  Waits for selection of product by active player.
-	 *  
-	 * @return selected product.
-	 */
-	private synchronized Product requestProduct(){
-		expectedType = Product.class;
-		while(selectedQueue == null && !pass)
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		expectedType = null;
-		Product product = selectedProduct;
-		selectedProduct = null;
-		return product;
 		
 	}
 	public synchronized QueuingCard requestQueuingCard(){
@@ -159,25 +107,6 @@ public class Game implements Runnable {
 		selectedQueuingCard=null;
 		pass=false;
 		return card;
-	}
-	/**
-	 *  Waits for selection of pawn by active player.
-	 *  
-	 * @return selected pawn.
-	 */
-	private synchronized Pawn requestPawn(){
-		expectedType = Product.class;
-		while(selectedQueue == null && !pass)
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		expectedType = null;
-		Pawn pawn = selectedPawn;
-		selectedPawn = null;
-		pass=false;
-		return pawn;
 	}
 	/**
 	 * First Phase of Day.
@@ -324,46 +253,6 @@ public class Game implements Runnable {
 				return;
 			} finally {}
 		}
-	}
-
-	/**
-	 * Method for handling players' pawn selections (e.g. on queue jumping)
-	 * 
-	 * @param playerNo
-	 *            ID of player selecting a product
-	 * @param product
-	 *            selected product
-	 */
-	public void pawnSelected(int playerNo, ProductType queueDestination,
-			int position) {
-		if (playerNo != gameState.getActivePlayer())
-			return;
-		
-		if(expectedType == Pawn.class){
-			selectedPawn = new Pawn(queueDestination, position);
-			notifyAll();
-		}
-
-	}
-
-	/**
-	 * Method for handling players' product selections (e.g. on opening of stores)
-	 * 
-	 * @param playerNo
-	 *            ID of player selecting a product
-	 * @param product
-	 *            selected product
-	 */
-	public void productSelected(int playerNo, ProductType type,
-			ProductType store) {
-		if (playerNo != gameState.getActivePlayer())
-			return;
-		
-		if(expectedType == Pawn.class){
-			selectedProduct = new Product(type, store);
-			notifyAll();
-		}
-
 	}
 	public void queuingCardSelected(int playerNo, QueuingCard card){
 		if(playerNo != gameState.getActivePlayer())
