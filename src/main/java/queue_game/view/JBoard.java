@@ -44,7 +44,7 @@ public class JBoard extends JPanel implements View{
 		for (Store store : gameState.getStores()){
 			add(new JQueue(store, game));
 		}
-		add(new JCardsArea(game,this));
+		
 	}
 
 	/**
@@ -63,7 +63,6 @@ public class JBoard extends JPanel implements View{
 		for (Store store : gameState.getStores()){
 			add(new JQueue(store, game));
 		}
-		add(new JCardsArea(game,this));
 		revalidate();
 		if(gameState.isGameOver()){
 			JOptionPane.showMessageDialog(this, "KONIEC GRY");

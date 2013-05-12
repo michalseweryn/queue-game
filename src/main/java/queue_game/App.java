@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities;
 
 import queue_game.controller.Game;
 import queue_game.view.JBoard;
+import queue_game.view.JCardsArea;
 import queue_game.view.JPlayerList;
 
 /**
@@ -24,11 +25,16 @@ public class App {
         JPlayerList playerList = new JPlayerList(game);
         game.addView(playerList);
 
+        JCardsArea cardsArea = new JCardsArea(game);
+	    game.addView(cardsArea);
+	
         frame.getContentPane().add(board);
         frame.getContentPane().add(playerList, BorderLayout.EAST);
+        frame.getContentPane().add(cardsArea, BorderLayout.SOUTH);
         frame.pack();
 		frame.setVisible(true);
-	}
+		
+		}
     public static void main( String[] args )
     {
         final Game game = new Game();

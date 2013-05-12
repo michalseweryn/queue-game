@@ -2,30 +2,45 @@ package queue_game.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
+import queue_game.View;
 import queue_game.controller.Game;
 import queue_game.model.DeckOfCards;
+import queue_game.model.GameState;
 
 /**
  * @author Jan
  * 
  *         Panel for queuing cards.
  */
-public class JCardsArea extends JComponent{
+public class JCardsArea extends JPanel implements View{
 	private static final long serialVersionUID = -3804758455470286800L;
-	public Color color;
+	public GameState gameState;
 	public DeckOfCards[] cards = new DeckOfCards[3];
-	public JCardsArea(Game game,JBoard board){
-		
-		cards[0] = game.getGameState().getDeck(game.getGameState().getActivePlayer());
-		cards[1] = game.getGameState().getDeck(game.getGameState().getActivePlayer());
-		cards[2] = game.getGameState().getDeck(game.getGameState().getActivePlayer());		
-		
+	public JCardsArea(Game game){
+		super();
+		this.gameState = game.getGameState();
+		game.addView(this);
+		FlowLayout layout = new FlowLayout();
+		layout.setVgap(0);
+		layout.setHgap(0);
+		setLayout(layout);	
+		addCards();
+	}
+	private void addCards(){
+		//for(int i = 0; i < 3; i++)
+		//	cards[i] = gameState.getDeck(gameState.getActivePlayer());
+		for(int i = 0; i < 3; i++){						
+			JQueuingCard temp = new JQueuingCard(gameState.getPlayersList().get((gameState.getActivePlayer())));
+			add(temp);
+		}
 	}
 	@Override
 	public Dimension getMinimumSize(){
@@ -37,7 +52,7 @@ public class JCardsArea extends JComponent{
 		if (getParent() == null)
 			return null;
 		Dimension size = getParent().getSize();
-		return new Dimension(size.width, size.height );
+		return new Dimension(size.width, 150 );
 	}
 	@Override
 	public Dimension getMaximumSize(){
@@ -53,12 +68,12 @@ public class JCardsArea extends JComponent{
 		g.fillRect(0, 0, size.width, size.height);
 		g2d.setColor(Color.BLACK);
 		g2d.draw(rect);
-		g.setColor(Color.RED);
-		g.fillRect(0, 0, size.width/4, size.height);
-		g.setColor(Color.BLUE);
-		g.fillRect(size.width/4, 0, size.width/4, size.height);
-		g.setColor(Color.GREEN);
-		g.fillRect(size.width/2, 0, size.width/4, size.height);
+	}
+	
+	public void update() {
+		removeAll();
+		addCards();
+		revalidate();
 	}
 	
 
