@@ -13,3 +13,6 @@
 .project
 .settings/
 target/
+
+# Javadoc #
+doc/
