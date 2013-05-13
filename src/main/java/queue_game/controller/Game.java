@@ -78,48 +78,9 @@ public class Game implements Runnable {
 	 */
 	public void PreparingToGamePhase(){
 		gameState.reset(nPlayers);
-		resetNumberOfProducts();
-		resetPlayers();
-		resetShoppingList();
-	}
-	/**
-	 * 
-	 * Resets number of products with our favorite number.
-	 * 
-	 */
-	public void resetNumberOfProducts(){
-		Integer [] numberOfProducts=gameState.getNumberOfProducts();
-		for(ProductType i : ProductType.values()){
-			numberOfProducts[i.ordinal()]=50;
-		}
-		gameState.setNumberOfProducts(numberOfProducts);
-	}
-	/**
-	 * 
-	 * Create new players and adds them pawns.
-	 * 
-	 */
-	public void resetPlayers(){
-		int initialNumberOfPawns = 5;
-		ArrayList<Player> players = gameState.getPlayersList();
-		for(int i = 0; i < gameState.getNumberOfPlayers(); i++){
-			players.add(new Player(i, "Gracz "+(i+1)));
-			players.get(i).setNumberOfPawns(initialNumberOfPawns);
-		}
-		gameState.setPlayersList(players);
-	}
-	/**
-	 * 
-	 * Create random shopping list.
-	 * 
-	 */
-	public void resetShoppingList(){
-		ArrayList<Player> players = gameState.getPlayersList();
-		for(int i = 0; i < gameState.getNumberOfPlayers(); i++){
-			Random r = new Random();
-			players.get(i).setShoppingList(new int[]{r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1});
-		}
-		gameState.setPlayersList(players);
+		gameState.resetNumberOfProducts();
+		gameState.resetPlayers();
+		gameState.resetShoppingList();
 	}
 	
 	/**
