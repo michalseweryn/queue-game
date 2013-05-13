@@ -148,15 +148,10 @@ public class GameState {
 		this.numberOfProducts = numberOfProducts;
 	}
 	
-	
-	public ArrayList<Player> getPlayersList() {
+	public ArrayList<Player> getPlayersList(){
 		return players;
 	}
-
-	public void setPlayersList(ArrayList<Player> players) {
-		this.players = players;
-	}
-
+	
 	/**
 	 *  Puts pawn of one player to given queue
 	 * @param player
