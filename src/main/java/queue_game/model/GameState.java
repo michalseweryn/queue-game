@@ -56,6 +56,40 @@ public class GameState {
 			stores[ind++] = new Store(product);
 	}
 	
+	/**
+	 * 
+	 * Resets number of products with our favorite number.
+	 * 
+	 */
+	public void resetNumberOfProducts(){
+		for(ProductType i : ProductType.values()){
+			numberOfProducts[i.ordinal()]=50;
+		}
+	}
+	/**
+	 * 
+	 * Create new players and adds them pawns.
+	 * 
+	 */
+	public void resetPlayers(){
+		int initialNumberOfPawns = 5;
+		for(int i = 0; i < numberOfPlayers; i++){
+			players.add(new Player(i, "Gracz "+(i+1)));
+			players.get(i).setNumberOfPawns(initialNumberOfPawns);
+		}
+	}
+	/**
+	 * 
+	 * Create random shopping list.
+	 * 
+	 */
+	public void resetShoppingList(){;
+		for(int i = 0; i < numberOfPlayers; i++){
+			Random r = new Random();
+			players.get(i).setShoppingList(new int[]{r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1});
+		}
+	}
+	
 	public void setGameOver(){
 		gameOver = true;
 	}

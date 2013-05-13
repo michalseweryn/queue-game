@@ -128,7 +128,7 @@ public class Game implements Runnable {
 	/**
 	 * First Phase of Day. Players select queues to place their pawns while
 	 * there are any pawns left.
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 	private void queuingUpPhase() throws InterruptedException {
@@ -180,6 +180,7 @@ public class Game implements Runnable {
 	public void queueJumpingPhase() {
 		gameState.setCurrentGamePhase(GamePhase.JUMPING);
 		final int numOfPlayers = gameState.getNumberOfPlayers();
+		ArrayList<QueuingCard> cardsOnHand;
 		QueuingCard current;
 		while (true) {
 			boolean allPassed = true;
