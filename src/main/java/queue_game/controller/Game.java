@@ -71,7 +71,11 @@ public class Game implements Runnable {
 			return;
 		}
 	}
-
+	/**
+	 * 
+	 * Prepares game to GamePhase: players,products,pawns, shopping_list.
+	 * 
+	 */
 	public void PreparingToGamePhase(){
 		gameState.reset(nPlayers);
 		resetNumberOfProducts();
@@ -79,7 +83,13 @@ public class Game implements Runnable {
 		for(Player pl:this.getGameState().getPlayersList()){
 			pl.setDeck(new DeckOfCards());
 		}
+		resetShoppingList();
 	}
+	/**
+	 * 
+	 * Resets number of products with our favorite number.
+	 * 
+	 */
 	public void resetNumberOfProducts(){
 		Integer [] numberOfProducts=gameState.getNumberOfProducts();
 		for(ProductType i : ProductType.values()){
@@ -87,16 +97,34 @@ public class Game implements Runnable {
 		}
 		gameState.setNumberOfProducts(numberOfProducts);
 	}
+	/**
+	 * 
+	 * Create new players and adds them pawns.
+	 * 
+	 */
 	public void resetPlayers(){
 		int initialNumberOfPawns = 5;
+		ArrayList<Player> players = gameState.getPlayersList();
 		for(int i = 0; i < gameState.getNumberOfPlayers(); i++){
-			ArrayList<Player> players = gameState.getPlayersList();
 			players.add(new Player(i, "Gracz "+(i+1)));
 			players.get(i).setNumberOfPawns(initialNumberOfPawns);
+		}
+		gameState.setPlayersList(players);
+	}
+	/**
+	 * 
+	 * Create random shopping list.
+	 * 
+	 */
+	public void resetShoppingList(){
+		ArrayList<Player> players = gameState.getPlayersList();
+		for(int i = 0; i < gameState.getNumberOfPlayers(); i++){
 			Random r = new Random();
 			players.get(i).setShoppingList(new int[]{r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1});
 		}
+		gameState.setPlayersList(players);
 	}
+	
 	/**
 	 * First Phase of Day. Players select queues to place their pawns while
 	 * there are any pawns left.
@@ -152,12 +180,6 @@ public class Game implements Runnable {
 	public void queueJumpingPhase() {
 		gameState.setCurrentGamePhase(GamePhase.JUMPING);
 		final int numOfPlayers = gameState.getNumberOfPlayers();
-		ArrayList<QueuingCard> cardsOnHand;
-		for (int i=0; i<numOfPlayers; i++){
-			cardsOnHand=this.getGameState().getPlayersList().get(i).getCardsOnHand();
-			DeckOfCards myDeck=this.getGameState().getDeck(i);
-			myDeck.getCards(cardsOnHand);
-		}
 		QueuingCard current;
 		while (true) {
 			boolean allPassed = true;
