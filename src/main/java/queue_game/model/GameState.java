@@ -55,6 +55,19 @@ public class GameState {
 		for(ProductType product : ProductType.values())
 			stores[ind++] = new Store(product);
 	}
+	/**
+	 * 
+	 * Reset cards of all players.
+	 * 
+	 */
+	public void resetCards(){
+		for(Player pl : players){
+			pl.setDeck(new DeckOfCards());
+		}
+		for (Player p: players){
+			p.getDeck().getCards(p.getCardsOnHand());
+		}
+	}
 	
 	/**
 	 * 
