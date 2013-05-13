@@ -5,6 +5,7 @@ package queue_game.model;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * @author michal
@@ -61,7 +62,8 @@ public class GameState {
 		for(int i = 0; i < numberOfPlayers; i++){
 			players.add(new Player(i, "Gracz "+(i+1)));
 			players.get(i).setNumberOfPawns(initialNumberOfPawns);
-			players.get(i).setShoppingList(new int[]{1, 1, 1, 1, 1});
+			Random r = new Random();
+			players.get(i).setShoppingList(new int[]{r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1});
 		}
 	}
 	
