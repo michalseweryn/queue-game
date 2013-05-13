@@ -3,6 +3,7 @@
  */
 package queue_game.controller;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -11,6 +12,7 @@ import queue_game.View;
 import queue_game.model.DeckOfCards;
 import queue_game.model.GamePhase;
 import queue_game.model.GameState;
+import queue_game.model.Player;
 import queue_game.model.ProductType;
 import queue_game.model.QueuingCard;
 import queue_game.model.Store;
@@ -23,6 +25,7 @@ import queue_game.model.Store;
  */
 public class Game implements Runnable {
 	private GameState gameState;
+	private int nPlayers;
 	private List<View> views = new LinkedList<View>();
 	private Class<?> expectedType = null;
 	private ProductType selectedQueue = null;
@@ -39,6 +42,7 @@ public class Game implements Runnable {
 	 */
 	public void startGame(int nPlayers) {
 		gameState.reset(nPlayers);
+		this.nPlayers = nPlayers;
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
@@ -47,12 +51,12 @@ public class Game implements Runnable {
 	 * All Phases of all days.
 	 */
 	public void run() {
+		PreparingToGamePhase();
 		try {
 			for (int day = 0; !gameOver(); day++) {
 				gameState.setDayNumber(day);
 				queuingUpPhase();
 				deliveryPhase();
-				queueJumpingPhase();
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -67,6 +71,28 @@ public class Game implements Runnable {
 		}
 	}
 
+	public void PreparingToGamePhase(){
+		gameState.reset(nPlayers);
+		resetNumberOfProducts();
+		resetPlayers();
+	}
+	public void resetNumberOfProducts(){
+		Integer [] numberOfProducts=gameState.getNumberOfProducts();
+		for(ProductType i : ProductType.values()){
+			numberOfProducts[i.ordinal()]=50;
+		}
+		gameState.setNumberOfProducts(numberOfProducts);
+	}
+	public void resetPlayers(){
+		int initialNumberOfPawns = 5;
+		for(int i = 0; i < gameState.getNumberOfPlayers(); i++){
+			ArrayList<Player> players = gameState.getPlayersList();
+			players.add(new Player(i, "Gracz "+(i+1)));
+			players.get(i).setNumberOfPawns(initialNumberOfPawns);
+			Random r = new Random();
+			players.get(i).setShoppingList(new int[]{r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1});
+		}
+	}
 	/**
 	 * First Phase of Day. Players select queues to place their pawns while
 	 * there are any pawns left.

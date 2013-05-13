@@ -29,7 +29,6 @@ public class GameState {
 	private int dayNumber;
 	private int gameOpeningMarker;
 	private int numberOfPlayers;
-	private int initialNumberOfPawns = 5;
 	private int activePlayer = 0;
 	private boolean gameOver;
 	private Store[] stores;
@@ -55,16 +54,6 @@ public class GameState {
 		int ind = 0;
 		for(ProductType product : ProductType.values())
 			stores[ind++] = new Store(product);
-		
-		for(ProductType i : ProductType.values()){
-			numberOfProducts[i.ordinal()]=50;
-		}
-		for(int i = 0; i < numberOfPlayers; i++){
-			players.add(new Player(i, "Gracz "+(i+1)));
-			players.get(i).setNumberOfPawns(initialNumberOfPawns);
-			Random r = new Random();
-			players.get(i).setShoppingList(new int[]{r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1});
-		}
 	}
 	
 	public void setGameOver(){
