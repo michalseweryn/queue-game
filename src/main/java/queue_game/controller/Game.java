@@ -76,6 +76,9 @@ public class Game implements Runnable {
 		gameState.reset(nPlayers);
 		resetNumberOfProducts();
 		resetPlayers();
+		for(Player pl:this.getGameState().getPlayersList()){
+			pl.setDeck(new DeckOfCards());
+		}
 	}
 	public void resetNumberOfProducts(){
 		Integer [] numberOfProducts=gameState.getNumberOfProducts();
@@ -149,20 +152,27 @@ public class Game implements Runnable {
 	public void queueJumpingPhase() {
 		gameState.setCurrentGamePhase(GamePhase.JUMPING);
 		final int numOfPlayers = gameState.getNumberOfPlayers();
+		ArrayList<QueuingCard> cardsOnHand;
+		for (int i=0; i<numOfPlayers; i++){
+			cardsOnHand=this.getGameState().getPlayersList().get(i).getCardsOnHand();
+			DeckOfCards myDeck=this.getGameState().getDeck(i);
+			myDeck.getCards(cardsOnHand);
+		}
 		QueuingCard current;
 		while (true) {
 			boolean allPassed = true;
 			for (int player = gameState.getGameOpeningMarker(), i = 0; i < numOfPlayers; i++, player = (player + 1)
 					% numOfPlayers) {
+				cardsOnHand=this.getGameState().getPlayersList().get(player).getCardsOnHand();
 				DeckOfCards myDeck = this.getGameState().getDeck(player);
-				if (!iPass[player] && myDeck.numOfCardsOnHand() > 0) {
+				if (!iPass[player] && cardsOnHand.size() > 0) {
 					gameState.setActivePlayer(player);
 					current = requestQueuingCard();
 					if (current == null) {
-						myDeck.iPass();
+						myDeck.iPass(cardsOnHand);
 						continue;
 					}
-					myDeck.iUseCard(current);
+					cardsOnHand.remove(current);
 					allPassed = false;
 					switch (current) {
 					case CLOSED_FOR_STOCKTAKING:

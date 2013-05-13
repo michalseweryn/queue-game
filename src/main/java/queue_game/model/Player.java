@@ -1,4 +1,7 @@
 package queue_game.model;
+
+import java.util.ArrayList;
+
 /**
  * A class which every object contains all the data about the particular player. 
  * 
@@ -10,6 +13,7 @@ public class Player {
 	private DeckOfCards deck=null;
 	private int[] shoppingList = null;
 	private int[] boughtProducts = {0, 0, 0, 0, 0};
+	private ArrayList<QueuingCard> cardsOnHand=new ArrayList<QueuingCard>();
 	private String name;
 	private int ID;
 	
@@ -55,6 +59,13 @@ public class Player {
 	
 	public DeckOfCards getDeck() {
 		return deck;
+	}
+	
+	public void setCardsOnHand(ArrayList<QueuingCard> cards){
+		cardsOnHand=cards;
+	}
+	public ArrayList<QueuingCard> getCardsOnHand(){
+		return cardsOnHand;
 	}
 	
 	
