@@ -37,6 +37,7 @@ public class Game implements Runnable {
 	public Game() {
 		gameState = new GameState();
 	}
+	
 	/**
 	 * Creates new thread for the game.
 	 */
