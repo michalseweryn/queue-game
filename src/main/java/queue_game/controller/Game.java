@@ -83,6 +83,9 @@ public class Game implements Runnable {
 		for(Player pl:this.getGameState().getPlayersList()){
 			pl.setDeck(new DeckOfCards());
 		}
+		for (Player p: this.getGameState().getPlayersList()){
+			p.getDeck().getCards(p.getCardsOnHand());
+		}
 		resetShoppingList();
 	}
 	/**
