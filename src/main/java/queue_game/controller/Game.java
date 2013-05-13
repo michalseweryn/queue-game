@@ -70,12 +70,22 @@ public class Game implements Runnable {
 			return;
 		}
 	}
-
+	/**
+	 * 
+	 * Prepares game to GamePhase: players,products,pawns, shopping_list.
+	 * 
+	 */
 	public void PreparingToGamePhase(){
 		gameState.reset(nPlayers);
 		resetNumberOfProducts();
 		resetPlayers();
+		resetShoppingList();
 	}
+	/**
+	 * 
+	 * Resets number of products with our favorite number.
+	 * 
+	 */
 	public void resetNumberOfProducts(){
 		Integer [] numberOfProducts=gameState.getNumberOfProducts();
 		for(ProductType i : ProductType.values()){
@@ -83,15 +93,32 @@ public class Game implements Runnable {
 		}
 		gameState.setNumberOfProducts(numberOfProducts);
 	}
+	/**
+	 * 
+	 * Create new players and adds them pawns.
+	 * 
+	 */
 	public void resetPlayers(){
 		int initialNumberOfPawns = 5;
+		ArrayList<Player> players = gameState.getPlayersList();
 		for(int i = 0; i < gameState.getNumberOfPlayers(); i++){
-			ArrayList<Player> players = gameState.getPlayersList();
 			players.add(new Player(i, "Gracz "+(i+1)));
 			players.get(i).setNumberOfPawns(initialNumberOfPawns);
+		}
+		gameState.setPlayersList(players);
+	}
+	/**
+	 * 
+	 * Create random shopping list.
+	 * 
+	 */
+	public void resetShoppingList(){
+		ArrayList<Player> players = gameState.getPlayersList();
+		for(int i = 0; i < gameState.getNumberOfPlayers(); i++){
 			Random r = new Random();
 			players.get(i).setShoppingList(new int[]{r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1, r.nextInt(4)+1});
 		}
+		gameState.setPlayersList(players);
 	}
 	/**
 	 * First Phase of Day. Players select queues to place their pawns while
