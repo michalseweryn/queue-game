@@ -121,6 +121,7 @@ public class Game implements Runnable {
 		}
 		gameState.setPlayersList(players);
 	}
+	
 	/**
 	 * First Phase of Day. Players select queues to place their pawns while
 	 * there are any pawns left.
