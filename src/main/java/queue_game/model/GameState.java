@@ -63,6 +63,7 @@ public class GameState {
 	public boolean isGameOver(){
 		return gameOver;
 	}
+	
 	/**
 	 * @return the gameOpeningMarker
 	 */
