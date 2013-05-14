@@ -4,7 +4,10 @@
 package queue_game.model;
 
 import java.awt.Color;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -97,20 +100,31 @@ public class GameState {
 
 	/**
 	 * 
-	 * Create random shopping list.
+	 * Create random shopping list and set gameOpeningMarker.
 	 * 
 	 */
 	public void resetShoppingList() {
-		;
+		int lists[][]= new int[][] {{4,0,2,1,3},{3,4,1,0,2},{2,3,0,4,1},{1,2,4,3,0},{0,1,3,2,4}};
+		Random r = new Random();
+		int rand=0;
+		rand=r.nextInt(6-numberOfPlayers);
+		int tmp[][]=Arrays.copyOfRange(lists,rand, rand+numberOfPlayers);
+		Collections.shuffle(Arrays.asList(tmp));
 		for (int i = 0; i < numberOfPlayers; i++) {
-			Random r = new Random();
-			players.get(i).setShoppingList(
-					new int[] { r.nextInt(4) + 1, r.nextInt(4) + 1,
-							r.nextInt(4) + 1, r.nextInt(4) + 1,
-							r.nextInt(4) + 1 });
+			players.get(i).setShoppingList(tmp[i]);
 		}
+		int marker=0;
+		for(int i=0;i<numberOfPlayers;i++){
+			int tab[] = new int[]{0,1,3,2,4};
+			if(Arrays.equals(tmp[i],tab)){
+				marker=i;
+				break;
+			}
+		}
+		this.setGameOpeningMarker(marker);
 	}
 
+	
 	public void setGameOver() {
 		gameOver = true;
 	}

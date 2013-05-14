@@ -57,8 +57,10 @@ public class Game implements Runnable {
 			PreparingToGamePhase();
 			for (int day = 0; !gameOver(); day++) {
 				gameState.setDayNumber(day);
-				if (day != 0)
+				if (day != 0){
 					queuingUpPhase();
+					prepareToQueueJumping();
+				}
 				deliveryPhase();
 				queueJumpingPhase();
 				try {
@@ -351,5 +353,11 @@ public class Game implements Runnable {
 	public Thread getGameThread() {
 		return gameThread;
 	}
+	private void prepareToQueueJumping(){
+		for (Player p : gameState.getPlayersList()) {
+			p.getDeck().getCards(p.getCardsOnHand());
+		}
+	}
+	
 
 }
