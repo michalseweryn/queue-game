@@ -4,6 +4,7 @@
 package queue_game.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -59,6 +60,7 @@ public class Game implements Runnable {
 				if (day != 0)
 					queuingUpPhase();
 				deliveryPhase();
+				queueJumpingPhase();
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -168,6 +170,12 @@ public class Game implements Runnable {
 						System.out.println("CLOSED");
 						break;
 					case COMMUNITY_LIST:
+						try{
+							Collections.reverse(gameState.getStore(requestQueue()).getQueue());
+						}catch(InterruptedException e){
+							System.out.println(e);
+						}
+						
 						System.out.println("USING COMMUNITY LIST");
 						break;
 					case CRITISIZING_AUTHORITIES:
@@ -298,8 +306,7 @@ public class Game implements Runnable {
 		}
 	}
 
-	public void queuingCardSelected(int playerNo, QueuingCard card) {
-		System.out.println("A");
+	public synchronized void queuingCardSelected(int playerNo, QueuingCard card) {
 		if (playerNo != gameState.getActivePlayer())
 			return;
 		if (expectedType == QueuingCard.class) {
