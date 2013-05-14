@@ -4,6 +4,7 @@
 package queue_game.model;
 
 import java.awt.Color;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -104,12 +105,27 @@ public class GameState {
 	 */
 	public void resetShoppingList() {
 		int lists[][]= new int[][] {{4,0,2,1,3},{3,4,1,0,2},{2,3,0,4,1},{1,2,4,3,0},{0,1,3,2,4}};
-		Collections.shuffle(Arrays.asList(lists));
+		//Collections.shuffle(Arrays.asList(lists));
+		int tmp[][]=Arrays.copyOf(lists, numberOfPlayers);
+		Collections.shuffle(Arrays.asList(tmp));
 		for (int i = 0; i < numberOfPlayers; i++) {
-			players.get(i).setShoppingList(lists[i]);
+			players.get(i).setShoppingList(tmp[i]);
 		}
+		int marker=0;
+		for(int i=0;i<numberOfPlayers;i++){
+			int tab[] = new int[]{0,1,3,2,4};
+			if(Arrays.equals(tmp[i],tab)){
+				marker=i;
+				break;
+			}
+		}
+		this.setGameOpeningMarker(marker);
 	}
 
+	/**
+	 * 
+	 * 
+	 */
 	public void setGameOver() {
 		gameOver = true;
 	}
