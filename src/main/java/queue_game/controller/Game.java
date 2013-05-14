@@ -59,7 +59,6 @@ public class Game implements Runnable {
 				gameState.setDayNumber(day);
 				if (day != 0){
 					queuingUpPhase();
-					prepareToQueueJumping();
 				}
 				deliveryPhase();
 				queueJumpingPhase();
@@ -69,6 +68,7 @@ public class Game implements Runnable {
 					return;
 				}
 				openingStoresPhase();
+				PCTPhase();
 			}
 			gameState.setGameOver();
 			updateViews();
@@ -141,8 +141,19 @@ public class Game implements Runnable {
 		}
 		updateViews();
 	}
+	/**
+	 * @author piotr
+	 * 
+	 * 
+	 */
+	private void PCTPhase(){
+		gameState.setCurrentGamePhase(GamePhase.PCT);
+		prepareToQueueJumping();
+		updateViews();
+	}
 
 	/**
+	 * @author piotr
 	 * Third Phase of Day. Each player either plays card or passes. Phase is
 	 * over when all players have passed or there are no cards left.
 	 */
@@ -353,6 +364,9 @@ public class Game implements Runnable {
 	public Thread getGameThread() {
 		return gameThread;
 	}
+	/**
+	 * prepares cards to play
+	 */
 	private void prepareToQueueJumping(){
 		for (Player p : gameState.getPlayersList()) {
 			p.getDeck().getCards(p.getCardsOnHand());
