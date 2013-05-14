@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -14,6 +15,8 @@ import queue_game.View;
 import queue_game.controller.Game;
 import queue_game.model.DeckOfCards;
 import queue_game.model.GameState;
+import queue_game.model.Player;
+import queue_game.model.QueuingCard;
 
 /**
  * @author Jan
@@ -37,8 +40,10 @@ public class JCardsArea extends JPanel implements View{
 	private void addCards(){
 		//for(int i = 0; i < 3; i++)
 		//	cards[i] = gameState.getDeck(gameState.getActivePlayer());
-		for(int i = 0; i < 3; i++){						
-			JQueuingCard temp = new JQueuingCard(gameState.getPlayersList().get((gameState.getActivePlayer())));
+		//for(int i = 0; i < 3; i++){				
+		Player player = gameState.getPlayersList().get((gameState.getActivePlayer()));
+		for(QueuingCard i: gameState.getPlayersList().get((gameState.getActivePlayer())).getCardsOnHand()){
+			JQueuingCard temp = new JQueuingCard(player,i);
 			add(temp);
 		}
 	}
