@@ -299,6 +299,7 @@ public class Game implements Runnable {
 	}
 
 	public void queuingCardSelected(int playerNo, QueuingCard card) {
+		System.out.println("A");
 		if (playerNo != gameState.getActivePlayer())
 			return;
 		if (expectedType == QueuingCard.class) {

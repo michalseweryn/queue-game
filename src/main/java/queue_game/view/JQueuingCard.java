@@ -5,10 +5,13 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import queue_game.controller.Game;
 import queue_game.model.DeckOfCards;
 import queue_game.model.GameState;
 import queue_game.model.Player;
@@ -19,14 +22,16 @@ import queue_game.model.QueuingCard;
  * 
  * 
  */
-public class JQueuingCard extends JPanel {
+public class JQueuingCard extends JPanel implements MouseListener{
 	private static final long serialVersionUID = 6947197330462260996L;
 	private QueuingCard card;
 	private Player player;
-
-	public JQueuingCard(Player player, QueuingCard card) {
+	private Game game;
+	public JQueuingCard(Player player, QueuingCard card,Game game) {
 		this.card = card;
 		this.player = player;
+		this.game = game;
+		addMouseListener(this);
 	}
 
 	@Override
@@ -66,4 +71,15 @@ public class JQueuingCard extends JPanel {
 			g.drawString(card.toString(), size.width / 5, size.height / 2);
 		}
 	}
+	public void mouseClicked(MouseEvent e) {
+		game.queuingCardSelected(player.getID(), card); 
+	}
+	
+	public void mouseEntered(MouseEvent e) {}
+	
+	public void mouseExited(MouseEvent e) {}
+	
+	public void mousePressed(MouseEvent e) {}
+	
+	public void mouseReleased(MouseEvent e) {}
 }
