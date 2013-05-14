@@ -52,8 +52,8 @@ public class Game implements Runnable {
 	 * All Phases of all days.
 	 */
 	public void run() {
-		PreparingToGamePhase();
 		try {
+			PreparingToGamePhase();
 			for (int day = 0; !gameOver(); day++) {
 				gameState.setDayNumber(day);
 				if (day != 0)
@@ -76,20 +76,16 @@ public class Game implements Runnable {
 	/**
 	 * 
 	 * Prepares game to GamePhase: players,products,pawns, shopping_list.
+	 * @throws InterruptedException 
 	 * 
 	 */
-	public void PreparingToGamePhase() {
+	public void PreparingToGamePhase() throws InterruptedException {
 		gameState.reset(nPlayers);
 		gameState.resetNumberOfProducts();
 		gameState.resetPlayers();
 		gameState.resetCards();
 		gameState.resetShoppingList();
-		try {
-			queuingUpPhase();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		queuingUpPhase();
 		for (ProductType pt : ProductType.values()) {
 			gameState.putPawnofSpeculator(pt);
 		}
