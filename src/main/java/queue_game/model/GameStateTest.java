@@ -12,34 +12,18 @@ public class GameStateTest extends TestCase {
 	}
 
 	public void testResetPlayers() {
-
+		GameState g= new GameState();
+		g.reset(5);
+		g.resetPlayers();
+		assertEquals(5,g.getPlayersList().get(1).getNumberOfPawns());
 	}
 
-	public void testResetShoppingList() {
-	
-	}
+
 	public void testPutPawnofSpeculator() {
-		fail("Not yet implemented");
-	}
-
-	public void testPutPlayerPawn() {
-		fail("Not yet implemented");
-	}
-
-	public void testSell() {
-		fail("Not yet implemented");
-	}
-
-	public void testObject() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetClass() {
-		fail("Not yet implemented");
-	}
-
-	public void testHashCode() {
-		fail("Not yet implemented");
+		GameState g= new GameState();
+		g.reset(5);
+		g.putPawnofSpeculator(ProductType.FURNITURE);
+		assertEquals(true,g.getStore(ProductType.FURNITURE).getQueue().contains(-1));
 	}
 
 	
