@@ -5,6 +5,8 @@ package queue_game.model;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -102,15 +104,9 @@ public class GameState {
 	 */
 	public void resetShoppingList() {
 		int lists[][]= new int[][] {{4,0,2,1,3},{3,4,1,0,2},{2,3,0,4,1},{1,2,4,3,0},{0,1,3,2,4}};
-		boolean used[] = new boolean[]{false,false,false,false,false};
+		Collections.shuffle(Arrays.asList(lists));
 		for (int i = 0; i < numberOfPlayers; i++) {
-			Random r = new Random();
-			int list =r.nextInt(5);
-			while(used[list]){
-				list=r.nextInt(5);
-			}
-			players.get(i).setShoppingList(lists[list]);
-			used[list]=true;
+			players.get(i).setShoppingList(lists[i]);
 		}
 	}
 
