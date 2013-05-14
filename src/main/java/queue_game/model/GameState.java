@@ -101,13 +101,16 @@ public class GameState {
 	 * 
 	 */
 	public void resetShoppingList() {
-		;
+		int lists[][]= new int[][] {{4,0,2,1,3},{3,4,1,0,2},{2,3,0,4,1},{1,2,4,3,0},{0,1,3,2,4}};
+		boolean used[] = new boolean[]{false,false,false,false,false};
 		for (int i = 0; i < numberOfPlayers; i++) {
 			Random r = new Random();
-			players.get(i).setShoppingList(
-					new int[] { r.nextInt(4) + 1, r.nextInt(4) + 1,
-							r.nextInt(4) + 1, r.nextInt(4) + 1,
-							r.nextInt(4) + 1 });
+			int list =r.nextInt(5);
+			while(used[list]){
+				list=r.nextInt(5);
+			}
+			players.get(i).setShoppingList(lists[list]);
+			used[list]=true;
 		}
 	}
 
