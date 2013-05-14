@@ -237,6 +237,7 @@ public class Game implements Runnable {
 	 */
 	public synchronized QueuingCard requestQueuingCard() {
 		expectedType = QueuingCard.class;
+		updateViews();
 		while (selectedQueuingCard == null && !pass) {
 			try {
 				wait();
