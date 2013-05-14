@@ -57,6 +57,7 @@ public class Game implements Runnable {
 			for (int day = 0; !gameOver(); day++) {
 				gameState.setDayNumber(day);
 				queuingUpPhase();
+				if(day==0) gameState.putPawnsofSpeculators();
 				deliveryPhase();
 				try {
 					Thread.sleep(1000);

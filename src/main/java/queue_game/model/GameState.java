@@ -204,7 +204,17 @@ public class GameState {
 	public void setPlayersList(ArrayList<Player> players) {
 		this.players = players;
 	}
-
+	/**
+	 * 
+	 * Puts black pawns of speculators to all queues.
+	 * 
+	 */
+	public void putPawnsofSpeculators(){
+		for(ProductType pt : ProductType.values()){
+			this.getStore(pt).getQueue().add(-1);
+		}
+		
+	}
 	/**
 	 *  Puts pawn of one player to given queue
 	 * @param player
