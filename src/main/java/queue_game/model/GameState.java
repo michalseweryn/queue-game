@@ -91,6 +91,7 @@ public class GameState {
 	 * 
 	 */
 	public void resetPlayers() {
+		players.clear();
 		int initialNumberOfPawns = 5;
 		for (int i = 0; i < numberOfPlayers; i++) {
 			players.add(new Player(i, "Gracz " + (i + 1)));  
