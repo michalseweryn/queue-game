@@ -1,6 +1,7 @@
 package queue_game.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 //import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -55,11 +56,11 @@ public class DeckOfCards {
 	 * fills the deck of cards
 	 */
 	public void fill(){
-		for (int i=0; i<10; i++)
-			deck.add(QueuingCard.COMMUNITY_LIST);
-		/*
+		/*for (int i=0; i<10; i++)
+			deck.add(QueuingCard.COMMUNITY_LIST);*/
+		
 		deck.addAll(Arrays.asList(QueuingCard.values()));
-		*/
+		
 	}
 
 }

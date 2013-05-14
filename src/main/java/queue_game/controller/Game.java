@@ -4,6 +4,7 @@
 package queue_game.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -56,9 +57,12 @@ public class Game implements Runnable {
 			PreparingToGamePhase();
 			for (int day = 0; !gameOver(); day++) {
 				gameState.setDayNumber(day);
-				if (day != 0)
+				if (day != 0){
 					queuingUpPhase();
+					prepareToQueueJumping();
+				}
 				deliveryPhase();
+				queueJumpingPhase();
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -154,7 +158,6 @@ public class Game implements Runnable {
 				cardsOnHand = this.getGameState().getPlayersList().get(player)
 						.getCardsOnHand();
 				DeckOfCards myDeck = this.getGameState().getDeck(player);
-				System.out.println(cardsOnHand.size());
 				if (!iPass[player] && cardsOnHand.size() > 0) {
 					gameState.setActivePlayer(player);
 					current = requestQueuingCard();
@@ -166,25 +169,40 @@ public class Game implements Runnable {
 					allPassed = false;
 					switch (current) {
 					case CLOSED_FOR_STOCKTAKING:
+						System.out.println("CLOSED");
 						break;
 					case COMMUNITY_LIST:
+						try{
+							Collections.reverse(gameState.getStore(requestQueue()).getQueue());
+						}catch(InterruptedException e){
+							System.out.println(e);
+						}
+						
 						System.out.println("USING COMMUNITY LIST");
 						break;
 					case CRITISIZING_AUTHORITIES:
+						System.out.println("AUTHORITIES");
 						break;
 					case DELIVERY_ERROR:
+						System.out.println("DELIVERY");
 						break;
 					case INCREASED_DELIVERY:
+						System.out.println("INCREASED");
 						break;
 					case LUCKY_STRIKE:
+						System.out.println("LUCKY");
 						break;
 					case MOTHER_WITH_CHILD:
+						System.out.println("Mother");
 						break;
 					case NOT_YOUR_PLACE:
+						System.out.println("PLACE");
 						break;
 					case TIPPING_FRIEND:
+						System.out.println("TIPING");
 						break;
 					case UNDER_THE_COUNTER_GOODS:
+						System.out.println("GOODS");
 						break;
 					default:
 						break;
@@ -244,6 +262,7 @@ public class Game implements Runnable {
 	 */
 	public synchronized QueuingCard requestQueuingCard() {
 		expectedType = QueuingCard.class;
+		updateViews();
 		while (selectedQueuingCard == null && !pass) {
 			try {
 				wait();
@@ -289,7 +308,7 @@ public class Game implements Runnable {
 		}
 	}
 
-	public void queuingCardSelected(int playerNo, QueuingCard card) {
+	public synchronized void queuingCardSelected(int playerNo, QueuingCard card) {
 		if (playerNo != gameState.getActivePlayer())
 			return;
 		if (expectedType == QueuingCard.class) {
@@ -334,5 +353,11 @@ public class Game implements Runnable {
 	public Thread getGameThread() {
 		return gameThread;
 	}
+	private void prepareToQueueJumping(){
+		for (Player p : gameState.getPlayersList()) {
+			p.getDeck().getCards(p.getCardsOnHand());
+		}
+	}
+	
 
 }

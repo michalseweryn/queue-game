@@ -25,11 +25,13 @@ import queue_game.model.QueuingCard;
  */
 public class JCardsArea extends JPanel implements View{
 	private static final long serialVersionUID = -3804758455470286800L;
-	public GameState gameState;
-	public DeckOfCards[] cards = new DeckOfCards[3];
+	private GameState gameState;
+	private Game game;
+	private DeckOfCards[] cards = new DeckOfCards[3];
 	public JCardsArea(Game game){
 		super();
 		this.gameState = game.getGameState();
+		this.game = game;
 		game.addView(this);
 		FlowLayout layout = new FlowLayout();
 		layout.setVgap(0);
@@ -43,7 +45,7 @@ public class JCardsArea extends JPanel implements View{
 		//for(int i = 0; i < 3; i++){				
 		Player player = gameState.getPlayersList().get((gameState.getActivePlayer()));
 		for(QueuingCard i: gameState.getPlayersList().get((gameState.getActivePlayer())).getCardsOnHand()){
-			JQueuingCard temp = new JQueuingCard(player,i);
+			JQueuingCard temp = new JQueuingCard(player,i,game);
 			add(temp);
 		}
 	}
