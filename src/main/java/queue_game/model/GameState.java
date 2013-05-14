@@ -100,7 +100,7 @@ public class GameState {
 
 	/**
 	 * 
-	 * Create random shopping list.
+	 * Create random shopping list and set gameopeningmarker.
 	 * 
 	 */
 	public void resetShoppingList() {
