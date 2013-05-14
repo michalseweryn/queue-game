@@ -147,6 +147,7 @@ public class Game implements Runnable {
 					% numOfPlayers) {
 				cardsOnHand=this.getGameState().getPlayersList().get(player).getCardsOnHand();
 				DeckOfCards myDeck = this.getGameState().getDeck(player);
+				System.out.println(cardsOnHand.size());
 				if (!iPass[player] && cardsOnHand.size() > 0) {
 					gameState.setActivePlayer(player);
 					current = requestQueuingCard();
@@ -185,6 +186,7 @@ public class Game implements Runnable {
 				}
 			}
 			if (allPassed) {
+				System.out.println("all");
 				break;
 			}
 		}

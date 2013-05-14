@@ -63,6 +63,8 @@ public class GameState {
 	public void resetCards(){
 		for(Player pl : players){
 			pl.setDeck(new DeckOfCards());
+			pl.getDeck().fill();
+			pl.getDeck().shuffle();
 		}
 		for (Player p: players){
 			p.getDeck().getCards(p.getCardsOnHand());
