@@ -44,6 +44,8 @@ public class JCardsArea extends JPanel implements View{
 		//	cards[i] = gameState.getDeck(gameState.getActivePlayer());
 		//for(int i = 0; i < 3; i++){				
 		Player player = gameState.getPlayersList().get((gameState.getActivePlayer()));
+		JButtonPass button = new JButtonPass(gameState.getPlayersList().get((gameState.getActivePlayer())), game);
+		add(button);
 		for(QueuingCard i: gameState.getPlayersList().get((gameState.getActivePlayer())).getCardsOnHand()){
 			JQueuingCard temp = new JQueuingCard(player,i,game);
 			add(temp);
