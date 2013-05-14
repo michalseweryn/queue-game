@@ -124,10 +124,7 @@ public class GameState {
 		this.setGameOpeningMarker(marker);
 	}
 
-	/**
-	 * 
-	 * 
-	 */
+	
 	public void setGameOver() {
 		gameOver = true;
 	}
