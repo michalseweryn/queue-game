@@ -37,7 +37,7 @@ public class Game implements Runnable {
 	public Game() {
 		gameState = new GameState();
 	}
-	
+
 	/**
 	 * Creates new thread for the game.
 	 */
@@ -47,7 +47,7 @@ public class Game implements Runnable {
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
-	
+
 	/**
 	 * All Phases of all days.
 	 */
@@ -56,8 +56,8 @@ public class Game implements Runnable {
 		try {
 			for (int day = 0; !gameOver(); day++) {
 				gameState.setDayNumber(day);
-				queuingUpPhase();
-				if(day==0) gameState.putPawnsofSpeculators();
+				if (day != 0)
+					queuingUpPhase();
 				deliveryPhase();
 				try {
 					Thread.sleep(1000);
@@ -72,23 +72,33 @@ public class Game implements Runnable {
 			return;
 		}
 	}
+
 	/**
 	 * 
 	 * Prepares game to GamePhase: players,products,pawns, shopping_list.
 	 * 
 	 */
-	public void PreparingToGamePhase(){
+	public void PreparingToGamePhase() {
 		gameState.reset(nPlayers);
 		gameState.resetNumberOfProducts();
 		gameState.resetPlayers();
 		gameState.resetCards();
 		gameState.resetShoppingList();
+		try {
+			queuingUpPhase();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for (ProductType pt : ProductType.values()) {
+			gameState.putPawnofSpeculator(pt);
+		}
 	}
-	
+
 	/**
 	 * First Phase of Day. Players select queues to place their pawns while
 	 * there are any pawns left.
-	 *
+	 * 
 	 * @throws InterruptedException
 	 */
 	private void queuingUpPhase() throws InterruptedException {
@@ -133,9 +143,8 @@ public class Game implements Runnable {
 	}
 
 	/**
-	 * Third Phase of Day. Each player either plays card or passes. 
-	 * Phase is over when all players have passed or there are no
-	 * cards left.
+	 * Third Phase of Day. Each player either plays card or passes. Phase is
+	 * over when all players have passed or there are no cards left.
 	 */
 	public void queueJumpingPhase() {
 		gameState.setCurrentGamePhase(GamePhase.JUMPING);
@@ -146,7 +155,8 @@ public class Game implements Runnable {
 			boolean allPassed = true;
 			for (int player = gameState.getGameOpeningMarker(), i = 0; i < numOfPlayers; i++, player = (player + 1)
 					% numOfPlayers) {
-				cardsOnHand=this.getGameState().getPlayersList().get(player).getCardsOnHand();
+				cardsOnHand = this.getGameState().getPlayersList().get(player)
+						.getCardsOnHand();
 				DeckOfCards myDeck = this.getGameState().getDeck(player);
 				System.out.println(cardsOnHand.size());
 				if (!iPass[player] && cardsOnHand.size() > 0) {
@@ -199,8 +209,8 @@ public class Game implements Runnable {
 	}
 
 	/**
-	 * Fourth Phase of Day. For each store with products, removes the right amount of product and
-	 * pawns.
+	 * Fourth Phase of Day. For each store with products, removes the right
+	 * amount of product and pawns.
 	 * 
 	 * @author Jan
 	 */
@@ -306,7 +316,7 @@ public class Game implements Runnable {
 	public void addView(View view) {
 		views.add(view);
 	}
-	
+
 	/**
 	 * Informs all views about changes in model.
 	 */
