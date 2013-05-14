@@ -21,7 +21,7 @@ import queue_game.model.GameState;
  */
 public class ProductPanel extends JComponent{
 	private static final long serialVersionUID = -3084430883046487464L;
-	private Integer numberOfProducts[]= new Integer[5];
+	private int[] numberOfProducts= new int[5];
 	public Color[] colors;
 	public ProductPanel(Game game,JBoard board){
 		numberOfProducts = game.getGameState().getNumberOfProducts();
@@ -63,11 +63,11 @@ public class ProductPanel extends JComponent{
 		g2d.setColor(Color.BLACK);
 		g2d.draw(rect);
 		g.setFont(new Font("default", Font.BOLD, 14));
-		g2d.drawString(numberOfProducts[0].toString(), widthOfField/2-5, 20);
-		g2d.drawString(numberOfProducts[1].toString(), (widthOfField/2)*3-5, 20);
-		g2d.drawString(numberOfProducts[2].toString(), (widthOfField/2)*5-5, 20);
-		g2d.drawString(numberOfProducts[3].toString(), (widthOfField/2)*7-5, 20);
-		g2d.drawString(numberOfProducts[4].toString(), (widthOfField/2)*9-5, 20);
+		g2d.drawString(Integer.toString(numberOfProducts[0]), widthOfField/2-5, 20);
+		g2d.drawString(Integer.toString(numberOfProducts[1]), (widthOfField/2)*3-5, 20);
+		g2d.drawString(Integer.toString(numberOfProducts[2]), (widthOfField/2)*5-5, 20);
+		g2d.drawString(Integer.toString(numberOfProducts[3]), (widthOfField/2)*7-5, 20);
+		g2d.drawString(Integer.toString(numberOfProducts[4]), (widthOfField/2)*9-5, 20);
 	}
 	
 

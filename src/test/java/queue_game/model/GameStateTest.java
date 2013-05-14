@@ -92,26 +92,23 @@ public class GameStateTest {
 
 	@Test
 	public void resetNumberOfProductsTest2() {
-		GameState g= new GameState();
-		g.resetNumberOfProducts();
-		Integer tab[]=g.getNumberOfProducts();
+		gameState.resetNumberOfProducts();
+		int[] tab=gameState.getNumberOfProducts();
 		assertEquals(new Integer(50),tab[2]);
 	}
 
 	@Test
 	public void resetPlayersTest2() {
-		GameState g= new GameState();
-		g.reset(5);
-		g.resetPlayers();
-		assertEquals(5,g.getPlayersList().get(1).getNumberOfPawns());
+		gameState.reset(5);
+		gameState.resetPlayers();
+		assertEquals(5,gameState.getPlayersList().get(1).getNumberOfPawns());
 	}
 
 	@Test
 	public void putPawnofSpeculatorTest() {
-		GameState g= new GameState();
-		g.reset(5);
-		g.putPawnofSpeculator(ProductType.FURNITURE);
-		assertEquals(true,g.getStore(ProductType.FURNITURE).getQueue().contains(-1));
+		gameState.reset(5);
+		gameState.putPawnofSpeculator(ProductType.FURNITURE);
+		assertEquals(true,gameState.getStore(ProductType.FURNITURE).getQueue().contains(-1));
 	}
 
 }

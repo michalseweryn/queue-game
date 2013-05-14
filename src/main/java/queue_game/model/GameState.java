@@ -34,7 +34,7 @@ public class GameState {
 	private int activePlayer = 0;
 	private boolean gameOver;
 	private Store[] stores;
-	private Integer numberOfProducts[] = new Integer[5];
+	private int[] numberOfProducts = new int[5];
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private GamePhase currentGamePhase = null;
 
@@ -213,11 +213,11 @@ public class GameState {
 		return players.get(player).getNumberOfPawns();
 	}
 
-	public Integer[] getNumberOfProducts() {
+	public int[] getNumberOfProducts() {
 		return numberOfProducts;
 	}
 
-	public void setNumberOfProducts(Integer[] numberOfProducts) {
+	public void setNumberOfProducts(int[] numberOfProducts) {
 		this.numberOfProducts = numberOfProducts;
 	}
 

@@ -135,7 +135,7 @@ public class Game implements Runnable {
 			ProductType type = ProductType.values()[rand];
 			Store deliveredStore = gameState.getStore(type);
 			deliveredStore.addProducts(1);
-			Integer numberOfProducts[] = gameState.getNumberOfProducts();
+			int[] numberOfProducts = gameState.getNumberOfProducts();
 			numberOfProducts[type.ordinal()] = numberOfProducts[type.ordinal()] - 1;
 			gameState.setNumberOfProducts(numberOfProducts);
 		}
