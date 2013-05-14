@@ -105,8 +105,12 @@ public class GameState {
 	 */
 	public void resetShoppingList() {
 		int lists[][]= new int[][] {{4,0,2,1,3},{3,4,1,0,2},{2,3,0,4,1},{1,2,4,3,0},{0,1,3,2,4}};
-		//Collections.shuffle(Arrays.asList(lists));
-		int tmp[][]=Arrays.copyOf(lists, numberOfPlayers);
+		Random r = new Random();
+		int rand=0;
+		if(numberOfPlayers!=5){
+			 rand=r.nextInt(5-numberOfPlayers);
+		}
+		int tmp[][]=Arrays.copyOfRange(lists,rand, rand+numberOfPlayers);
 		Collections.shuffle(Arrays.asList(tmp));
 		for (int i = 0; i < numberOfPlayers; i++) {
 			players.get(i).setShoppingList(tmp[i]);
