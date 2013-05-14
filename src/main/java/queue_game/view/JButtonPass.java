@@ -64,7 +64,9 @@ public class JButtonPass extends JPanel implements MouseListener{
 		g.drawString("PASS", size.width / 5, size.height /2);
 		
 	}
-	public void mouseClicked(MouseEvent e) {}
+	public void mouseClicked(MouseEvent e) {
+		game.queuingCardSelected(player.getID(), null); 
+	}
 	
 	public void mouseEntered(MouseEvent e) {}
 	
