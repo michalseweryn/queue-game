@@ -62,7 +62,7 @@ public class Game implements Runnable {
 					prepareToQueueJumping();
 				}
 				deliveryPhase();
-				queueJumpingPhase();
+				if(day!=0) queueJumpingPhase();
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
