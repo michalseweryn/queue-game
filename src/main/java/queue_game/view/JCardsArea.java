@@ -6,14 +6,15 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
-import javax.swing.JComponent;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import queue_game.View;
 import queue_game.controller.Game;
-import queue_game.model.DeckOfCards;
 import queue_game.model.GameState;
 import queue_game.model.Player;
 import queue_game.model.QueuingCard;
@@ -27,7 +28,6 @@ public class JCardsArea extends JPanel implements View{
 	private static final long serialVersionUID = -3804758455470286800L;
 	private GameState gameState;
 	private Game game;
-	private DeckOfCards[] cards = new DeckOfCards[3];
 	public JCardsArea(Game game){
 		super();
 		this.gameState = game.getGameState();
@@ -42,10 +42,19 @@ public class JCardsArea extends JPanel implements View{
 	private void addCards(){
 		//for(int i = 0; i < 3; i++)
 		//	cards[i] = gameState.getDeck(gameState.getActivePlayer());
-		//for(int i = 0; i < 3; i++){				
+		//for(int i = 0; i < 3; i++){			
+		List<QueuingCard> cards = gameState.getPlayersList().get((gameState.getActivePlayer())).getCardsOnHand();
 		Player player = gameState.getPlayersList().get((gameState.getActivePlayer()));
-		JButtonPass button = new JButtonPass(gameState.getPlayersList().get((gameState.getActivePlayer())), game);
-		add(button);
+		if(cards.size() > 0){
+			JButton button = new JButton("PASS");
+			button.addActionListener(new ActionListener(){
+
+				public void actionPerformed(ActionEvent e) {
+					game.queuingCardSelected(gameState.getActivePlayer(), null); 
+				}
+			});
+			add(button);
+		}
 		for(QueuingCard i: gameState.getPlayersList().get((gameState.getActivePlayer())).getCardsOnHand()){
 			JQueuingCard temp = new JQueuingCard(player,i,game);
 			add(temp);
@@ -83,6 +92,7 @@ public class JCardsArea extends JPanel implements View{
 		removeAll();
 		addCards();
 		revalidate();
+		repaint();
 	}
 	
 
