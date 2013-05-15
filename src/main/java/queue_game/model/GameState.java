@@ -4,7 +4,6 @@
 package queue_game.model;
 
 import java.awt.Color;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,7 +44,7 @@ public class GameState {
 			stores[ind++] = new Store(product);
 	}
 
-	public void reset(int nPlayers) {
+	public synchronized void reset(int nPlayers) {
 		dayNumber = 0;
 		gameOpeningMarker = 0;
 		activePlayer = 0;
@@ -63,7 +62,7 @@ public class GameState {
 	 * Reset cards of all players.
 	 * 
 	 */
-	public void resetCards() {
+	public synchronized void resetCards() {
 		for (Player pl : players) {
 			pl.setDeck(new DeckOfCards());
 			pl.getDeck().fill();
@@ -79,7 +78,7 @@ public class GameState {
 	 * Resets number of products with our favorite number.
 	 * 
 	 */
-	public void resetNumberOfProducts() {
+	public synchronized void resetNumberOfProducts() {
 		for (ProductType i : ProductType.values()) {
 			numberOfProducts[i.ordinal()] = 50;
 		}
@@ -90,7 +89,7 @@ public class GameState {
 	 * Create new players and adds them pawns.
 	 * 
 	 */
-	public void resetPlayers() {
+	public synchronized void resetPlayers() {
 		players.clear();
 		int initialNumberOfPawns = 5;
 		for (int i = 0; i < numberOfPlayers; i++) {
@@ -104,7 +103,7 @@ public class GameState {
 	 * Create random shopping list and set gameOpeningMarker.
 	 * 
 	 */
-	public void resetShoppingList() {
+	public synchronized void resetShoppingList() {
 		int lists[][]= new int[][] {{4,0,2,1,3},{3,4,1,0,2},{2,3,0,4,1},{1,2,4,3,0},{0,1,3,2,4}};
 		Random r = new Random();
 		int rand=0;
@@ -126,18 +125,18 @@ public class GameState {
 	}
 
 	
-	public void setGameOver() {
+	public synchronized void setGameOver() {
 		gameOver = true;
 	}
 
-	public boolean isGameOver() {
+	public synchronized boolean isGameOver() {
 		return gameOver;
 	}
 
 	/**
 	 * @return the gameOpeningMarker
 	 */
-	public int getGameOpeningMarker() {
+	public synchronized int getGameOpeningMarker() {
 		return gameOpeningMarker;
 	}
 
@@ -145,14 +144,14 @@ public class GameState {
 	 * @param gameOpeningMarker
 	 *            the gameOpeningMarker to set
 	 */
-	public void setGameOpeningMarker(int gameOpeningMarker) {
+	public synchronized void setGameOpeningMarker(int gameOpeningMarker) {
 		this.gameOpeningMarker = gameOpeningMarker;
 	}
 
 	/**
 	 * @return the dayNumber
 	 */
-	public int getDayNumber() {
+	public synchronized int getDayNumber() {
 		return dayNumber;
 	}
 
@@ -160,72 +159,72 @@ public class GameState {
 	 * @param dayNumber
 	 *            the dayNumber to set
 	 */
-	public void setDayNumber(int dayNumber) {
+	public synchronized void setDayNumber(int dayNumber) {
 		this.dayNumber = dayNumber;
 	}
 
 	/**
 	 * @return the stores
 	 */
-	public Store[] getStores() {
+	public synchronized Store[] getStores() {
 		return stores;
 	}
 
-	public DeckOfCards getDeck(int playerNr) {
+	public synchronized DeckOfCards getDeck(int playerNr) {
 		return players.get(playerNr).getDeck();
 	}
 
-	public Store getStore(ProductType product) {
+	public synchronized Store getStore(ProductType product) {
 		return stores[product.ordinal()];
 	}
 
-	public void setNumberOfPlayers(int nPlayers) {
+	public synchronized void setNumberOfPlayers(int nPlayers) {
 		numberOfPlayers = nPlayers;
 	}
 
-	public int getNumberOfPlayers() {
+	public synchronized int getNumberOfPlayers() {
 		return numberOfPlayers;
 	}
 
-	public GamePhase getCurrentGamePhase() {
+	public synchronized GamePhase getCurrentGamePhase() {
 		return currentGamePhase;
 	}
 
-	public void setCurrentGamePhase(GamePhase phase) {
+	public synchronized void setCurrentGamePhase(GamePhase phase) {
 		currentGamePhase = phase;
 	}
 
 	/**
 	 * @return ID of player whose turn is now.
 	 */
-	public int getActivePlayer() {
+	public synchronized int getActivePlayer() {
 		return activePlayer;
 	}
 
 	/**
 	 * Sets ID of player whose turn is now.
 	 */
-	public void setActivePlayer(int id) {
+	public synchronized void setActivePlayer(int id) {
 		activePlayer = id;
 	}
 
-	public int getNumberOfPawns(int player) {
+	public synchronized int getNumberOfPawns(int player) {
 		return players.get(player).getNumberOfPawns();
 	}
 
-	public int[] getNumberOfProducts() {
+	public synchronized int[] getNumberOfProducts() {
 		return numberOfProducts;
 	}
 
-	public void setNumberOfProducts(int[] numberOfProducts) {
+	public synchronized void setNumberOfProducts(int[] numberOfProducts) {
 		this.numberOfProducts = numberOfProducts;
 	}
 
-	public ArrayList<Player> getPlayersList() {
+	public synchronized ArrayList<Player> getPlayersList() {
 		return players;
 	}
 
-	public void setPlayersList(ArrayList<Player> players) {
+	public synchronized void setPlayersList(ArrayList<Player> players) {
 		this.players = players;
 	}
 
@@ -234,7 +233,7 @@ public class GameState {
 	 * Puts black pawns of speculators to all queues.
 	 * 
 	 */
-	public void putPawnofSpeculator(ProductType dest) {
+	public synchronized void putPawnofSpeculator(ProductType dest) {
 		this.getStore(dest).getQueue().add(-1);
 	}
 
@@ -245,7 +244,7 @@ public class GameState {
 	 * @param destination
 	 */
 
-	public void putPlayerPawn(int player, ProductType destination) {
+	public synchronized void putPlayerPawn(int player, ProductType destination) {
 		if (player < 0 || player >= numberOfPlayers)
 			throw new IllegalArgumentException("No such Player: " + player);
 		int nPawns = getNumberOfPawns(player);
@@ -259,7 +258,7 @@ public class GameState {
 	/**
 	 * @param type
 	 */
-	public void sell(ProductType type) {
+	public synchronized void sell(ProductType type) {
 		Store store = getStore(type);
 		if (store.getQueue().isEmpty())
 			throw new IllegalArgumentException("Empty queue");
