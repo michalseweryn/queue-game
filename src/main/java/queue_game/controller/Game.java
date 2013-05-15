@@ -62,11 +62,6 @@ public class Game implements Runnable {
 				}
 				deliveryPhase();
 				queueJumpingPhase();
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					return;
-				}
 				openingStoresPhase();
 				PCTPhase();
 			}
@@ -139,7 +134,6 @@ public class Game implements Runnable {
 			numberOfProducts[type.ordinal()] = numberOfProducts[type.ordinal()] - 1;
 			gameState.setNumberOfProducts(numberOfProducts);
 		}
-		updateViews();
 	}
 	/**
 	 * @author piotr
@@ -149,7 +143,6 @@ public class Game implements Runnable {
 	private void PCTPhase(){
 		gameState.setCurrentGamePhase(GamePhase.PCT);
 		prepareToQueueJumping();
-		updateViews();
 	}
 
 	/**
@@ -157,7 +150,7 @@ public class Game implements Runnable {
 	 * Third Phase of Day. Each player either plays card or passes. Phase is
 	 * over when all players have passed or there are no cards left.
 	 */
-	public void queueJumpingPhase() {
+	public void queueJumpingPhase() throws InterruptedException{
 		gameState.setCurrentGamePhase(GamePhase.JUMPING);
 		final int numOfPlayers = gameState.getNumberOfPlayers();
 		ArrayList<QueuingCard> cardsOnHand;
@@ -183,12 +176,7 @@ public class Game implements Runnable {
 						System.out.println("CLOSED");
 						break;
 					case COMMUNITY_LIST:
-						try{
 							Collections.reverse(gameState.getStore(requestQueue()).getQueue());
-						}catch(InterruptedException e){
-							System.out.println(e);
-						}
-						
 						System.out.println("USING COMMUNITY LIST");
 						break;
 					case CRITISIZING_AUTHORITIES:
@@ -244,7 +232,6 @@ public class Game implements Runnable {
 			while (gameState.getStore(type).getQueue().size() > 0
 					&& gameState.getStore(type).getNumberOf() > 0)
 				gameState.sell(type);
-		updateViews();
 	}
 
 	/**
@@ -271,16 +258,11 @@ public class Game implements Runnable {
 	 * @return destination of selected queue.
 	 * @throws InterruptedException
 	 */
-	public synchronized QueuingCard requestQueuingCard() {
+	public synchronized QueuingCard requestQueuingCard() throws InterruptedException {
 		expectedType = QueuingCard.class;
 		updateViews();
-		while (selectedQueuingCard == null && !pass) {
-			try {
+		while (selectedQueuingCard == null && !pass) 
 				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 		expectedType = null;
 		QueuingCard card = selectedQueuingCard;
 		selectedQueuingCard = null;
