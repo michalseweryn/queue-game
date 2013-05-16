@@ -186,6 +186,11 @@ public class Game implements Runnable {
 						System.out.println("DELIVERY");
 						break;
 					case INCREASED_DELIVERY:
+						Store store = gameState.getStore(requestQueue());
+						while(store.getNumberOf()==0){
+							store =gameState.getStore(requestQueue());
+						}
+						store.addProduct(store.productType);
 						System.out.println("INCREASED");
 						break;
 					case LUCKY_STRIKE:
