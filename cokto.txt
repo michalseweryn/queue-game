@@ -1,0 +1,35 @@
+Co kto zrobił
+sklepy:
+	view - Szymon
+	model - Piotr
+pionki:
+	model, view - Helena
+kolejki (view):
+	Michał
+dostawa + produkty:
+	Krzysztof
+
+test skelpu, pierwszej fazy: 
+	Helena
+
+otwarcie sklepu:
+	Jan
+
+Przepychanki + Karty akcji:
+	Piotr
+	
+Panel z ilością pozostałych towarów:
+	Helena
+
+Panel na karty akcji:
+	Jan
+
+Panel z listą graczy:
+	Krzysztof
+
+Listy zakupów:
+	Helena
+
+
+
+
