@@ -30,6 +30,9 @@ Panel z listą graczy:
 Listy zakupów:
 	Helena
 
+Testy:
+	Szymon
+
 
 
 
