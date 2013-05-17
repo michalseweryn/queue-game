@@ -13,7 +13,6 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import queue_game.View;
 import queue_game.controller.Game;
 import queue_game.model.GameState;
 import queue_game.model.Player;
@@ -32,7 +31,6 @@ public class JCardsArea extends JPanel implements View{
 		super();
 		this.gameState = game.getGameState();
 		this.game = game;
-		game.addView(this);
 		FlowLayout layout = new FlowLayout();
 		layout.setVgap(0);
 		layout.setHgap(0);

@@ -10,7 +10,6 @@ import java.awt.Rectangle;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import queue_game.View;
 import queue_game.controller.Game;
 import queue_game.model.GameState;
 import queue_game.model.Store;

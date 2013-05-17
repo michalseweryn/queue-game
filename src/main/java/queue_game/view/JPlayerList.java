@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import queue_game.View;
 import queue_game.controller.Game;
 import queue_game.model.GameState;
 import queue_game.model.Player;
@@ -22,7 +21,6 @@ public class JPlayerList extends JPanel implements View {
 	public JPlayerList(Game game) {
 		super();
 		this.gameState = game.getGameState();
-		game.addView(this);
 		FlowLayout layout = new FlowLayout();
 		layout.setVgap(0);
 		layout.setHgap(0);
