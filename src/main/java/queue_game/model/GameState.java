@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -36,6 +37,7 @@ public class GameState {
 	private int[] numberOfProducts = new int[5];
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private GamePhase currentGamePhase = null;
+	private ArrayList<GameAction> actions = new ArrayList<GameAction>();
 
 	public GameState() {
 		stores = new Store[ProductType.values().length];
@@ -228,6 +230,14 @@ public class GameState {
 		this.players = players;
 	}
 
+	public synchronized void addPlayerAction(GameAction action) {
+		actions.add(action);
+	}
+
+	public synchronized List<GameAction> getPlayerActions() {
+		return actions;
+	}
+
 	/**
 	 * 
 	 * Puts black pawns of speculators to all queues.
@@ -258,7 +268,7 @@ public class GameState {
 	/**
 	 * @param type
 	 */
-	public synchronized void sell(ProductType type) {
+	public synchronized int sell(ProductType type) {
 		Store store = getStore(type);
 		if (store.getQueue().isEmpty())
 			throw new IllegalArgumentException("Empty queue");
@@ -272,7 +282,7 @@ public class GameState {
 		if (player == -1) {
 			this.putPawnofSpeculator(type);
 		}
-
+		return player;
 	}
 
 }

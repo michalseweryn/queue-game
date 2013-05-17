@@ -13,6 +13,8 @@ import queue_game.model.DeckOfCards;
 import queue_game.model.GamePhase;
 import queue_game.model.GameState;
 import queue_game.model.Player;
+import queue_game.model.GameAction;
+import queue_game.model.GameActionType;
 import queue_game.model.ProductType;
 import queue_game.model.QueuingCard;
 import queue_game.model.Store;
@@ -66,6 +68,7 @@ public class Game implements Runnable {
 				PCTPhase();
 			}
 			gameState.setGameOver();
+			newAction(GameActionType.GAME_OVER);
 			updateViews();
 		} catch (InterruptedException e) {
 			return;
@@ -87,6 +90,7 @@ public class Game implements Runnable {
 		queuingUpPhase();
 		for (ProductType pt : ProductType.values()) {
 			gameState.putPawnofSpeculator(pt);
+			newAction(GameActionType.PAWN_PLACED, 0, pt.ordinal());
 		}
 	}
 
@@ -105,7 +109,9 @@ public class Game implements Runnable {
 					% gameState.getNumberOfPlayers()) {
 				if (gameState.getNumberOfPawns(player) > 0) {
 					gameState.setActivePlayer(player);
-					gameState.putPlayerPawn(player, requestQueue());
+					ProductType queue = requestQueue();
+					gameState.putPlayerPawn(player, queue);
+					newAction(GameActionType.PAWN_PLACED, player + 1, queue.ordinal());
 					timeSinceLastPawnLocation = 0;
 				} else {
 					timeSinceLastPawnLocation++;
@@ -130,6 +136,7 @@ public class Game implements Runnable {
 			ProductType type = ProductType.values()[rand];
 			Store deliveredStore = gameState.getStore(type);
 			deliveredStore.addProducts(1);
+			newAction(GameActionType.PRODUCT_DELIVERED, type.ordinal(), 1);
 			int[] numberOfProducts = gameState.getNumberOfProducts();
 			numberOfProducts[type.ordinal()] = numberOfProducts[type.ordinal()] - 1;
 			gameState.setNumberOfProducts(numberOfProducts);
@@ -167,6 +174,7 @@ public class Game implements Runnable {
 					current = requestQueuingCard();
 					if (current == null) {
 						myDeck.iPass(cardsOnHand);
+						newAction(GameActionType.PASSED, player + 1);
 						continue;
 					}
 					cardsOnHand.remove(current);
@@ -174,15 +182,20 @@ public class Game implements Runnable {
 					switch (current) {
 					case CLOSED_FOR_STOCKTAKING:
 						System.out.println("CLOSED");
+						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
 						break;
 					case COMMUNITY_LIST:
-							Collections.reverse(gameState.getStore(requestQueue()).getQueue());
+						ProductType queue = requestQueue();
+						Collections.reverse(gameState.getStore(queue).getQueue());
+						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal(), queue.ordinal());
 						System.out.println("USING COMMUNITY LIST");
 						break;
 					case CRITISIZING_AUTHORITIES:
+						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
 						System.out.println("AUTHORITIES");
 						break;
 					case DELIVERY_ERROR:
+						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
 						System.out.println("DELIVERY");
 						break;
 					case INCREASED_DELIVERY:
@@ -191,21 +204,27 @@ public class Game implements Runnable {
 							store =gameState.getStore(requestQueue());
 						}
 						store.addProduct(store.productType);
+						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal(), store.productType.ordinal());
 						System.out.println("INCREASED");
 						break;
 					case LUCKY_STRIKE:
+						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
 						System.out.println("LUCKY");
 						break;
 					case MOTHER_WITH_CHILD:
+						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
 						System.out.println("Mother");
 						break;
 					case NOT_YOUR_PLACE:
+						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
 						System.out.println("PLACE");
 						break;
 					case TIPPING_FRIEND:
+						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
 						System.out.println("TIPING");
 						break;
 					case UNDER_THE_COUNTER_GOODS:
+						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
 						System.out.println("GOODS");
 						break;
 					default:
@@ -236,7 +255,7 @@ public class Game implements Runnable {
 		for (ProductType type : ProductType.values())
 			while (gameState.getStore(type).getQueue().size() > 0
 					&& gameState.getStore(type).getNumberOf() > 0)
-				gameState.sell(type);
+				newAction(GameActionType.PRODUCT_BOUGHT, gameState.sell(type) + 1, type.ordinal());
 	}
 
 	/**
@@ -358,6 +377,14 @@ public class Game implements Runnable {
 		for (Player p : gameState.getPlayersList()) {
 			p.getDeck().getCards(p.getCardsOnHand());
 		}
+	}
+	/**
+	 * Adds a PlayerAction to the list and writes it to a socket when network playing
+	 * @param action action to be handled
+	 */
+	private void newAction(GameActionType type, int... info) {
+		GameAction action = new GameAction(type, info);
+		gameState.addPlayerAction(action);
 	}
 	
 
