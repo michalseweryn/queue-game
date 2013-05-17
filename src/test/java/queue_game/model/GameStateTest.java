@@ -94,7 +94,7 @@ public class GameStateTest {
 	public void resetNumberOfProductsTest2() {
 		gameState.resetNumberOfProducts();
 		int[] tab=gameState.getNumberOfProducts();
-		assertEquals(new Integer(50),tab[2]);
+		assertEquals(50,tab[2]);
 	}
 
 	@Test

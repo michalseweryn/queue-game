@@ -1,48 +1,35 @@
 package queue_game.model;
 
-import java.util.Arrays;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class PlayerTest {
-	
-	boolean arraysEquals(int[] a, int []b) {
-		return Arrays.toString(a) == Arrays.toString(b);
-	}
-	
-	
-	
-	
 	private Player player;
 
 	@Before
 	public void setUp() throws Exception {
 		player = new Player(0, "Test player");
 	}
-	
+
 	@Test
 	public void setShoppingListTest() {
 		int[] shoppingList = new int[] {0, 1, 2, 3, 4};
 		player.setShoppingList(shoppingList);
-		assert arraysEquals(shoppingList, 
-				player.getShoppingList());
+		assertArrayEquals(shoppingList, player.getShoppingList());
 		shoppingList = new int[] {1, 2, 3, 4, 0};
 		player.setShoppingList(shoppingList);
-		assert arraysEquals(shoppingList, 
-				player.getShoppingList());
+		assertArrayEquals(shoppingList, player.getShoppingList());
 		shoppingList = new int[] {2, 3, 4, 0, 1};
 		player.setShoppingList(shoppingList);
-		assert arraysEquals(shoppingList, 
-				player.getShoppingList());
+		assertArrayEquals(shoppingList, player.getShoppingList());
 		shoppingList = new int[] {3, 4, 0, 1, 2};
 		player.setShoppingList(shoppingList);
-		assert arraysEquals(shoppingList, 
-				player.getShoppingList());
+		assertArrayEquals(shoppingList, player.getShoppingList());
 		shoppingList = new int[] {4, 0, 1, 2, 3};
 		player.setShoppingList(shoppingList);
-		assert arraysEquals(shoppingList, 
-				player.getShoppingList());
+		assertArrayEquals(shoppingList, player.getShoppingList());
 	}
 
 	@Test(expected = IllegalArgumentException.class)

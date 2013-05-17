@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import queue_game.View;
 import queue_game.model.DeckOfCards;
 import queue_game.model.GamePhase;
 import queue_game.model.GameState;
@@ -17,6 +16,7 @@ import queue_game.model.Player;
 import queue_game.model.ProductType;
 import queue_game.model.QueuingCard;
 import queue_game.model.Store;
+import queue_game.view.View;
 
 /**
  * @author michal

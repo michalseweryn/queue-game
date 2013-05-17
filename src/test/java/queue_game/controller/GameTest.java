@@ -1,9 +1,9 @@
 package queue_game.controller;
 
-import queue_game.View;
 import queue_game.model.GamePhase;
 import queue_game.model.ProductType;
 import queue_game.view.JBoard;
+import queue_game.view.View;
 import junit.framework.TestCase;
 
 public class GameTest extends TestCase {

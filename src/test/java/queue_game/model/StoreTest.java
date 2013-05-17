@@ -17,10 +17,10 @@ public class StoreTest {
 	public void addPawnTest() {
 		store.addPawn(0);
 		store.addPawn(1);
-		assertEquals(0, store.getQueue().getFirst());
-		assertEquals(1, store.getQueue().getLast());
+		assertEquals(0, (int) store.getQueue().getFirst());
+		assertEquals(1, (int) store.getQueue().getLast());
 		store.addPawn(2);
-		assertEquals(2, store.getQueue().getLast());
+		assertEquals(2, (int) store.getQueue().getLast());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
