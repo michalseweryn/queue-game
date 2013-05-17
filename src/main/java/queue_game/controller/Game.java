@@ -236,6 +236,9 @@ public class Game implements Runnable {
 							gameState.getPlayersList().get(player).setNumberOfPawns(nPawns + 1);
 							gameState.getPlayersList().get(player).addProduct(store1.productType);
 						}
+						else{
+							System.out.println("Niestety uzycie karty niemozliwe");
+						}
 						System.out.println("GOODS");
 						break;
 					default:
