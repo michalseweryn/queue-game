@@ -57,7 +57,7 @@ public class Game implements Runnable {
 			PreparingToGamePhase();
 			for (int day = 0; !gameOver(); day++) {
 				gameState.setDayNumber(day);
-				if (day != 0){
+				if (day != 0) {
 					queuingUpPhase();
 				}
 				deliveryPhase();
@@ -75,7 +75,8 @@ public class Game implements Runnable {
 	/**
 	 * 
 	 * Prepares game to GamePhase: players,products,pawns, shopping_list.
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 * 
 	 */
 	public void PreparingToGamePhase() throws InterruptedException {
@@ -135,22 +136,23 @@ public class Game implements Runnable {
 			gameState.setNumberOfProducts(numberOfProducts);
 		}
 	}
+
 	/**
 	 * @author piotr
 	 * 
 	 * 
 	 */
-	private void PCTPhase(){
+	private void PCTPhase() {
 		gameState.setCurrentGamePhase(GamePhase.PCT);
 		prepareToQueueJumping();
 	}
 
 	/**
-	 * @author piotr
-	 * Third Phase of Day. Each player either plays card or passes. Phase is
-	 * over when all players have passed or there are no cards left.
+	 * @author piotr Third Phase of Day. Each player either plays card or
+	 *         passes. Phase is over when all players have passed or there are
+	 *         no cards left.
 	 */
-	public void queueJumpingPhase() throws InterruptedException{
+	public void queueJumpingPhase() throws InterruptedException {
 		gameState.setCurrentGamePhase(GamePhase.JUMPING);
 		final int numOfPlayers = gameState.getNumberOfPlayers();
 		ArrayList<QueuingCard> cardsOnHand;
@@ -176,19 +178,27 @@ public class Game implements Runnable {
 						System.out.println("CLOSED");
 						break;
 					case COMMUNITY_LIST:
-							Collections.reverse(gameState.getStore(requestQueue()).getQueue());
+						Collections.reverse(gameState.getStore(requestQueue())
+								.getQueue());
 						System.out.println("USING COMMUNITY LIST");
 						break;
 					case CRITISIZING_AUTHORITIES:
 						System.out.println("AUTHORITIES");
 						break;
 					case DELIVERY_ERROR:
+						Store store2 = gameState.getStore(requestQueue());
+						while (store2.getNumberOf() == 0) {
+							store2 = gameState.getStore(requestQueue());
+						}
+						store2.removeProducts(1);
+						Store store3 = gameState.getStore(requestQueue());
+						store3.addProduct(store2.productType);
 						System.out.println("DELIVERY");
 						break;
 					case INCREASED_DELIVERY:
 						Store store = gameState.getStore(requestQueue());
-						while(store.getNumberOf()==0){
-							store =gameState.getStore(requestQueue());
+						while (store.getNumberOf() == 0) {
+							store = gameState.getStore(requestQueue());
 						}
 						store.addProduct(store.productType);
 						System.out.println("INCREASED");
@@ -206,6 +216,26 @@ public class Game implements Runnable {
 						System.out.println("TIPING");
 						break;
 					case UNDER_THE_COUNTER_GOODS:
+						boolean isproductAndplayer = false;
+						for (Store s : gameState.getStores()) {
+							if (s.getNumberOf() != 0
+									&& s.getQueue().getFirst() == player) {
+								isproductAndplayer = true;
+								break;
+							}
+						}
+						if (isproductAndplayer) {
+							Store store1 = gameState.getStore(requestQueue());
+							while (store1.getNumberOf() == 0
+									|| store1.getQueue().getFirst() != player) {
+								store1 = gameState.getStore(requestQueue());
+							}
+							store1.getQueue().pop();
+							store1.removeProducts(1);
+							int nPawns = gameState.getNumberOfPawns(player);
+							gameState.getPlayersList().get(player).setNumberOfPawns(nPawns + 1);
+							gameState.getPlayersList().get(player).addProduct(store1.productType);
+						}
 						System.out.println("GOODS");
 						break;
 					default:
@@ -263,11 +293,12 @@ public class Game implements Runnable {
 	 * @return destination of selected queue.
 	 * @throws InterruptedException
 	 */
-	public synchronized QueuingCard requestQueuingCard() throws InterruptedException {
+	public synchronized QueuingCard requestQueuingCard()
+			throws InterruptedException {
 		expectedType = QueuingCard.class;
 		updateViews();
-		while (selectedQueuingCard == null && !pass) 
-				wait();
+		while (selectedQueuingCard == null && !pass)
+			wait();
 		expectedType = null;
 		QueuingCard card = selectedQueuingCard;
 		selectedQueuingCard = null;
@@ -351,14 +382,14 @@ public class Game implements Runnable {
 	public Thread getGameThread() {
 		return gameThread;
 	}
+
 	/**
 	 * prepares cards to play
 	 */
-	private void prepareToQueueJumping(){
+	private void prepareToQueueJumping() {
 		for (Player p : gameState.getPlayersList()) {
 			p.getDeck().getCards(p.getCardsOnHand());
 		}
 	}
-	
 
 }
