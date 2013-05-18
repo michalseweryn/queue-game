@@ -23,7 +23,7 @@ public class DeckOfCards {
 	 *  Takes card from the top of the deck, and gives it to "on hand" list
 	 */
 	public void getCards(ArrayList<QueuingCard> cardsOnHand){
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3 && cardsOnHand.size() < 3; i++) {
 			if(size()==0)
 				break;
 			cardsOnHand.add(deck.get(deck.size() - 1));
