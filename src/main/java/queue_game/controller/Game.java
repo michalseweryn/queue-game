@@ -418,7 +418,7 @@ public class Game implements Runnable {
 	 */
 	private void newAction(GameActionType type, int... info) {
 		GameAction action = new GameAction(type, info);
-		gameState.addPlayerAction(action);
+		gameState.addGameAction(action);
 	}
 
 }
