@@ -157,14 +157,8 @@ public class JBoard extends JPanel implements ComponentListener{
         	stores.add(null);
         for(int i = 0; i < 6; i++)
         	pawns.add(new ArrayList<JPawn>());
-        for(ProductType store : ProductType.values()){
-        	
-        	ArrayList<JProductSquare> list = new ArrayList<JProductSquare>();
-        	for(ProductType product : ProductType.values()){
-        		list.add(new JProductSquare(game, product, 0, store));
-        	}
-        	products.add(list);	
-        }
+        for(ProductType store : ProductType.values())
+        	products.add(new ArrayList<JProductSquare>());
         BoardDrawer boardDrawer = new BoardDrawer();
         boardDrawer.setBounds(0, 0, 2000, 2000);
 		layeredPane.add(boardDrawer, new Integer(0));
@@ -251,6 +245,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			if(newOne){
 				stores.set(ind, store);
 				layeredPane.add(store, STORE_LAYER);
+				store.repaint();
 			}
 			ind++;
 		}
@@ -301,6 +296,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			
 		ind = 0;
 		for(int i = 0; i < 5; i++){
+			System.out.println("i = " + i);
 			boolean rep = false;
 			ArrayList<JProductSquare> list = products.get(i);
 			int count = 0;
@@ -332,7 +328,8 @@ public class JBoard extends JPanel implements ComponentListener{
 					rep = true;
 				if(square.setType(ProductType.values()[pr]))
 					rep = true;
-				square.setLocation((int)(3 * tileWidth * ind + count * side), (int)(tileHeight));
+				square.repaint();
+				square.setLocation((int)(3 * tileWidth * ind + j * side), (int)(tileHeight));
 			}
 			if(rep)
 				stores.get(i).repaint();

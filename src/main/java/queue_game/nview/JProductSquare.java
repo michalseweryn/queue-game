@@ -36,8 +36,10 @@ public class JProductSquare extends JComponent implements MouseListener{
 		this.store = store;
 	}
 	public boolean setAmount(int a){
-		if(this.amount == a)
+		if(this.amount == a){
+			
 			return false;
+		}
 		this.amount = a;
 		return true;
 	}

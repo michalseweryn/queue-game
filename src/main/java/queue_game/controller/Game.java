@@ -183,18 +183,13 @@ public class Game implements Runnable {
 					allPassed = false;
 					switch (current) {
 					case CLOSED_FOR_STOCKTAKING:
-						System.out.println("CLOSED");
-						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
+						closedForStocktaking();
 						break;
 					case COMMUNITY_LIST:
-						ProductType queue = requestQueue();
-						Collections.reverse(gameState.getStore(queue).getQueue());
-						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal(), queue.ordinal());
-						System.out.println("USING COMMUNITY LIST");
+						communityList();
 						break;
-					case CRITISIZING_AUTHORITIES:
-						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
-						System.out.println("AUTHORITIES");
+					case CRITICIZING_AUTHORITIES:
+						criticizingAuthorities();
 						break;
 					case DELIVERY_ERROR:
 						Store store2 = gameState.getStore(requestQueue());
@@ -275,6 +270,37 @@ public class Game implements Runnable {
 		for (int i = 0; i < 6; i++) {
 			iPass[i] = false;
 		}
+	}
+
+	/**
+	 * 
+	 */
+	private void criticizingAuthorities() throws InterruptedException{
+		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1, 
+				QueuingCard.CRITICIZING_AUTHORITIES.ordinal());
+		System.out.println("AUTHORITIES");
+	}
+
+	/**
+	 * @throws InterruptedException 
+	 * 
+	 */
+	private void communityList() throws InterruptedException {
+		ProductType queue = requestQueue();
+		Collections.reverse(gameState.getStore(queue).getQueue());
+		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1, 
+				QueuingCard.COMMUNITY_LIST.ordinal(), queue.ordinal());
+		System.out.println("USING COMMUNITY LIST");
+	}
+
+	/**
+	 * 
+	 */
+	private void closedForStocktaking() throws InterruptedException{
+		System.out.println("CLOSED");
+		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1, 
+				QueuingCard.CLOSED_FOR_STOCKTAKING.ordinal());
+		
 	}
 
 	/**
@@ -419,6 +445,17 @@ public class Game implements Runnable {
 	private void newAction(GameActionType type, int... info) {
 		GameAction action = new GameAction(type, info);
 		gameState.addGameAction(action);
+	}
+
+	/**
+	 * @param activePlayer
+	 * @param destination
+	 * @param position
+	 */
+	public void pawnSelected(int activePlayer, ProductType destination,
+			int position) {
+		System.out.println("pionek " + activePlayer + " " + destination + " " + position);
+		
 	}
 
 }

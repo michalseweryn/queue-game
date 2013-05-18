@@ -134,6 +134,7 @@ public class JPawn extends JComponent implements MouseListener {
 
 	public void mouseClicked(MouseEvent e) {
 		if (pawnShape.contains(e.getPoint())){
+			game.pawnSelected(game.getGameState().getActivePlayer(), destination, position);
 			//System.out.println("Kliknięty " + position + " w kolejce do " + destination);
 			//PAWN  (position) SELECTED, you should inform about it the controller.
 			return;
@@ -143,6 +144,7 @@ public class JPawn extends JComponent implements MouseListener {
 		AffineTransform aT = AffineTransform.getTranslateInstance(0, pawnDistance);
 		Point p = new Point();
 		if (pawnShape.contains(aT.transform(e.getPoint(), p))){
+			game.pawnSelected(game.getGameState().getActivePlayer(), destination, position - 1);
 			//System.out.println("Kliknięty " + (position - 1) + " w kolejce do " + destination);
 			//PAWN  (position - 1) SELECTED, you should inform about it the controller.
 			return;
@@ -151,6 +153,7 @@ public class JPawn extends JComponent implements MouseListener {
 			return;
 		e.getPoint().translate(0, (int) pawnDistance);
 		if (pawnShape.contains(e.getPoint())){
+			game.pawnSelected(game.getGameState().getActivePlayer(), destination, position - 2);
 			//System.out.println("Kliknięty " + (position - 2) + " w kolejce do " + destination);
 			//PAWN  (position - 2) SELECTED, you should inform about it the controller.
 			return;

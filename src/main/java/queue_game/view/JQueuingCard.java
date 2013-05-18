@@ -88,7 +88,7 @@ public class JQueuingCard extends JPanel implements MouseListener{
 		case COMMUNITY_LIST:
 			this.setToolTipText("Ustaw wybraną kolejkę tył na przód");
 			break;
-		case CRITISIZING_AUTHORITIES:
+		case CRITICIZING_AUTHORITIES:
 			this.setToolTipText("Przesuń wybrany pionek o dwa miejsca do tyłu");
 			break;
 		case DELIVERY_ERROR:
