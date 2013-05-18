@@ -296,7 +296,6 @@ public class JBoard extends JPanel implements ComponentListener{
 			
 		ind = 0;
 		for(int i = 0; i < 5; i++){
-			System.out.println("i = " + i);
 			boolean rep = false;
 			ArrayList<JProductSquare> list = products.get(i);
 			int count = 0;
