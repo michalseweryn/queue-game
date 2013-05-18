@@ -3,7 +3,9 @@
  */
 package queue_game.controller;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -112,7 +114,8 @@ public class Game implements Runnable {
 					gameState.setActivePlayer(player);
 					ProductType queue = requestQueue();
 					gameState.putPlayerPawn(player, queue);
-					newAction(GameActionType.PAWN_PLACED, player + 1, queue.ordinal());
+					newAction(GameActionType.PAWN_PLACED, player + 1,
+							queue.ordinal());
 					timeSinceLastPawnLocation = 0;
 				} else {
 					timeSinceLastPawnLocation++;
@@ -161,146 +164,224 @@ public class Game implements Runnable {
 	 */
 	public void queueJumpingPhase() throws InterruptedException {
 		gameState.setCurrentGamePhase(GamePhase.JUMPING);
-		final int numOfPlayers = gameState.getNumberOfPlayers();
-		ArrayList<QueuingCard> cardsOnHand;
-		QueuingCard current;
-		while (true) {
-			boolean allPassed = true;
-			for (int player = gameState.getGameOpeningMarker(), i = 0; i < numOfPlayers; i++, player = (player + 1)
-					% numOfPlayers) {
-				cardsOnHand = this.getGameState().getPlayersList().get(player)
-						.getCardsOnHand();
-				DeckOfCards myDeck = this.getGameState().getDeck(player);
-				if (!iPass[player] && cardsOnHand.size() > 0) {
-					gameState.setActivePlayer(player);
-					current = requestQueuingCard();
-					if (current == null) {
-						myDeck.iPass(cardsOnHand);
-						newAction(GameActionType.PASSED, player + 1);
+		final int nPlayers = gameState.getNumberOfPlayers();
+		boolean[] finished = new boolean[nPlayers];
+		Arrays.fill(finished, false);
+		int nFinished = 0;
+		QueuingCard card;
+		int player = gameState.getGameOpeningMarker();
+		outer: while (true) {
+			gameState.setActivePlayer(player);
+			ArrayList<QueuingCard> cardsOnHand = gameState.getPlayersList()
+					.get(player).getCardsOnHand();
+			boolean success = false;
+			do {
+				card = requestQueuingCard();
+				if (card == null) {
+					finished[player] = true;
+					success = true;
+					nFinished++;
+					if (nFinished == nPlayers)
+						break outer;
+				} else {
+					if (!cardsOnHand.contains(card))
 						continue;
-					}
-					cardsOnHand.remove(current);
-					allPassed = false;
-					switch (current) {
-					case CLOSED_FOR_STOCKTAKING:
-						closedForStocktaking();
-						break;
-					case COMMUNITY_LIST:
-						communityList();
-						break;
-					case CRITICIZING_AUTHORITIES:
-						criticizingAuthorities();
-						break;
+					switch (card) {
 					case DELIVERY_ERROR:
-						Store store2 = gameState.getStore(requestQueue());
-						while (store2.getNumberOf() == 0) {
-							store2 = gameState.getStore(requestQueue());
-						}
-						store2.removeProducts(1);
-						Store store3 = gameState.getStore(requestQueue());
-						store3.addProduct(store2.productType);
-						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal(), store2.productType.ordinal(), store3.productType.ordinal());
-						System.out.println("DELIVERY");
-						break;
-					case INCREASED_DELIVERY:
-						Store store = gameState.getStore(requestQueue());
-						while (store.getNumberOf() == 0) {
-							store = gameState.getStore(requestQueue());
-						}
-						store.addProduct(store.productType);
-						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal(), store.productType.ordinal());
-						System.out.println("INCREASED");
-						break;
-					case LUCKY_STRIKE:
-						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
-						System.out.println("LUCKY");
-						break;
-					case MOTHER_WITH_CHILD:
-						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
-						System.out.println("Mother");
+						if (deliveryError())
+							success = true;
 						break;
 					case NOT_YOUR_PLACE:
-						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
-						System.out.println("PLACE");
+						if (notYourPlace())
+							success = true;
 						break;
-					case TIPPING_FRIEND:
-						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
-						System.out.println("TIPING");
+					case LUCKY_STRIKE:
+						if (luckyStrike())
+							success = true;
+						break;
+					case MOTHER_WITH_CHILD:
+						if (motherWithChild())
+							success = true;
 						break;
 					case UNDER_THE_COUNTER_GOODS:
-						boolean isproductAndplayer = false;
-						for (Store s : gameState.getStores()) {
-							if (s.getNumberOf() != 0
-									&& s.getQueue().getFirst() == player) {
-								isproductAndplayer = true;
-								break;
-							}
-						}
-						if (isproductAndplayer) {
-							Store store1 = gameState.getStore(requestQueue());
-							while (store1.getNumberOf() == 0
-									|| store1.getQueue().getFirst() != player) {
-								store1 = gameState.getStore(requestQueue());
-							}
-							store1.getQueue().pop();
-							store1.removeProducts(1);
-							int nPawns = gameState.getNumberOfPawns(player);
-							gameState.getPlayersList().get(player).setNumberOfPawns(nPawns + 1);
-							gameState.getPlayersList().get(player).addProduct(store1.productType);
-							newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal(), store1.productType.ordinal());
-						}
-						else{
-							System.out.println("Niestety uzycie karty niemozliwe");
-						}
-						System.out.println("GOODS");
+						if (underTheCounterGoods())
+							success = true;
 						break;
-					default:
+					case TIPPING_FRIEND:
+						if (tippingFriend())
+							success = true;
 						break;
-
+					case CRITICIZING_AUTHORITIES:
+						if (criticizingAuthorities())
+							success = true;
+						break;
+					case INCREASED_DELIVERY:
+						if (increasedDelivery())
+							success = true;
+						break;
+					case CLOSED_FOR_STOCKTAKING:
+						if (closedForStocktaking())
+							success = true;
+						break;
+					case COMMUNITY_LIST:
+						if (communityList()) {
+							System.out.println("sukces");
+							success = true;
+						}
+						break;
 					}
 				}
-			}
-			if (allPassed) {
-				System.out.println("all");
-				break;
-			}
-		}
-
-		// NA KONCU ODSWIEŻYC LISTE IPASS[]. I ZEBY WSZYSTKO STYKALO
-		for (int i = 0; i < 6; i++) {
-			iPass[i] = false;
+				if (success)
+					cardsOnHand.remove(card);
+				if (cardsOnHand.isEmpty()) {
+					finished[player] = true;
+					success = true;
+					nFinished++;
+					if (nFinished == nPlayers)
+						break outer;
+				}
+			} while (!success);
+			System.out.println("po sukcesie");
+			do
+				player = (player + 1) % nPlayers;
+			while (finished[player]);
 		}
 	}
 
 	/**
+	 * @return
+	 */
+	private boolean increasedDelivery() {
+		// TODO adapt action code
+		/*
+		 * Store store = gameState.getStore(requestQueue()); while
+		 * (store.getNumberOf() == 0) { store =
+		 * gameState.getStore(requestQueue()); }
+		 * store.addProduct(store.productType);
+		 * newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal(),
+		 * store.productType.ordinal()); System.out.println("INCREASED");
+		 */
+		return true;
+	}
+
+	/**
+	 * @return
+	 */
+	private boolean tippingFriend() {
+		// TODO write action code
+		return true;
+	}
+
+	/**
+	 * @return
+	 */
+	private boolean underTheCounterGoods() {
+		// TODO Adapt action code
+		/*
+		 * boolean isproductAndplayer = false; for (Store s :
+		 * gameState.getStores()) { if (s.getNumberOf() != 0 &&
+		 * s.getQueue().getFirst() == player) { isproductAndplayer = true;
+		 * break; } } if (isproductAndplayer) { Store store1 =
+		 * gameState.getStore(requestQueue()); while (store1.getNumberOf() == 0
+		 * || store1.getQueue().getFirst() != player) { store1 =
+		 * gameState.getStore(requestQueue()); } store1.getQueue().pop();
+		 * store1.removeProducts(1); int nPawns =
+		 * gameState.getNumberOfPawns(player);
+		 * gameState.getPlayersList().get(player).setNumberOfPawns(nPawns + 1);
+		 * gameState
+		 * .getPlayersList().get(player).addProduct(store1.productType);
+		 * newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal(),
+		 * store1.productType.ordinal()); } else{
+		 * System.out.println("Niestety uzycie karty niemozliwe"); }
+		 * System.out.println("GOO
+					DS");
+		 */
+		return true;
+	}
+
+	/**
+	 * @return
+	 */
+	private boolean motherWithChild() {
+		// TODO write action code
+		return true;
+	}
+
+	/**
+	 * @return
+	 */
+	private boolean luckyStrike() {
+		// TODO write action code
+		return true;
+	}
+
+	/**
+	 * @return
+	 */
+	private boolean notYourPlace() {
+		// TODO write action code
+		return true;
+	}
+
+	/**
+	 * @return
+	 * @throws InterruptedException
 	 * 
 	 */
-	private void criticizingAuthorities() throws InterruptedException{
-		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1, 
+	private boolean deliveryError() throws InterruptedException {
+		// TODO adapt action code
+		/*
+		 * Store store2 = gameState.getStore(requestQueue()); while
+		 * (store2.getNumberOf() == 0) { store2 =
+		 * gameState.getStore(requestQueue()); } store2.removeProducts(1); Store
+		 * store3 = gameState.getStore(requestQueue());
+		 * store3.addProduct(store2.productType);
+		 * newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() +
+		 * 1, QueuingCard.DELIVERY_ERROR.ordinal(),
+		 * store2.productType.ordinal(), store3.productType.ordinal());
+		 * System.out.println("DELIVERY");
+		 */
+		return true;
+	}
+
+	/**
+	 * @return
+	 * 
+	 */
+	private boolean criticizingAuthorities() throws InterruptedException {
+		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.CRITICIZING_AUTHORITIES.ordinal());
 		System.out.println("AUTHORITIES");
+		return true;
 	}
 
 	/**
-	 * @throws InterruptedException 
+	 * @return
+	 * @throws InterruptedException
 	 * 
 	 */
-	private void communityList() throws InterruptedException {
+	private boolean communityList() throws InterruptedException {
 		ProductType queue = requestQueue();
+		if (queue == null)
+			return false;
 		Collections.reverse(gameState.getStore(queue).getQueue());
-		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1, 
+		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.COMMUNITY_LIST.ordinal(), queue.ordinal());
 		System.out.println("USING COMMUNITY LIST");
+		return true;
 	}
 
 	/**
+	 * @return
 	 * 
 	 */
-	private void closedForStocktaking() throws InterruptedException{
+	private boolean closedForStocktaking() throws InterruptedException {
+		// TODO Action code
 		System.out.println("CLOSED");
-		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1, 
+		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.CLOSED_FOR_STOCKTAKING.ordinal());
-		
+		return true;
+
 	}
 
 	/**
@@ -313,7 +394,8 @@ public class Game implements Runnable {
 		for (ProductType type : ProductType.values())
 			while (gameState.getStore(type).getQueue().size() > 0
 					&& gameState.getStore(type).getNumberOf() > 0)
-				newAction(GameActionType.PRODUCT_BOUGHT, gameState.sell(type) + 1, type.ordinal());
+				newAction(GameActionType.PRODUCT_BOUGHT,
+						gameState.sell(type) + 1, type.ordinal());
 	}
 
 	/**
@@ -438,9 +520,13 @@ public class Game implements Runnable {
 			p.getDeck().getCards(p.getCardsOnHand());
 		}
 	}
+
 	/**
-	 * Adds a PlayerAction to the list and writes it to a socket when network playing
-	 * @param action action to be handled
+	 * Adds a PlayerAction to the list and writes it to a socket when network
+	 * playing
+	 * 
+	 * @param action
+	 *            action to be handled
 	 */
 	private void newAction(GameActionType type, int... info) {
 		GameAction action = new GameAction(type, info);
@@ -454,8 +540,9 @@ public class Game implements Runnable {
 	 */
 	public void pawnSelected(int activePlayer, ProductType destination,
 			int position) {
-		System.out.println("pionek " + activePlayer + " " + destination + " " + position);
-		
+		System.out.println("pionek " + activePlayer + " " + destination + " "
+				+ position);
+
 	}
 
 }
