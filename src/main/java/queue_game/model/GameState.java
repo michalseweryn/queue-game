@@ -230,7 +230,7 @@ public class GameState {
 		this.players = players;
 	}
 
-	public synchronized void addPlayerAction(GameAction action) {
+	public synchronized void addGameAction(GameAction action) {
 		actions.add(action);
 	}
 
