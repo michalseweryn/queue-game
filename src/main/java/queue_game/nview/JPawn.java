@@ -155,6 +155,7 @@ public class JPawn extends JComponent implements MouseListener {
 			//PAWN  (position - 2) SELECTED, you should inform about it the controller.
 			return;
 		}
+		game.pawnSelected(game.getGameState().getActivePlayer(), destination,position);
 	}
 
 	public void mouseEntered(MouseEvent e) {

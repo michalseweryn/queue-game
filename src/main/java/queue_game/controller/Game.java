@@ -29,6 +29,7 @@ import queue_game.view.View;
 public class Game implements Runnable {
 	private GameState gameState;
 	private int nPlayers;
+	private PawnsParameters selectedPawn;
 	private List<View> views = new LinkedList<View>();
 	private Class<?> expectedType = null;
 	private ProductType selectedQueue = null;
@@ -37,6 +38,10 @@ public class Game implements Runnable {
 	private boolean iPass[] = new boolean[6];
 	private boolean pass = false;
 
+	private class PawnsParameters{
+		int position=0;
+		ProductType destination=null;
+	}
 	public Game() {
 		gameState = new GameState();
 	}
@@ -221,6 +226,11 @@ public class Game implements Runnable {
 						System.out.println("LUCKY");
 						break;
 					case MOTHER_WITH_CHILD:
+						PawnsParameters p = requestPawn();
+						Store st =gameState.getStore(p.destination);
+						int pawnsPosition=st.getQueue().get(p.position);
+						st.getQueue().remove(p.position);
+						st.getQueue().addFirst(player);
 						newAction(GameActionType.CARD_PLAYED, player + 1, current.ordinal());
 						System.out.println("Mother");
 						break;
@@ -291,6 +301,23 @@ public class Game implements Runnable {
 	}
 
 	/**
+	 * Waits for selection of pawn by active player and returns selected pawn.
+	 * 
+	 * @return destination of selected pawn.
+	 * @throws InterruptedException
+	 */
+	private synchronized PawnsParameters requestPawn() throws InterruptedException {
+		expectedType = PawnsParameters.class;
+		updateViews();
+		while (selectedPawn == null)
+			wait();
+		expectedType = null;
+		PawnsParameters pawn = selectedPawn;
+		selectedPawn = null;
+		return pawn;
+
+	}
+	/**
 	 * Waits for selection of queue by active player and returns selected queue.
 	 * 
 	 * @return destination of selected queue.
@@ -334,6 +361,30 @@ public class Game implements Runnable {
 		return gameState.getDayNumber() > 5;
 	}
 
+	/**
+	 * Method for handling players' pawn selections (e.g. on queuing up)
+	 * 
+	 * @param playerNo
+	 *            ID of player selecting a product
+	 * @param product
+	 *            pawn destination type or null, when destination is outdoor
+	 *            market.
+	 */
+	public synchronized void pawnSelected(int playerNo, ProductType destination,int position) {
+		if (playerNo != gameState.getActivePlayer())
+			return;
+
+		if (expectedType == PawnsParameters.class) {
+
+			selectedPawn.destination=destination;
+			selectedPawn.position=position;
+			try {
+				notifyAll();
+				return;
+			} finally {
+			}
+		}
+	}
 	/**
 	 * Method for handling players' queue selections (e.g. on queuing up)
 	 * 
