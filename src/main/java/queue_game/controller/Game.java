@@ -133,6 +133,7 @@ public class Game implements Runnable {
 					% gameState.getNumberOfPlayers()) {
 				if (gameState.getNumberOfPawns(player) > 0) {
 					gameState.setActivePlayer(player);
+					messageForPlayer("Wybierz kolejkę w której chcesz ustawić pionka");
 					ProductType queue = requestQueue();
 					gameState.putPlayerPawn(player, queue);
 					newAction(GameActionType.PAWN_PLACED, player + 1,
@@ -154,6 +155,7 @@ public class Game implements Runnable {
 	 * @author krzysiek & Helena
 	 */
 	public void deliveryPhase() {
+		System.out.println("Dostawa");
 		List<DeliveryCard> tempDCList = deckOfDeliveryCards.removeThreeCards();
 		ProductType type;
 		for (DeliveryCard dC : tempDCList){
@@ -164,13 +166,12 @@ public class Game implements Runnable {
 			if(numberOfProductsLeft !=0 )
 			{
 				int amount = Math.min(dC.getAmount(), numberOfProductsLeft);
-				deliveredStore.addProducts(amount);
+				gameState.transferProductToStore(type, amount);
 				newAction(GameActionType.PRODUCT_DELIVERED,
 							type.ordinal(), amount);
-				gameState.setNumberOfProductsLeft(type.ordinal(),
-						numberOfProductsLeft - amount);
 			}
 		}
+		gameState.setCurrentDeliveryList(tempDCList);
 	}
 
 	/**
@@ -178,7 +179,12 @@ public class Game implements Runnable {
 	 * 
 	 * 
 	 */
+<<<<<<< HEAD
 	private void PCTPhase() throws InterruptedException {
+=======
+	private void PCTPhase() {
+		System.out.println("PCT");
+>>>>>>> branch 'master' of https://github.com/michalseweryn/queue-game.git
 		gameState.setCurrentGamePhase(GamePhase.PCT);
 		prepareToQueueJumping();
 		openStores();
@@ -299,10 +305,7 @@ public class Game implements Runnable {
 			return false;
 		}
 		Store store = gameState.getStore(type);
-		if (store == null) {
-			messageForPlayer("BŁĄD. Nie można zwiększyć dostawy w bazarze.");
-			return false;
-		}
+
 		if (store.getNumberOf() == 0) {
 			System.out.println("BŁĄD. Do tego sklepu nie było dostawy.");
 			return false;
@@ -468,11 +471,11 @@ public class Game implements Runnable {
 		int p = gameState.getStore(pawn.destination).getQueue()
 				.get(pawn.position);
 		if(p==gameState.getActivePlayer()){
-			messageForPlayer("BŁAD.To twój pionek.");
+			messageForPlayer("BŁAD. To twój pionek.");
 			return false;
 		}
 		if(pawn.position==gameState.getStore(pawn.destination).getQueue().size()-1){
-			messageForPlayer("BŁAD.On już jest ostatni w tej kolejce.");
+			messageForPlayer("BŁAD. On już jest ostatni w tej kolejce.");
 			return false;
 		}
 		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
@@ -490,10 +493,10 @@ public class Game implements Runnable {
 	 * 
 	 */
 	private boolean communityList() throws InterruptedException {
-		messageForPlayer("Wybierz kolejke która ma zostac odwrócona");
+		messageForPlayer("Wybierz kolejke która ma zostać odwrócona");
 		ProductType queue = requestQueue();
 		if (queue == null){
-			messageForPlayer("BŁAD.Ta kolejka jest pusta.");
+			messageForPlayer("BŁAD. Ta kolejka jest pusta.");
 			return false;
 		}
 		Collections.reverse(gameState.getStore(queue).getQueue());
@@ -535,7 +538,6 @@ public class Game implements Runnable {
 						//		gameState.sell(type) + 1, type.ordinal());
 						break;
 					}
-					
 				}
 				assert false: "Wrong number of products";
 			}
