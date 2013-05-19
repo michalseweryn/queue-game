@@ -3,6 +3,8 @@ package queue_game.model;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,8 +34,15 @@ public class DeckOfQueuingCardsTest {
 
 	@Test
 	public void fillTest() {
-		//ten test bedzie sprawdzal czy w talii sa wszystkie mozliwe karty
-		fail("Not implemented");
+		
+		ArrayList<QueuingCard> temp;
+		ArrayList<QueuingCard> all = new ArrayList<QueuingCard>();
+		while(deck.size() > 0){
+			deck.getCards(temp = new ArrayList<QueuingCard>());
+			all.addAll(temp);
+		}
+		Collections.sort(all);
+		assertEquals(all, Arrays.asList(QueuingCard.values()));
 	}
 
 }
