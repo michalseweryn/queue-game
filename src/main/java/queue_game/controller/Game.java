@@ -345,16 +345,18 @@ public class Game implements Runnable {
 	/**
 	 * @return
 	 */
-	private boolean motherWithChild() {
-		PawnParameters pawn = null;
-		try {
-			pawn = requestPawn();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	private boolean motherWithChild() throws InterruptedException{
+		PawnParameters pawn  = requestPawn();
 		int p = gameState.getStore(pawn.destination).getQueue()
 				.get(pawn.position);
+		if(p!=gameState.getActivePlayer()){
+			messageForPlayer("");
+			return false;
+		}
+		if(pawn.position==0){
+			messageForPlayer("");
+			return false;
+		}
 		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
 		gameState.getStore(pawn.destination).getQueue().addFirst(p);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
@@ -375,16 +377,21 @@ public class Game implements Runnable {
 	/**
 	 * @return
 	 */
-	private boolean notYourPlace() {
+	private boolean notYourPlace() throws InterruptedException{
 		PawnParameters pawn = null;
-		try {
+		
 			pawn = requestPawn();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		int p = gameState.getStore(pawn.destination).getQueue()
 				.get(pawn.position);
+		if(p!=gameState.getActivePlayer()){
+			messageForPlayer("");
+			return false;
+		}
+		if(pawn.position==0){
+			messageForPlayer("");
+			return false;
+		}
 		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
 		gameState.getStore(pawn.destination).getQueue()
 				.add(pawn.position - 1, p);
@@ -400,8 +407,9 @@ public class Game implements Runnable {
 	 */
 	private boolean deliveryError() throws InterruptedException {
 		Store store2 = gameState.getStore(requestQueue());
-		while (store2.getNumberOf() == 0) {
-			store2 = gameState.getStore(requestQueue());
+		if(store2.getNumberOf() == 0) {
+			messageForPlayer("");
+			return false;
 		}
 		store2.removeProducts(1);
 		Store store3 = gameState.getStore(requestQueue());
@@ -418,15 +426,17 @@ public class Game implements Runnable {
 	 * 
 	 */
 	private boolean criticizingAuthorities() throws InterruptedException {
-		PawnParameters pawn = null;
-		try {
-			pawn = requestPawn();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		PawnParameters pawn = requestPawn();
 		int p = gameState.getStore(pawn.destination).getQueue()
 				.get(pawn.position);
+		if(p==gameState.getActivePlayer()){
+			messageForPlayer("");
+			return false;
+		}
+		if(pawn.position==gameState.getStore(pawn.destination).getQueue().size()-1){
+			messageForPlayer("");
+			return false;
+		}
 		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
 		gameState.getStore(pawn.destination).getQueue()
 				.add(pawn.position + 2, p);
@@ -443,8 +453,10 @@ public class Game implements Runnable {
 	 */
 	private boolean communityList() throws InterruptedException {
 		ProductType queue = requestQueue();
-		if (queue == null)
+		if (queue == null){
+			messageForPlayer("");
 			return false;
+		}
 		Collections.reverse(gameState.getStore(queue).getQueue());
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.COMMUNITY_LIST.ordinal(), queue.ordinal());
