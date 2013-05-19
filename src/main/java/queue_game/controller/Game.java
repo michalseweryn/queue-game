@@ -347,8 +347,7 @@ public class Game implements Runnable {
 			System.out.println("BŁĄD. Ten sklep jest zamknięty.");
 			return false;
 		}
-		store.removeProducts(1, prod.product);
-		store.getQueue().remove(0);
+		gameState.sell(prod.store, prod.product);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.UNDER_THE_COUNTER_GOODS.ordinal());
 		return true;
@@ -364,15 +363,14 @@ public class Game implements Runnable {
 		int p = gameState.getStore(pawn.destination).getQueue()
 				.get(pawn.position);
 		if(p!=gameState.getActivePlayer()){
-			messageForPlayer("BŁAD.To nie twój pionek.");
+			messageForPlayer("BŁAD. To nie twój pionek.");
 			return false;
 		}
 		if(pawn.position==0){
-			messageForPlayer("BŁAD.Już jestes pierwszy w tej kolejce.");
+			messageForPlayer("BŁAD. Już jestes pierwszy w tej kolejce.");
 			return false;
 		}
-		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
-		gameState.getStore(pawn.destination).getQueue().addFirst(p);
+		gameState.movePawn(pawn.destination, pawn.position, pawn.destination, 0);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.MOTHER_WITH_CHILD.ordinal());
 		return true;
