@@ -3,22 +3,20 @@
  */
 package queue_game.controller;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Random;
+import java.lang.Math;
 
 import queue_game.model.DeckOfDeliveryCards;
-import queue_game.model.DeckOfQueuingCards;
+import queue_game.model.DeliveryCard;
+import queue_game.model.GameAction;
+import queue_game.model.GameActionType;
 import queue_game.model.GamePhase;
 import queue_game.model.GameState;
 import queue_game.model.Player;
-import queue_game.model.GameAction;
-import queue_game.model.GameActionType;
 import queue_game.model.ProductType;
 import queue_game.model.QueuingCard;
 import queue_game.model.Store;
@@ -42,7 +40,7 @@ public class Game implements Runnable {
 	private QueuingCard selectedQueuingCard = null;
 	private boolean iPass[] = new boolean[6];
 	private boolean pass = false;
-	private DeckOfDeliveryCards deckOfDeliveryCards = new DeckOfDeliveryCards(2);
+	private DeckOfDeliveryCards deckOfDeliveryCards = new DeckOfDeliveryCards();
 	
 	
 
@@ -156,22 +154,22 @@ public class Game implements Runnable {
 	 * @author krzysiek & Helena
 	 */
 	public void deliveryPhase() {
-		for (int i = 0; i < 3; i++) {
-			int typeNumber;
-			try {
-				typeNumber = deckOfDeliveryCards.getAndRemoveFirst();
-			} catch (NoSuchElementException e){
-				continue;
-			}
-			ProductType type = ProductType.values()[typeNumber];
-			
+		List<DeliveryCard> tempDCList = deckOfDeliveryCards.removeThreeCards();
+		ProductType type;
+		for (DeliveryCard dC : tempDCList){
+			type = dC.getProductType();
 			Store deliveredStore = gameState.getStore(type);
-			if((gameState.getNumberOfProductsLeft(typeNumber))!=0)
-				deliveredStore.addProducts(1);
-			newAction(GameActionType.PRODUCT_DELIVERED, type.ordinal(), 1);
-			int[] numberOfProducts = gameState.getNumberOfProductsLeft();
-			numberOfProducts[type.ordinal()] = numberOfProducts[type.ordinal()] - 1;
-			gameState.setNumberOfProducts(numberOfProducts);
+			int numberOfProductsLeft =
+					gameState.getNumberOfProductsLeft(type.ordinal());
+			if(numberOfProductsLeft !=0 )
+			{
+				int amount = Math.min(dC.getAmount(), numberOfProductsLeft);
+				deliveredStore.addProducts(amount);
+				newAction(GameActionType.PRODUCT_DELIVERED,
+							type.ordinal(), amount);
+				gameState.setNumberOfProductsLeft(type.ordinal(),
+						numberOfProductsLeft - amount);
+			}
 		}
 	}
 

@@ -3,14 +3,14 @@ package queue_game.model;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
  * @author krzysiek
  */
 public class DeckOfDeliveryCards {
-	private LinkedList<Integer> deck=new LinkedList<Integer>();
-	private static final int defaultNumberOfDC = 2;
+	private LinkedList<DeliveryCard> deck=new LinkedList<DeliveryCard>();
 	
 	/**
 	 * Creates new list and calls fill() function
@@ -20,57 +20,51 @@ public class DeckOfDeliveryCards {
 		fill();
 	}
 	
-	/**
-	 * Creates new list and calls fill(numberOfCardsOfEachKind) function
-	 */
-	
-	public DeckOfDeliveryCards(int numberOfCardsOfEachKind)
-	{
-		fill(numberOfCardsOfEachKind);
-	}
-	
 	
 	/**
-	 * Clears the list, refills it with default number of cards (12) of each kind and shuffles
+	 * Fills and shuffles
 	 */
 	public void fill(){
-		fill(defaultNumberOfDC);
-	}
-	/**
-	 * Clears the list, refills it with given number of cards of each kind and shuffles
-	 */
-	
-	public void fill(int numberOfCardsOfEachKind)
-	{
 		deck.clear();
-		for (int i=0; i<5; i++)
-			for (int j=0; j<numberOfCardsOfEachKind; j++)
-				deck.add(i);
+		for (ProductType pT : ProductType.values())
+			for (int i=1; i<=3; i++)
+				deck.add(new DeliveryCard(pT, i));
 		shuffle();
 	}
 
 	
-	
-	
-	
-	public void add(int card){
-		deck.add(card);
-	}
-	
 	/**
-	 * @throws NoSuchElementException if deck is empty.
+	 * Removes 3 cards from the top of the deck and returns them as a list.
+	 * If there aren't 3 cards in the deck, the list contains less
+	 * (including 0) cards.
 	 */
-	public int getAndRemoveFirst(){
-		int res = deck.getFirst();
-		deck.removeFirst();
+	public List<DeliveryCard> removeThreeCards(){
+		List<DeliveryCard> res = new LinkedList<DeliveryCard>();
+		try {
+			for (int i=0; i<3; i++)
+				res.add(deck.removeFirst());
+		}
+		catch (NoSuchElementException e){
+			//nothing
+		}
 		return res;
 	}
 	/**
-	 * 
-	 * @throws IndexOutOfBoundsException
+	 * Returns and not removes 2 cards from the top of the deck
+	 * and returns them as a list.
+	 * If there aren't 2 cards in the deck, the list contains less
+	 * (including 0) cards.
 	 */
-	public int get(int index){
-		return deck.get(index);
+	public List<DeliveryCard> peekTwoCards(){
+		List<DeliveryCard> res = new LinkedList<DeliveryCard>();
+		try {
+			res.add(deck.get(0));
+			res.add(deck.get(1));
+		}
+		catch (IndexOutOfBoundsException e){
+			//nothing
+		}
+		return res;
 	}
 	
 	/**

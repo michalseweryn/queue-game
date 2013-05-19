@@ -222,8 +222,12 @@ public class GameState {
 		return numberOfProductsLeft[numberOfStore];
 	}
 
-	public synchronized void setNumberOfProducts(int[] numberOfProducts) {
-		this.numberOfProductsLeft = numberOfProducts;
+	public synchronized void setNumberOfProductsLeft(int[] numberOfProductsLeft) {
+		this.numberOfProductsLeft = numberOfProductsLeft;
+	}
+	
+	public synchronized void setNumberOfProductsLeft(int index, int numberOfProductsLeft) {
+		this.numberOfProductsLeft[index] = numberOfProductsLeft;
 	}
 
 	public synchronized ArrayList<Player> getPlayersList() {
