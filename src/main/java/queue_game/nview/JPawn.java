@@ -171,6 +171,7 @@ public class JPawn extends JComponent implements MouseListener {
 	}
 
 	public void mouseReleased(MouseEvent e) {
+		game.pawnSelected(playerId, destination, position );
 	}
 	
 	public void setPosition(int j) {
