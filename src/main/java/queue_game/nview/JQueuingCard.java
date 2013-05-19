@@ -32,7 +32,6 @@ public class JQueuingCard extends JPanel implements MouseListener {
 		this.card = card;
 		this.player = player;
 		this.game = game;
-		addToolTip();
 		addMouseListener(this);
 		addToolTip();
 	}
@@ -75,6 +74,7 @@ public class JQueuingCard extends JPanel implements MouseListener {
 		}
 	}
 	
+
 	private void addToolTip(){
 		switch(card){
 		case CLOSED_FOR_STOCKTAKING:

@@ -422,23 +422,28 @@ public class Game implements Runnable {
 	 * 
 	 */
 	private boolean deliveryError() throws InterruptedException {
-		messageForPlayer("Wybierz sklep z którego chcesz zabrać towar dostawa");
-		Store store2 = gameState.getStore(requestQueue());
-		if(store2.getNumberOf() == 0) {
-			messageForPlayer("BŁAD.W tym sklepie nie było dostawy.");
+		messageForPlayer("Wybierz towar, który ma być przeniesiony");
+		ProductParameters prod = requestProduct();
+		if (prod.store == null) {
+			messageForPlayer("BŁĄD. Nie można przenieść towaru z bazaru.");
 			return false;
 		}
-		if (store2.isClosed()) {
-			messageForPlayer("BŁĄD. Ten sklep jest zamknięty.");
+		Store store = gameState.getStore(prod.store);
+		if (store.getNumberOf(prod.product) <= 0) {
+			messageForPlayer("BŁĄD. Tego towaru nie ma w sklepie");
 			return false;
 		}
-		store2.removeProducts(1);
+		if (store.isClosed()) {
+			System.out.println("BŁĄD. Ten sklep jest zamknięty.");
+			return false;
+		}
+		store.removeProducts(1, prod.product);
 		messageForPlayer("Wybierz sklep w którym ma być dodany towar");
 		Store store3 = gameState.getStore(requestQueue());
-		store3.addProduct(store2.productType);
+		store3.addProduct(prod.product);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.DELIVERY_ERROR.ordinal(),
-				store2.productType.ordinal(), store3.productType.ordinal());
+				store.productType.ordinal(), store3.productType.ordinal());
 		return true;
 	}
 
