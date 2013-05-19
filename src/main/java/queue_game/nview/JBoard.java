@@ -134,7 +134,7 @@ public class JBoard extends JPanel implements ComponentListener{
 	
 	@Override
 	public Dimension getPreferredSize(){
-		int maxH = (int) (getParent().getSize().getHeight() - 150);
+		int maxH = (int) (getParent().getSize().getHeight() - 180);
 		int maxW = (int) getParent().getSize().getWidth();
 		if(maxH * BOARD_WIDTH * TILE_SIDES_RATIO < maxW * BOARD_HEIGHT)
 			return new Dimension((int) (maxH * BOARD_WIDTH * TILE_SIDES_RATIO / BOARD_HEIGHT), maxH);

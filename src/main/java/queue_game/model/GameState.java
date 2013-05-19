@@ -83,7 +83,7 @@ public class GameState {
 	 */
 	public synchronized void resetNumberOfProductsLeft() {
 		for (ProductType i : ProductType.values()) {
-			numberOfProductsLeft[i.ordinal()] = 50;
+			numberOfProductsLeft[i.ordinal()] = 12;
 		}
 	}
 
@@ -290,7 +290,6 @@ public class GameState {
 	 */
 
 	public synchronized void putPlayerPawn(int player, ProductType destination) {
-		System.out.println(currentDeliveryList);
 		if (player < 0 || player >= numberOfPlayers)
 			throw new IllegalArgumentException("No such Player: " + player);
 		int nPawns = getNumberOfPawns(player);

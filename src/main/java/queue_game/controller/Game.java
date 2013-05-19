@@ -38,8 +38,6 @@ public class Game implements Runnable {
 	private ProductType selectedQueue = null;
 	private Thread gameThread = null;
 	private QueuingCard selectedQueuingCard = null;
-	private boolean iPass[] = new boolean[6];
-	private boolean pass = false;
 	private DeckOfDeliveryCards deckOfDeliveryCards = new DeckOfDeliveryCards();
 	
 	
@@ -155,21 +153,16 @@ public class Game implements Runnable {
 	 * @author krzysiek & Helena
 	 */
 	public void deliveryPhase() {
-		System.out.println("Dostawa");
 		List<DeliveryCard> tempDCList = deckOfDeliveryCards.removeThreeCards();
 		ProductType type;
 		for (DeliveryCard dC : tempDCList){
 			type = dC.getProductType();
-			Store deliveredStore = gameState.getStore(type);
 			int numberOfProductsLeft =
 					gameState.getNumberOfProductsLeft(type.ordinal());
-			if(numberOfProductsLeft !=0 )
-			{
-				int amount = Math.min(dC.getAmount(), numberOfProductsLeft);
-				gameState.transferProductToStore(type, amount);
-				newAction(GameActionType.PRODUCT_DELIVERED,
-							type.ordinal(), amount);
-			}
+			int amount = Math.min(dC.getAmount(), numberOfProductsLeft);
+			gameState.transferProductToStore(type, amount);
+			newAction(GameActionType.PRODUCT_DELIVERED,
+						type.ordinal(), amount);
 		}
 		gameState.setCurrentDeliveryList(tempDCList);
 	}
@@ -182,7 +175,6 @@ public class Game implements Runnable {
 
 
 	private void PCTPhase() throws InterruptedException {
-		System.out.println("PCT");
 		gameState.setCurrentGamePhase(GamePhase.PCT);
 		prepareToQueueJumping();
 		openStores();
@@ -311,7 +303,7 @@ public class Game implements Runnable {
 			messageForPlayer("BŁĄD. Ten sklep jest zamknięty.");
 			return false;
 		}
-		store.addProduct(store.productType);
+		gameState.transferProductToStore(store.productType, 1);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.INCREASED_DELIVERY.ordinal(),
 				store.productType.ordinal());
@@ -347,7 +339,7 @@ public class Game implements Runnable {
 			return false;
 		}
 		if (store.isClosed()) {
-			System.out.println("BŁĄD. Ten sklep jest zamknięty.");
+			messageForPlayer("BŁĄD. Ten sklep jest zamknięty.");
 			return false;
 		}
 		gameState.sell(prod.store, prod.product);
@@ -387,15 +379,13 @@ public class Game implements Runnable {
 		PawnParameters pawn  = requestPawn();
 		int p = gameState.getStore(pawn.destination).getQueue()
 				.get(pawn.position);
-		ProductType dest = pawn.destination;
 		if(p!=gameState.getActivePlayer()){
 			messageForPlayer("BŁAD.To nie twój pionek.");
 			return false;
 		}
 		messageForPlayer("Wybierz kolejke do której zostanie przeniesiony pionek");
 		ProductType type = requestQueue();
-		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
-		gameState.getStore(type).getQueue().add(1, gameState.getActivePlayer());
+		gameState.movePawn(pawn.destination, pawn.position, type, 1);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.LUCKY_STRIKE.ordinal());
 		return true;
@@ -420,9 +410,7 @@ public class Game implements Runnable {
 			messageForPlayer("BŁAD.Już jestes pierwszy w tej kolejce.");
 			return false;
 		}
-		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
-		gameState.getStore(pawn.destination).getQueue()
-				.add(pawn.position - 1, p);
+		gameState.movePawn(pawn.destination, pawn.position, pawn.destination, pawn.position - 1);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.NOT_YOUR_PLACE.ordinal());
 		return true;
@@ -441,7 +429,7 @@ public class Game implements Runnable {
 			return false;
 		}
 		if (store2.isClosed()) {
-			System.out.println("BŁĄD. Ten sklep jest zamknięty.");
+			messageForPlayer("BŁĄD. Ten sklep jest zamknięty.");
 			return false;
 		}
 		store2.removeProducts(1);
@@ -451,7 +439,6 @@ public class Game implements Runnable {
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.DELIVERY_ERROR.ordinal(),
 				store2.productType.ordinal(), store3.productType.ordinal());
-		System.out.println("DELIVERY");
 		return true;
 	}
 
@@ -477,7 +464,6 @@ public class Game implements Runnable {
 				.add(pawn.position + 2, p);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.CRITICIZING_AUTHORITIES.ordinal());
-		System.out.println("AUTHORITIES");
 		return true;
 	}
 
@@ -496,7 +482,6 @@ public class Game implements Runnable {
 		Collections.reverse(gameState.getStore(queue).getQueue());
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.COMMUNITY_LIST.ordinal(), queue.ordinal());
-		System.out.println("USING COMMUNITY LIST");
 		return true;
 	}
 
@@ -508,7 +493,6 @@ public class Game implements Runnable {
 		messageForPlayer("Wybierz sklep do zamkniecia");
 		ProductType queue = requestQueue();
 		gameState.getStore(queue).setClosed(true);
-		System.out.println("CLOSED");
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.CLOSED_FOR_STOCKTAKING.ordinal());
 		return true;
@@ -555,7 +539,6 @@ public class Game implements Runnable {
 		expectedType = null;
 		PawnParameters pawn = selectedPawn;
 		selectedPawn = null;
-		System.out.println("pionek" + pawn.position + "do" + pawn.destination);
 		return pawn;
 
 	}
@@ -586,7 +569,6 @@ public class Game implements Runnable {
 		expectedType = ProductParameters.class;
 		updateViews();
 		while (expectedType != null) {
-			System.out.println("czekamy");
 			wait();
 		}
 
@@ -731,7 +713,7 @@ public class Game implements Runnable {
 			gameState.setActivePlayer(player);
 			Player temp=gameState.getPlayersList().get(player);
 			outer: while (temp.getNumberOfPawns() < 5) {
-				System.out.println("Wybierz pionek ktory chcesz usunac");
+				messageForPlayer("Wybierz pionek ktory chcesz usunac");
 				PawnParameters selectedPawn = requestPawn();
 				if (selectedPawn.position == -1) {
 					break;
