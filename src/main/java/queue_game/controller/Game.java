@@ -179,11 +179,14 @@ public class Game implements Runnable {
 	 * 
 	 * 
 	 */
-	private void PCTPhase() {
+
+
+	private void PCTPhase() throws InterruptedException {
 		System.out.println("PCT");
 		gameState.setCurrentGamePhase(GamePhase.PCT);
 		prepareToQueueJumping();
 		openStores();
+		pawnsTaking();
 	}
 /**
  * 
@@ -714,6 +717,39 @@ public class Game implements Runnable {
 		for (Player p : gameState.getPlayersList()) {
 			p.getDeck().getCards(p.getCardsOnHand());
 		}
+	}
+	/**
+	 * 
+	 */
+	private void pawnsTaking() throws InterruptedException{
+		int nPlayers=gameState.getNumberOfPlayers();
+		int opening=gameState.getGameOpeningMarker();
+		int player=opening;
+		do{
+			gameState.setActivePlayer(player);
+			Player temp=gameState.getPlayersList().get(player);
+			outer: while (temp.getNumberOfPawns() < 5) {
+				System.out.println("Wybierz pionek ktory chcesz usunac lub spasuj");
+				PawnParameters selectedPawn = requestPawn();
+				if (selectedPawn.position == -1) {
+					break;
+				} else if (selectedPawn.destination == null) {
+				} else {
+					if (gameState.getStore(selectedPawn.destination).getQueue()
+							.get(selectedPawn.position).equals(player)) {
+						gameState
+								.removePlayerPawn(player,
+										selectedPawn.position,
+										selectedPawn.destination);
+					} else {
+						continue outer;
+					}
+				}
+
+			}
+			player=(player+1)%nPlayers;
+			
+		}while(player!=opening);
 	}
 
 	/**

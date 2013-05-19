@@ -27,6 +27,7 @@ public class JPawn extends JComponent implements MouseListener{
 	private ProductType product;
 	private Integer place;
 	private int length;
+	private int playerId;
 	private final static Color[] pawnColors = GameState.playerColors;
 	
 	public JPawn(ProductType product, int playerId, Game game, int place, int length) {
@@ -35,6 +36,7 @@ public class JPawn extends JComponent implements MouseListener{
 		this.product = product;
 		this.place = place;
 		this.length = length;
+		this.playerId=playerId;
 		addMouseListener(this);
 	}
 	
@@ -83,7 +85,9 @@ public class JPawn extends JComponent implements MouseListener{
 	
 	public void mousePressed(MouseEvent e) {}
 	
-	public void mouseReleased(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {
+		game.pawnSelected(playerId, product, place );
+	}
 
 }
 

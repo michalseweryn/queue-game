@@ -300,6 +300,20 @@ public class GameState {
 		players.get(player).setNumberOfPawns(nPawns - 1);
 		this.getStore(destination).getQueue().add(player);
 	}
+	/**
+	 * 
+	 */
+	public void removePlayerPawn(int player, int position,
+			ProductType destination) {
+		if(player<0 || player>=numberOfPlayers)
+			throw new IllegalArgumentException("No such player"+ player);
+		int nPawns=getNumberOfPawns(player);
+		if(nPawns==5){
+			throw new IllegalArgumentException("Player has no Pawn on Map"+ player);
+		}
+		players.get(player).setNumberOfPawns(nPawns+1);
+		this.getStore(destination).getQueue().remove(position);
+	}
 
 	/**
 	 * @param type
