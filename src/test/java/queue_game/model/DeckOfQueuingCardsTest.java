@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DeckOfCardsTest {
-	private DeckOfCards deck;
+public class DeckOfQueuingCardsTest {
+	private DeckOfQueuingCards deck;
 
 	@Before
 	public void setUp() throws Exception {
-		deck = new DeckOfCards();
+		deck = new DeckOfQueuingCards();
 		deck.fill();
 		deck.shuffle();
 	}

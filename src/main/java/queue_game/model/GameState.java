@@ -38,8 +38,8 @@ public class GameState {
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private GamePhase currentGamePhase = null;
 	private ArrayList<GameAction> actions = new ArrayList<GameAction>();
-
-	public GameState() {
+	
+	public GameState(){
 		stores = new Store[ProductType.values().length];
 		int ind = 0;
 		for (ProductType product : ProductType.values())
@@ -66,7 +66,7 @@ public class GameState {
 	 */
 	public synchronized void resetCards() {
 		for (Player pl : players) {
-			pl.setDeck(new DeckOfCards());
+			pl.setDeck(new DeckOfQueuingCards());
 			pl.getDeck().fill();
 			pl.getDeck().shuffle();
 		}
@@ -172,7 +172,7 @@ public class GameState {
 		return stores;
 	}
 
-	public synchronized DeckOfCards getDeck(int playerNr) {
+	public synchronized DeckOfQueuingCards getDeck(int playerNr) {
 		return players.get(playerNr).getDeck();
 	}
 

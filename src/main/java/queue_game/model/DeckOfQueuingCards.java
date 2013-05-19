@@ -10,7 +10,7 @@ import java.util.List;
  * @author Piotr
  * Deck of Cards
  */
-public class DeckOfCards {
+public class DeckOfQueuingCards {
 	private List<QueuingCard> deck=new ArrayList<QueuingCard>();
 	//private List<QueuingCard> cardsOnHand=new ArrayList<QueuingCard>();
 

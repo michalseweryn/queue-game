@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
-import queue_game.model.DeckOfCards;
+import queue_game.model.DeckOfDeliveryCards;
+import queue_game.model.DeckOfQueuingCards;
 import queue_game.model.GamePhase;
 import queue_game.model.GameState;
 import queue_game.model.Player;
@@ -36,7 +38,9 @@ public class Game implements Runnable {
 	private QueuingCard selectedQueuingCard = null;
 	private boolean iPass[] = new boolean[6];
 	private boolean pass = false;
-
+	private DeckOfDeliveryCards deckOfDeliveryCards = new DeckOfDeliveryCards(2);
+	
+	
 	public Game() {
 		gameState = new GameState();
 	}
@@ -124,17 +128,20 @@ public class Game implements Runnable {
 	}
 
 	/**
-	 * Second Phase of Day. Randomizes 3 stores with repetitions and delivers
-	 * products to them and decreases number of products.
+	 * Second Phase of Day. Delivers 3
+	 * products to stores according to delivery cards and decreases number of products.
 	 * 
 	 * @author krzysiek & Helena
 	 */
 	public void deliveryPhase() {
-		int rand;
-		Random rG = new Random();
 		for (int i = 0; i < 3; i++) {
-			rand = rG.nextInt(5);
-			ProductType type = ProductType.values()[rand];
+			ProductType type;
+			try {
+				type =  ProductType.values()[deckOfDeliveryCards.getAndRemoveFirst()];
+			} catch (NoSuchElementException e){
+				continue;
+			}
+			
 			Store deliveredStore = gameState.getStore(type);
 			deliveredStore.addProducts(1);
 			newAction(GameActionType.PRODUCT_DELIVERED, type.ordinal(), 1);
@@ -170,7 +177,7 @@ public class Game implements Runnable {
 					% numOfPlayers) {
 				cardsOnHand = this.getGameState().getPlayersList().get(player)
 						.getCardsOnHand();
-				DeckOfCards myDeck = this.getGameState().getDeck(player);
+				DeckOfQueuingCards myDeck = this.getGameState().getDeck(player);
 				if (!iPass[player] && cardsOnHand.size() > 0) {
 					gameState.setActivePlayer(player);
 					current = requestQueuingCard();

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import queue_game.controller.Game;
-import queue_game.model.DeckOfCards;
+import queue_game.model.DeckOfQueuingCards;
 import queue_game.model.GameState;
 import queue_game.model.Player;
 import queue_game.model.QueuingCard;

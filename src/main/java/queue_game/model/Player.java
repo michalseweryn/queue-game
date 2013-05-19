@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class Player {
 	private int numberOfPawns;
-	private DeckOfCards deck=null;
+	private DeckOfQueuingCards deck=null;
 	private int[] shoppingList = null;
 	private int[] boughtProducts = {0, 0, 0, 0, 0};
 	private ArrayList<QueuingCard> cardsOnHand=new ArrayList<QueuingCard>();
@@ -53,11 +53,11 @@ public class Player {
 	}
 	
 
-	public void setDeck(DeckOfCards deck) {
+	public void setDeck(DeckOfQueuingCards deck) {
 		this.deck = deck;
 	}
 	
-	public DeckOfCards getDeck() {
+	public DeckOfQueuingCards getDeck() {
 		return deck;
 	}
 	
