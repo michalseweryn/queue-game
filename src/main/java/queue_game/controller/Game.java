@@ -523,17 +523,19 @@ public class Game implements Runnable {
 	 */
 	public void openingStoresPhase() {
 		for(Store store : gameState.getStores()){
-			while(store.totalNumber() > 0){
+			if(store.isClosed())
+				continue;
+			int queueLength = store.getQueue().size();
+			while(queueLength-- > 0){
 				for(ProductType product: ProductType.values()){
 					if(store.getNumberOf(product) > 0 && !store.isClosed()){
 						gameState.sell(store.productType, product);
 						// no full information anyway.
-						//*newAction(GameActionType.PRODUCT_BOUGHT,
+						// newAction(GameActionType.PRODUCT_BOUGHT,
 						//		gameState.sell(type) + 1, type.ordinal());
 						break;
 					}
 				}
-				assert false: "Wrong number of products";
 			}
 		}
 	}
