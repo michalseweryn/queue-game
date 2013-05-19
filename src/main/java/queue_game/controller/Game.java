@@ -171,6 +171,7 @@ public class Game implements Runnable {
 						numberOfProductsLeft - amount);
 			}
 		}
+		gameState.setCurrentDeliveryList(tempDCList);
 	}
 
 	/**

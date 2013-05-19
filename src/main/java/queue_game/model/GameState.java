@@ -38,6 +38,7 @@ public class GameState {
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private GamePhase currentGamePhase = null;
 	private ArrayList<GameAction> actions = new ArrayList<GameAction>();
+	private List<DeliveryCard> currentDeliveryList;
 	
 	public GameState(){
 		stores = new Store[ProductType.values().length];
@@ -196,6 +197,15 @@ public class GameState {
 		currentGamePhase = phase;
 	}
 
+	public synchronized void setCurrentDeliveryList (
+			List<DeliveryCard> currentDeliveryList) {
+	this.currentDeliveryList = currentDeliveryList;
+	}
+	
+	public synchronized List<DeliveryCard> getCurrentDeliveryList () {
+		return currentDeliveryList;
+	}
+	
 	/**
 	 * @return ID of player whose turn is now.
 	 */
@@ -280,6 +290,7 @@ public class GameState {
 	 */
 
 	public synchronized void putPlayerPawn(int player, ProductType destination) {
+		System.out.println(currentDeliveryList);
 		if (player < 0 || player >= numberOfPlayers)
 			throw new IllegalArgumentException("No such Player: " + player);
 		int nPawns = getNumberOfPawns(player);
