@@ -14,6 +14,9 @@ public class DeckOfCards {
 	private List<QueuingCard> deck=new ArrayList<QueuingCard>();
 	//private List<QueuingCard> cardsOnHand=new ArrayList<QueuingCard>();
 
+	private void addToTheTop(QueuingCard card){
+		deck.add(deck.size(), card);
+	}
 	/**
 	 * 
 	 * @return
@@ -25,6 +28,14 @@ public class DeckOfCards {
 				break;
 			cardsOnHand.add(deck.get(deck.size() - 1));
 			deck.remove(deck.size() - 1);
+		}
+	}
+	/**
+	 * Writes cards from hand to the deck
+	 */
+	public void iPass(ArrayList<QueuingCard> cardsOnHand){
+		while(!cardsOnHand.isEmpty()){
+			this.addToTheTop(cardsOnHand.remove(0));
 		}
 	}
 	/**
