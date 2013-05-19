@@ -337,4 +337,15 @@ public class GameState {
 		}
 	}
 
+	/**
+	 * @param type
+	 * @return
+	 */
+	public boolean wasDelivered(ProductType type) {
+		for(DeliveryCard card : currentDeliveryList)
+			if(card.getProductType().equals(type))
+				return true;
+		return false;
+	}
+
 }

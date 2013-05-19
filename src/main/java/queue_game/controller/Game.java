@@ -284,7 +284,6 @@ public class Game implements Runnable {
 						break outer;
 				}
 			} while (!success);
-			System.out.println("po sukcesie");
 			do
 				player = (player + 1) % nPlayers;
 			while (finished[player]);
@@ -304,19 +303,18 @@ public class Game implements Runnable {
 		}
 		Store store = gameState.getStore(type);
 
-		if (store.getNumberOf() == 0) {
-			System.out.println("BŁĄD. Do tego sklepu nie było dostawy.");
+		if (!gameState.wasDelivered(type)) {
+			messageForPlayer("BŁĄD. Do tego sklepu nie było dostawy.");
 			return false;
 		}
 		if (store.isClosed()) {
-			System.out.println("BŁĄD. Ten sklep jest zamknięty.");
+			messageForPlayer("BŁĄD. Ten sklep jest zamknięty.");
 			return false;
 		}
 		store.addProduct(store.productType);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.INCREASED_DELIVERY.ordinal(),
 				store.productType.ordinal());
-		System.out.println("INCREASED");
 		return true;
 	}
 
