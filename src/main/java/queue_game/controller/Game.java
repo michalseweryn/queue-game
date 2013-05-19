@@ -731,7 +731,7 @@ public class Game implements Runnable {
 			gameState.setActivePlayer(player);
 			Player temp=gameState.getPlayersList().get(player);
 			outer: while (temp.getNumberOfPawns() < 5) {
-				System.out.println("Wybierz pionek ktory chcesz usunac");
+				System.out.println("Wybierz pionek ktory chcesz usunac lub spasuj");
 				PawnParameters selectedPawn = requestPawn();
 				if (selectedPawn.position == -1) {
 					break;
