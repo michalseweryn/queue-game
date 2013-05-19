@@ -25,8 +25,8 @@ public class GameStateTest {
 
 	@Test
 	public void resetNumberOfProductsTest() {
-		gameState.resetNumberOfProducts();
-		for(int n: gameState.getNumberOfProducts())
+		gameState.resetNumberOfProductsLeft();
+		for(int n: gameState.getNumberOfProductsLeft())
 			assertEquals(50, n);
 	}
 
@@ -92,8 +92,8 @@ public class GameStateTest {
 
 	@Test
 	public void resetNumberOfProductsTest2() {
-		gameState.resetNumberOfProducts();
-		int[] tab=gameState.getNumberOfProducts();
+		gameState.resetNumberOfProductsLeft();
+		int[] tab=gameState.getNumberOfProductsLeft();
 		assertEquals(50,tab[2]);
 	}
 

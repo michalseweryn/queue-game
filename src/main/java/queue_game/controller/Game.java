@@ -109,7 +109,7 @@ public class Game implements Runnable {
 	 */
 	public void PreparingToGamePhase() throws InterruptedException {
 		gameState.reset(nPlayers);
-		gameState.resetNumberOfProducts();
+		gameState.resetNumberOfProductsLeft();
 		gameState.resetPlayers();
 		gameState.resetCards();
 		gameState.resetShoppingList();
@@ -157,17 +157,19 @@ public class Game implements Runnable {
 	 */
 	public void deliveryPhase() {
 		for (int i = 0; i < 3; i++) {
-			ProductType type;
+			int typeNumber;
 			try {
-				type =  ProductType.values()[deckOfDeliveryCards.getAndRemoveFirst()];
+				typeNumber = deckOfDeliveryCards.getAndRemoveFirst();
 			} catch (NoSuchElementException e){
 				continue;
 			}
+			ProductType type = ProductType.values()[typeNumber];
 			
 			Store deliveredStore = gameState.getStore(type);
-			deliveredStore.addProducts(1);
+			if((gameState.getNumberOfProductsLeft(typeNumber))!=0)
+				deliveredStore.addProducts(1);
 			newAction(GameActionType.PRODUCT_DELIVERED, type.ordinal(), 1);
-			int[] numberOfProducts = gameState.getNumberOfProducts();
+			int[] numberOfProducts = gameState.getNumberOfProductsLeft();
 			numberOfProducts[type.ordinal()] = numberOfProducts[type.ordinal()] - 1;
 			gameState.setNumberOfProducts(numberOfProducts);
 		}

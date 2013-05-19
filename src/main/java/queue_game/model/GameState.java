@@ -34,7 +34,7 @@ public class GameState {
 	private int activePlayer = 0;
 	private boolean gameOver;
 	private Store[] stores;
-	private int[] numberOfProducts = new int[5];
+	private int[] numberOfProductsLeft = new int[5];
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private GamePhase currentGamePhase = null;
 	private ArrayList<GameAction> actions = new ArrayList<GameAction>();
@@ -80,9 +80,9 @@ public class GameState {
 	 * Resets number of products with our favorite number.
 	 * 
 	 */
-	public synchronized void resetNumberOfProducts() {
+	public synchronized void resetNumberOfProductsLeft() {
 		for (ProductType i : ProductType.values()) {
-			numberOfProducts[i.ordinal()] = 50;
+			numberOfProductsLeft[i.ordinal()] = 50;
 		}
 	}
 
@@ -214,12 +214,16 @@ public class GameState {
 		return players.get(player).getNumberOfPawns();
 	}
 
-	public synchronized int[] getNumberOfProducts() {
-		return numberOfProducts;
+	public synchronized int[] getNumberOfProductsLeft() {
+		return numberOfProductsLeft;
+	}
+	
+	public synchronized int getNumberOfProductsLeft(int numberOfStore) {
+		return numberOfProductsLeft[numberOfStore];
 	}
 
 	public synchronized void setNumberOfProducts(int[] numberOfProducts) {
-		this.numberOfProducts = numberOfProducts;
+		this.numberOfProductsLeft = numberOfProducts;
 	}
 
 	public synchronized ArrayList<Player> getPlayersList() {

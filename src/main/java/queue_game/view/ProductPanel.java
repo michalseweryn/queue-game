@@ -24,7 +24,7 @@ public class ProductPanel extends JComponent{
 	private int[] numberOfProducts= new int[5];
 	public Color[] colors;
 	public ProductPanel(Game game,JBoard board){
-		numberOfProducts = game.getGameState().getNumberOfProducts();
+		numberOfProducts = game.getGameState().getNumberOfProductsLeft();
 		colors=GameState.productColors;
 	}
 	@Override
