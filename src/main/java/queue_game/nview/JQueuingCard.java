@@ -31,6 +31,7 @@ public class JQueuingCard extends JPanel implements MouseListener{
 		this.card = card;
 		this.player = player;
 		this.game = game;
+		addToolTip();
 		addMouseListener(this);
 	}
 
@@ -73,6 +74,48 @@ public class JQueuingCard extends JPanel implements MouseListener{
 	}
 	public void mouseClicked(MouseEvent e) {
 		game.queuingCardSelected(player.getID(), card); 
+	}
+	
+	private void addToolTip(){
+		switch(card){
+		case CLOSED_FOR_STOCKTAKING:
+			this.setToolTipText("Wybierz sklep, który nie będzie " +
+					"sprzedawał towaru w tej rundzie");
+			break;
+		case COMMUNITY_LIST:
+			this.setToolTipText("Ustaw wybraną kolejkę tył na przód");
+			break;
+		case CRITICIZING_AUTHORITIES:
+			this.setToolTipText("Przesuń wybrany pionek o dwa miejsca do tyłu");
+			break;
+		case DELIVERY_ERROR:
+			this.setToolTipText("Przenieś towar z jednego sklepu do drugiego");
+			break;
+		case INCREASED_DELIVERY:
+			this.setToolTipText("Dołóż jeden towar do sklepu, w którym" +
+					" przed chwilą miała miejsce dostawa towaru");
+			break;
+		case LUCKY_STRIKE:
+			this.setToolTipText("Przesuń swój pionek na drugie miejsce " +
+					"do wybranej kolejki");
+			break;
+		case MOTHER_WITH_CHILD:
+			this.setToolTipText("Przesuń swój pionek na początek kolejki");
+			break;
+		case NOT_YOUR_PLACE:
+			this.setToolTipText("Przesuń swój pionek o jedno miejsce do przodu");
+			break;
+		case TIPPING_FRIEND:
+			this.setToolTipText("Podejrzyj dwie karty dostawy towaru");
+			break;
+		case UNDER_THE_COUNTER_GOODS:
+			this.setToolTipText("Jeżeli jesteś pierwszy w kolejce, " +
+					"zabierz natychmiast towar" );
+			break;
+		default:
+			break;
+		
+		}
 	}
 	
 	public void mouseEntered(MouseEvent e) {}
