@@ -531,7 +531,7 @@ public class Game implements Runnable {
 					if(store.getNumberOf(product) > 0 && !store.isClosed()){
 						gameState.sell(store.productType, product);
 						// no full information anyway.
-						//*newAction(GameActionType.PRODUCT_BOUGHT,
+						// newAction(GameActionType.PRODUCT_BOUGHT,
 						//		gameState.sell(type) + 1, type.ordinal());
 						break;
 					}
