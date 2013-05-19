@@ -294,13 +294,15 @@ public class GameState {
 	 * @param type
 	 * 
 	 */
-	public synchronized int sell(ProductType offeredProduct, ProductType soldProduct) throws IllegalArgumentException{
+	public synchronized void sell(ProductType offeredProduct, ProductType soldProduct) throws IllegalArgumentException{
 		if (getStore(offeredProduct).getQueue().isEmpty())
-			throw new IllegalArgumentException("Empty queue");
-		int player = getStore(offeredProduct).getQueue().pop();
+			throw new IllegalArgumentException("Empty queue: " + offeredProduct);
+		int player = getStore(offeredProduct).getQueue().peek();
 		getStore(offeredProduct).removeProduct(soldProduct);
 		
 		if (player >= 0 && player < numberOfPlayers) {
+			getStore(offeredProduct).getQueue().remove();
+			
 			players.get(player).addPawn();
 			players.get(player).addProduct(soldProduct);
 		}
@@ -308,7 +310,6 @@ public class GameState {
 			int queueLength = getStore(offeredProduct).getQueue().size();
 			movePawn(offeredProduct, 0, offeredProduct, queueLength - 1);
 		}
-		return player;
 	}
 
 }

@@ -133,6 +133,7 @@ public class Game implements Runnable {
 					% gameState.getNumberOfPlayers()) {
 				if (gameState.getNumberOfPawns(player) > 0) {
 					gameState.setActivePlayer(player);
+					messageForPlayer("Wybierz kolejkę w której chcesz ustawić pionka");
 					ProductType queue = requestQueue();
 					gameState.putPlayerPawn(player, queue);
 					newAction(GameActionType.PAWN_PLACED, player + 1,
@@ -154,6 +155,7 @@ public class Game implements Runnable {
 	 * @author krzysiek & Helena
 	 */
 	public void deliveryPhase() {
+		System.out.println("Dostawa");
 		List<DeliveryCard> tempDCList = deckOfDeliveryCards.removeThreeCards();
 		ProductType type;
 		for (DeliveryCard dC : tempDCList){
@@ -164,11 +166,9 @@ public class Game implements Runnable {
 			if(numberOfProductsLeft !=0 )
 			{
 				int amount = Math.min(dC.getAmount(), numberOfProductsLeft);
-				deliveredStore.addProducts(amount);
+				gameState.transferProductToStore(type, amount);
 				newAction(GameActionType.PRODUCT_DELIVERED,
 							type.ordinal(), amount);
-				gameState.setNumberOfProductsLeft(type.ordinal(),
-						numberOfProductsLeft - amount);
 			}
 		}
 	}
@@ -179,6 +179,7 @@ public class Game implements Runnable {
 	 * 
 	 */
 	private void PCTPhase() {
+		System.out.println("PCT");
 		gameState.setCurrentGamePhase(GamePhase.PCT);
 		prepareToQueueJumping();
 		openStores();
