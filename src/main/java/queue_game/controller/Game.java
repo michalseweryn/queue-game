@@ -171,6 +171,7 @@ public class Game implements Runnable {
 							type.ordinal(), amount);
 			}
 		}
+		gameState.setCurrentDeliveryList(tempDCList);
 	}
 
 	/**
