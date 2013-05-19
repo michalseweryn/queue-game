@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import queue_game.controller.Game;
+import queue_game.model.GamePhase;
 import queue_game.model.GameState;
 import queue_game.model.Player;
 import queue_game.model.QueuingCard;
@@ -48,7 +49,12 @@ public class JCardsArea extends JPanel implements View{
 			button.addActionListener(new ActionListener(){
 
 				public void actionPerformed(ActionEvent e) {
-					game.queuingCardSelected(gameState.getActivePlayer(), null); 
+					if(game.getGameState().getCurrentGamePhase()==GamePhase.PCT){
+						game.pawnSelected(game.getGameState().getActivePlayer(), null, -1);
+					}
+					else{
+						game.queuingCardSelected(gameState.getActivePlayer(), null); 
+					}
 				}
 			});
 			add(button);

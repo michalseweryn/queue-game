@@ -179,12 +179,10 @@ public class Game implements Runnable {
 	 * 
 	 * 
 	 */
-<<<<<<< HEAD
+
+
 	private void PCTPhase() throws InterruptedException {
-=======
-	private void PCTPhase() {
 		System.out.println("PCT");
->>>>>>> branch 'master' of https://github.com/michalseweryn/queue-game.git
 		gameState.setCurrentGamePhase(GamePhase.PCT);
 		prepareToQueueJumping();
 		openStores();
