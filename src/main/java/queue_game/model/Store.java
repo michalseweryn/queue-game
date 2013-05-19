@@ -11,6 +11,13 @@ public class Store {
 	public final ProductType productType;
 	private LinkedList<Integer> queue=new LinkedList<Integer>();
 	private int numberOf[]=new int[5];
+	private boolean isClosed=false;
+	public boolean isClosed() {
+		return isClosed;
+	}
+	public void setClosed(boolean isClosed) {
+		this.isClosed = isClosed;
+	}
 	
 	public LinkedList<Integer> getQueue() {
 		return queue;

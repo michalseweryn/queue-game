@@ -183,8 +183,18 @@ public class Game implements Runnable {
 	private void PCTPhase() {
 		gameState.setCurrentGamePhase(GamePhase.PCT);
 		prepareToQueueJumping();
+		openStores();
 	}
-
+/**
+ * 
+ * Set stores open.
+ * 
+ */
+	private void openStores(){
+		for(ProductType p : ProductType.values()){
+			gameState.getStore(p).setClosed(false);
+		}
+	}
 	/**
 	 * @author piotr Third Phase of Day. Each player either plays card or
 	 *         passes. Phase is over when all players have passed or there are
@@ -298,6 +308,10 @@ public class Game implements Runnable {
 			System.out.println("BŁĄD. Do tego sklepu nie było dostawy.");
 			return false;
 		}
+		if (store.isClosed()) {
+			System.out.println("BŁĄD. Ten sklep jest zamknięty.");
+			return false;
+		}
 		store.addProduct(store.productType);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.INCREASED_DELIVERY.ordinal(),
@@ -332,6 +346,10 @@ public class Game implements Runnable {
 		}
 		if (!store.getQueue().get(0).equals(gameState.getActivePlayer())) {
 			messageForPlayer("BŁĄD. Nie jesteś pierwszy w kolejce do tego sklepu.");
+			return false;
+		}
+		if (store.isClosed()) {
+			System.out.println("BŁĄD. Ten sklep jest zamknięty.");
 			return false;
 		}
 		store.removeProducts(1, prod.product);
@@ -380,9 +398,6 @@ public class Game implements Runnable {
 		}
 		messageForPlayer("Wybierz kolejke do której zostanie przeniesiony pionek");
 		ProductType type = requestQueue();
-		if(type.ordinal()!=dest.ordinal()+1 && type.ordinal()!=dest.ordinal()+1){
-			messageForPlayer("BŁAD.To nie jest sasiednia kolejka.");
-		}
 		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
 		gameState.getStore(type).getQueue().add(1, gameState.getActivePlayer());
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
@@ -427,6 +442,10 @@ public class Game implements Runnable {
 		Store store2 = gameState.getStore(requestQueue());
 		if(store2.getNumberOf() == 0) {
 			messageForPlayer("BŁAD.W tym sklepie nie było dostawy.");
+			return false;
+		}
+		if (store2.isClosed()) {
+			System.out.println("BŁĄD. Ten sklep jest zamknięty.");
 			return false;
 		}
 		store2.removeProducts(1);
@@ -490,7 +509,9 @@ public class Game implements Runnable {
 	 * 
 	 */
 	private boolean closedForStocktaking() throws InterruptedException {
-		// TODO Action code
+		messageForPlayer("Wybierz sklep do zamkniecia");
+		ProductType queue = requestQueue();
+		gameState.getStore(queue).setClosed(true);
 		System.out.println("CLOSED");
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.CLOSED_FOR_STOCKTAKING.ordinal());
@@ -508,7 +529,7 @@ public class Game implements Runnable {
 		for(Store store : gameState.getStores()){
 			while(store.totalNumber() > 0){
 				for(ProductType product: ProductType.values()){
-					if(store.getNumberOf(product) > 0){
+					if(store.getNumberOf(product) > 0 && !store.isClosed()){
 						gameState.sell(store.productType, product);
 						// no full information anyway.
 						//*newAction(GameActionType.PRODUCT_BOUGHT,
