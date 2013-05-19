@@ -600,17 +600,18 @@ public class Game implements Runnable {
 	 * @param destination
 	 * @param position
 	 */
-	public void pawnSelected(int player, ProductType destination, int position) {
+	public synchronized void pawnSelected(int player, ProductType destination, int position) {
 		if (player != gameState.getActivePlayer())
 			return;
-		if (expectedType == PawnParameters.class) {
+		if (expectedType != PawnParameters.class) 
+			return;
 			PawnParameters p = new PawnParameters();
 			p.destination = destination;
 			p.position = position;
 			selectedPawn = p;
-		}
-		System.out.println("pionek " + player + " " + destination + " "
-				+ position);
+			expectedType = null;
+			notifyAll();
+		//System.out.println("pionek " + player + " " + destination + " "+ position);
 
 	}
 
