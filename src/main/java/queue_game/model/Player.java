@@ -68,7 +68,9 @@ public class Player {
 		return cardsOnHand;
 	}
 	
-	
+	public void addPawn(){
+		numberOfPawns++;
+	}
 	public void setNumberOfPawns(int numberOfPawns) {
 		this.numberOfPawns = numberOfPawns;
 	}

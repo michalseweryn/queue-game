@@ -11,6 +11,13 @@ public class Store {
 	public final ProductType productType;
 	private LinkedList<Integer> queue=new LinkedList<Integer>();
 	private int numberOf[]=new int[5];
+	private boolean isClosed=false;
+	public boolean isClosed() {
+		return isClosed;
+	}
+	public void setClosed(boolean isClosed) {
+		this.isClosed = isClosed;
+	}
 	
 	public LinkedList<Integer> getQueue() {
 		return queue;
@@ -81,6 +88,19 @@ public class Store {
 			}	
 		}
 		return hasIt;
+	}
+	
+	public int totalNumber(){
+		int total = 0;
+		for(int i = 0; i < 5; i++)
+			total += numberOf[i];
+		return total;
+	}
+	
+	public void removeProduct(ProductType product){
+		if(numberOf[product.ordinal()] <= 0)
+			throw new IllegalArgumentException("No such product in store: " + product);
+		numberOf[product.ordinal()]--;
 	}
 	/**
 	 * 
