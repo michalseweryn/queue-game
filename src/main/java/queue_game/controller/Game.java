@@ -346,6 +346,7 @@ public class Game implements Runnable {
 	 * @return
 	 */
 	private boolean motherWithChild() throws InterruptedException{
+		messageForPlayer("Wybierz twój pionek który ma być przesunięty");
 		PawnParameters pawn  = requestPawn();
 		int p = gameState.getStore(pawn.destination).getQueue()
 				.get(pawn.position);
@@ -367,8 +368,23 @@ public class Game implements Runnable {
 	/**
 	 * @return
 	 */
-	private boolean luckyStrike() {
-		// TODO write action code
+	private boolean luckyStrike() throws InterruptedException{
+		messageForPlayer("Wybierz twój pionek który ma byc przeniesiony");
+		PawnParameters pawn  = requestPawn();
+		int p = gameState.getStore(pawn.destination).getQueue()
+				.get(pawn.position);
+		ProductType dest = pawn.destination;
+		if(p!=gameState.getActivePlayer()){
+			messageForPlayer("BŁAD.To nie twój pionek.");
+			return false;
+		}
+		messageForPlayer("Wybierz kolejke do której zostanie przeniesiony pionek");
+		ProductType type = requestQueue();
+		if(type.ordinal()!=dest.ordinal()+1 && type.ordinal()!=dest.ordinal()+1){
+			messageForPlayer("BŁAD.To nie jest sasiednia kolejka.");
+		}
+		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
+		gameState.getStore(type).getQueue().add(1, gameState.getActivePlayer());
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.LUCKY_STRIKE.ordinal());
 		return true;
@@ -378,6 +394,7 @@ public class Game implements Runnable {
 	 * @return
 	 */
 	private boolean notYourPlace() throws InterruptedException{
+		messageForPlayer("Wybierz twój pionek który ma zostać przesunięty");
 		PawnParameters pawn = null;
 		
 			pawn = requestPawn();
@@ -406,12 +423,14 @@ public class Game implements Runnable {
 	 * 
 	 */
 	private boolean deliveryError() throws InterruptedException {
+		messageForPlayer("Wybierz sklep z którego chcesz zabrać towar dostawa");
 		Store store2 = gameState.getStore(requestQueue());
 		if(store2.getNumberOf() == 0) {
 			messageForPlayer("BŁAD.W tym sklepie nie było dostawy.");
 			return false;
 		}
 		store2.removeProducts(1);
+		messageForPlayer("Wybierz sklep w którym ma być dodany towar");
 		Store store3 = gameState.getStore(requestQueue());
 		store3.addProduct(store2.productType);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
@@ -426,6 +445,7 @@ public class Game implements Runnable {
 	 * 
 	 */
 	private boolean criticizingAuthorities() throws InterruptedException {
+		messageForPlayer("Wybierz pionek innego gracza, który ma być przesunięty");
 		PawnParameters pawn = requestPawn();
 		int p = gameState.getStore(pawn.destination).getQueue()
 				.get(pawn.position);
@@ -452,6 +472,7 @@ public class Game implements Runnable {
 	 * 
 	 */
 	private boolean communityList() throws InterruptedException {
+		messageForPlayer("Wybierz kolejke która ma zostac odwrócona");
 		ProductType queue = requestQueue();
 		if (queue == null){
 			messageForPlayer("BŁAD.Ta kolejka jest pusta.");
