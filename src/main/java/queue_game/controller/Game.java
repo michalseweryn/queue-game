@@ -572,6 +572,7 @@ public class Game implements Runnable {
 		notifyAll();
 	}
 
+	
 	/**
 	 * @param activePlayer
 	 * @param destination
