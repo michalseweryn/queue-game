@@ -34,10 +34,13 @@ public class JProductSquare extends JComponent implements MouseListener{
 		this.product = product;
 		this.amount = amount;
 		this.store = store;
+		addMouseListener(this);
 	}
 	public boolean setAmount(int a){
-		if(this.amount == a)
+		if(this.amount == a){
+			
 			return false;
+		}
 		this.amount = a;
 		return true;
 	}
@@ -65,6 +68,7 @@ public class JProductSquare extends JComponent implements MouseListener{
 		
 	}
 	public void mouseClicked(MouseEvent arg0) {
+		game.productSelected(game.getGameState().getActivePlayer(), product, store);
 		
 	}
 	

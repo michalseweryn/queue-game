@@ -1,8 +1,9 @@
 package queue_game.model;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
 
 /**
@@ -13,6 +14,8 @@ import java.util.Arrays;
 public class GameAction {
 	private GameActionType type;
 	private int[] info;
+	private int player;
+	private String message;
 
 	private GameAction() {
 	}
@@ -21,6 +24,12 @@ public class GameAction {
 		this.type = type;
 		this.info = Arrays.copyOf(info, info.length);
 	}
+	
+	public GameAction(int player, String message) {
+		type = GameActionType.CHAT;
+		this.player = player;
+		this.message = message;
+	}
 
 	/**
 	 * Writes current object to the specified OutputStream (most likely a Socket).
@@ -28,18 +37,23 @@ public class GameAction {
 	 * @param out The stream to write to
 	 * @throws IOException when something goes wrong
 	 */
-	public void write(OutputStream out) throws IOException {
+	public void write(DataOutputStream out) throws IOException {
 		out.write(type.ordinal());
-		out.write(info.length);
-		for(int i = 0; i < info.length; ++i)
-			out.write(info[i]);
-		out.flush();
+		if(type == GameActionType.CHAT) {
+			out.write(player);
+			out.writeUTF(message);
+		} else {
+			out.write(info.length);
+			for(int i = 0; i < info.length; ++i)
+				out.write(info[i]);
+			out.flush();
+		}
 	}
 
-	private static int readInt(InputStream in) throws IOException {
+	private static int readInt(DataInputStream in) throws IOException {
 		int i = in.read();
 		if(i == -1)
-			throw new IOException("Unexpected end of stream");
+			throw new EOFException("Unexpected end of stream");
 		return i;
 	}
 
@@ -50,16 +64,22 @@ public class GameAction {
 	 * @param in the stream to read from
 	 * @return the read GameAction object
 	 * @throws IOException when something goes wrong
+	 * @throws EOFException when the stream ends unexpectedly
 	 */
-	public static GameAction read(InputStream in) throws IOException {
+	public static GameAction read(DataInputStream in) throws IOException {
 		GameAction action = new GameAction();
 		int ordinal = readInt(in);
 		if(ordinal >= GameActionType.values().length)
 			throw new IOException("Incorrect action numer");
 		action.type = GameActionType.values()[ordinal];
-		action.info = new int[readInt(in)];
-		for(int i = 0; i < action.info.length; ++i)
-			action.info[i] = readInt(in);
+		if(action.type == GameActionType.CHAT) {
+			action.player = readInt(in);
+			action.message = in.readUTF();
+		} else {
+			action.info = new int[readInt(in)];
+			for(int i = 0; i < action.info.length; ++i)
+				action.info[i] = readInt(in);
+		}
 		return action;
 	}
 }
