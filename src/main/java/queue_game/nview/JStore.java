@@ -49,6 +49,13 @@ public class JStore extends JComponent implements MouseListener{
 		fillAndDraw(g2d, wall);
 		g2d.setColor(Color.gray);
 		fillAndDraw(g2d, roof);
+		if(game.getGameState().getStore(product).isClosed()){
+			g2d.setColor(Color.red);
+			g2d.setStroke(new BasicStroke((float)(height * 0.1)));
+			g2d.drawLine((int)d, (int)d, (int)(width + d), (int)(height + d));
+			g2d.drawLine((int)d, (int)(d + height), (int)(d + width), (int)d);
+		}
+			
 		/*int initialHeight = size.height / 5 + 2;
 		int remainingHeight = size.height - initialHeight;
 		//When there are more than 10 pawns, you should resize the rectangles

@@ -22,17 +22,19 @@ import queue_game.model.QueuingCard;
  * 
  * 
  */
-public class JQueuingCard extends JPanel implements MouseListener{
+public class JQueuingCard extends JPanel implements MouseListener {
 	private static final long serialVersionUID = 6947197330462260996L;
 	private QueuingCard card;
 	private Player player;
 	private Game game;
-	public JQueuingCard(Player player, QueuingCard card,Game game) {
+
+	public JQueuingCard(Player player, QueuingCard card, Game game) {
 		this.card = card;
 		this.player = player;
 		this.game = game;
 		addToolTip();
 		addMouseListener(this);
+		addToolTip();
 	}
 
 	@Override
@@ -71,9 +73,6 @@ public class JQueuingCard extends JPanel implements MouseListener{
 			g.setFont(g.getFont().deriveFont(10f));
 			g.drawString(card.toString(), size.width / 5, size.height / 2);
 		}
-	}
-	public void mouseClicked(MouseEvent e) {
-		game.queuingCardSelected(player.getID(), card); 
 	}
 	
 	private void addToolTip(){
@@ -118,11 +117,20 @@ public class JQueuingCard extends JPanel implements MouseListener{
 		}
 	}
 	
-	public void mouseEntered(MouseEvent e) {}
-	
-	public void mouseExited(MouseEvent e) {}
-	
-	public void mousePressed(MouseEvent e) {}
-	
-	public void mouseReleased(MouseEvent e) {}
+
+	public void mouseClicked(MouseEvent e) {
+		game.queuingCardSelected(player.getID(), card);
+	}
+
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	public void mouseExited(MouseEvent e) {
+	}
+
+	public void mousePressed(MouseEvent e) {
+	}
+
+	public void mouseReleased(MouseEvent e) {
+	}
 }
