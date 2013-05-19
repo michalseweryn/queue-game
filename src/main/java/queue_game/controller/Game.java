@@ -350,11 +350,11 @@ public class Game implements Runnable {
 		int p = gameState.getStore(pawn.destination).getQueue()
 				.get(pawn.position);
 		if(p!=gameState.getActivePlayer()){
-			messageForPlayer("");
+			messageForPlayer("BŁAD.To nie twój pionek.");
 			return false;
 		}
 		if(pawn.position==0){
-			messageForPlayer("");
+			messageForPlayer("BŁAD.Już jestes pierwszy w tej kolejce.");
 			return false;
 		}
 		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
@@ -385,11 +385,11 @@ public class Game implements Runnable {
 		int p = gameState.getStore(pawn.destination).getQueue()
 				.get(pawn.position);
 		if(p!=gameState.getActivePlayer()){
-			messageForPlayer("");
+			messageForPlayer("BŁAD.To nie twój pionek.");
 			return false;
 		}
 		if(pawn.position==0){
-			messageForPlayer("");
+			messageForPlayer("BŁAD.Już jestes pierwszy w tej kolejce.");
 			return false;
 		}
 		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
@@ -408,7 +408,7 @@ public class Game implements Runnable {
 	private boolean deliveryError() throws InterruptedException {
 		Store store2 = gameState.getStore(requestQueue());
 		if(store2.getNumberOf() == 0) {
-			messageForPlayer("");
+			messageForPlayer("BŁAD.W tym sklepie nie było dostawy.");
 			return false;
 		}
 		store2.removeProducts(1);
@@ -430,11 +430,11 @@ public class Game implements Runnable {
 		int p = gameState.getStore(pawn.destination).getQueue()
 				.get(pawn.position);
 		if(p==gameState.getActivePlayer()){
-			messageForPlayer("");
+			messageForPlayer("BŁAD.To twój pionek.");
 			return false;
 		}
 		if(pawn.position==gameState.getStore(pawn.destination).getQueue().size()-1){
-			messageForPlayer("");
+			messageForPlayer("BŁAD.On już jest ostatni w tej kolejce.");
 			return false;
 		}
 		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
@@ -454,7 +454,7 @@ public class Game implements Runnable {
 	private boolean communityList() throws InterruptedException {
 		ProductType queue = requestQueue();
 		if (queue == null){
-			messageForPlayer("");
+			messageForPlayer("BŁAD.Ta kolejka jest pusta.");
 			return false;
 		}
 		Collections.reverse(gameState.getStore(queue).getQueue());
