@@ -472,12 +472,8 @@ public class Game implements Runnable {
 		PawnParameters pawn = requestPawn();
 		int p = gameState.getStore(pawn.destination).getQueue()
 				.get(pawn.position);
-		if(p==gameState.getActivePlayer()){
-			messageForPlayer("BŁAD. To twój pionek.");
-			return false;
-		}
-		if(pawn.position==gameState.getStore(pawn.destination).getQueue().size()-1){
-			messageForPlayer("BŁAD. On już jest ostatni w tej kolejce.");
+		if(pawn.position==gameState.getStore(pawn.destination).getQueue().size()-1 || pawn.position==gameState.getStore(pawn.destination).getQueue().size()-2){
+			messageForPlayer("BŁAD. On już jest na końcu kolejki.");
 			return false;
 		}
 		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
