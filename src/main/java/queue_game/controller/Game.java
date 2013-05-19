@@ -114,8 +114,8 @@ public class Game implements Runnable {
 		gameState.resetCards();
 		gameState.resetShoppingList();
 		queuingUpPhase();
+		gameState.putSpeculators();
 		for (ProductType pt : ProductType.values()) {
-			gameState.putPawnofSpeculator(pt);
 			newAction(GameActionType.PAWN_PLACED, 0, pt.ordinal());
 		}
 	}
@@ -472,11 +472,21 @@ public class Game implements Runnable {
 	 * @author Jan
 	 */
 	public void openingStoresPhase() {
-		for (ProductType type : ProductType.values())
-			while (gameState.getStore(type).getQueue().size() > 0
-					&& gameState.getStore(type).getNumberOf() > 0)
-				newAction(GameActionType.PRODUCT_BOUGHT,
-						gameState.sell(type) + 1, type.ordinal());
+		for(Store store : gameState.getStores()){
+			while(store.totalNumber() > 0){
+				for(ProductType product: ProductType.values()){
+					if(store.getNumberOf(product) > 0){
+						gameState.sell(store.productType, product);
+						// no full information anyway.
+						//*newAction(GameActionType.PRODUCT_BOUGHT,
+						//		gameState.sell(type) + 1, type.ordinal());
+						break;
+					}
+					
+				}
+				assert false: "Wrong number of products";
+			}
+		}
 	}
 
 	/**

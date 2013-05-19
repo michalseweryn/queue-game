@@ -82,6 +82,19 @@ public class Store {
 		}
 		return hasIt;
 	}
+	
+	public int totalNumber(){
+		int total = 0;
+		for(int i = 0; i < 5; i++)
+			total += numberOf[i];
+		return total;
+	}
+	
+	public void removeProduct(ProductType product){
+		if(numberOf[product.ordinal()] <= 0)
+			throw new IllegalArgumentException("No such product in store: " + product);
+		numberOf[product.ordinal()]--;
+	}
 	/**
 	 * 
 	 * @param numberOfRemovedProducts

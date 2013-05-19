@@ -75,6 +75,8 @@ public class GameStateTest {
 	public void putPlayerPawnTest3() {
 		gameState.putPlayerPawn(6, ProductType.CLOTHES);
 	}
+//temporarily out of use
+	/*
 
 	@Test
 	public void sellTest() {
@@ -83,12 +85,10 @@ public class GameStateTest {
 		gameState.putPlayerPawn(2, ProductType.CLOTHES);
 		gameState.sell(ProductType.CLOTHES);
 		assertEquals(new ArrayList<Integer>(Arrays.asList(4, 2)), gameState.getStore(ProductType.CLOTHES).getQueue());
-	}
-
-	@Test(expected = IllegalArgumentException.class)
+	}@Test(expected = IllegalArgumentException.class)
 	public void sellTest2() {
 		gameState.sell(ProductType.CLOTHES);
-	}
+	}*/
 
 	@Test
 	public void resetNumberOfProductsTest2() {
@@ -107,7 +107,7 @@ public class GameStateTest {
 	@Test
 	public void putPawnofSpeculatorTest() {
 		gameState.reset(5);
-		gameState.putPawnofSpeculator(ProductType.FURNITURE);
+		gameState.putSpeculators();
 		assertEquals(true,gameState.getStore(ProductType.FURNITURE).getQueue().contains(-1));
 	}
 

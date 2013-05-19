@@ -241,14 +241,31 @@ public class GameState {
 	public synchronized List<GameAction> getPlayerActions() {
 		return actions;
 	}
+	public void movePawn(ProductType orig, int pos, ProductType dest, int npos){
+		Integer pawn = getStore(orig).getQueue().remove(pos);
+		getStore(dest).getQueue().add(npos, pawn);
+	}
 
 	/**
 	 * 
 	 * Puts black pawns of speculators to all queues.
 	 * 
 	 */
-	public synchronized void putPawnofSpeculator(ProductType dest) {
-		this.getStore(dest).getQueue().add(-1);
+	public synchronized void putSpeculators() {
+		for(Store store : stores)
+			store.getQueue().add(-1);
+	}
+	
+	/**
+	 *  Transfers given amount of product to corresponding store.
+	 * @param product type of delivered product
+	 * @throws IllegalArgumentException too large amount of product.
+	 */
+	public void transferProductToStore(ProductType product, int amount) throws IllegalArgumentException{
+		if(numberOfProductsLeft[product.ordinal()] == 0)
+			throw new IllegalArgumentException("No more pieces of product left: " + product);
+		numberOfProductsLeft[product.ordinal()] -= amount;
+		stores[product.ordinal()].addProducts(amount);
 	}
 
 	/**
@@ -271,20 +288,21 @@ public class GameState {
 
 	/**
 	 * @param type
+	 * 
 	 */
-	public synchronized int sell(ProductType type) {
-		Store store = getStore(type);
-		if (store.getQueue().isEmpty())
+	public synchronized int sell(ProductType offeredProduct, ProductType soldProduct) throws IllegalArgumentException{
+		if (getStore(offeredProduct).getQueue().isEmpty())
 			throw new IllegalArgumentException("Empty queue");
-		int player = getStore(type).getQueue().pop();
-		store.removeProducts(1);
+		int player = getStore(offeredProduct).getQueue().pop();
+		getStore(offeredProduct).removeProduct(soldProduct);
+		
 		if (player >= 0 && player < numberOfPlayers) {
-			int nPawns = getNumberOfPawns(player);
-			players.get(player).setNumberOfPawns(nPawns + 1);
-			players.get(player).addProduct(type);
+			players.get(player).addPawn();
+			players.get(player).addProduct(soldProduct);
 		}
 		if (player == -1) {
-			this.putPawnofSpeculator(type);
+			int queueLength = getStore(offeredProduct).getQueue().size();
+			movePawn(offeredProduct, 0, offeredProduct, queueLength - 1);
 		}
 		return player;
 	}
