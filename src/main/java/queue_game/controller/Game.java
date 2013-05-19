@@ -299,10 +299,7 @@ public class Game implements Runnable {
 			return false;
 		}
 		Store store = gameState.getStore(type);
-		if (store == null) {
-			messageForPlayer("BŁĄD. Nie można zwiększyć dostawy w bazarze.");
-			return false;
-		}
+
 		if (store.getNumberOf() == 0) {
 			System.out.println("BŁĄD. Do tego sklepu nie było dostawy.");
 			return false;
@@ -468,11 +465,11 @@ public class Game implements Runnable {
 		int p = gameState.getStore(pawn.destination).getQueue()
 				.get(pawn.position);
 		if(p==gameState.getActivePlayer()){
-			messageForPlayer("BŁAD.To twój pionek.");
+			messageForPlayer("BŁAD. To twój pionek.");
 			return false;
 		}
 		if(pawn.position==gameState.getStore(pawn.destination).getQueue().size()-1){
-			messageForPlayer("BŁAD.On już jest ostatni w tej kolejce.");
+			messageForPlayer("BŁAD. On już jest ostatni w tej kolejce.");
 			return false;
 		}
 		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
@@ -490,10 +487,10 @@ public class Game implements Runnable {
 	 * 
 	 */
 	private boolean communityList() throws InterruptedException {
-		messageForPlayer("Wybierz kolejke która ma zostac odwrócona");
+		messageForPlayer("Wybierz kolejke która ma zostać odwrócona");
 		ProductType queue = requestQueue();
 		if (queue == null){
-			messageForPlayer("BŁAD.Ta kolejka jest pusta.");
+			messageForPlayer("BŁAD. Ta kolejka jest pusta.");
 			return false;
 		}
 		Collections.reverse(gameState.getStore(queue).getQueue());
@@ -535,7 +532,6 @@ public class Game implements Runnable {
 						//		gameState.sell(type) + 1, type.ordinal());
 						break;
 					}
-					
 				}
 				assert false: "Wrong number of products";
 			}
