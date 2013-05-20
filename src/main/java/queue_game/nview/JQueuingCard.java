@@ -45,8 +45,8 @@ public class JQueuingCard extends JPanel implements MouseListener {
 	public Dimension getPreferredSize() {
 		if (getParent() == null)
 			return null;
-		Dimension size = getParent().getSize();
-		return new Dimension(size.width / 6, size.height);
+		Dimension size = getParent().getParent().getSize();
+		return new Dimension(size.height / 6, 4 * size.height / 18);
 	}
 
 	@Override

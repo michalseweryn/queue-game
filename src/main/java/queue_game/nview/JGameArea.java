@@ -27,9 +27,9 @@ public class JGameArea extends JPanel implements queue_game.view.View{
 		this.productPanel = new ProductPanel(game, board);
 		this.board = new JBoard(game);
 		this.cardsArea = new JCardsArea(game);
-		add(productPanel);
-		add(board);
-		add(cardsArea, BorderLayout.SOUTH);
+		add(productPanel, BorderLayout.PAGE_START);
+		add(board, BorderLayout.CENTER);
+		add(cardsArea, BorderLayout.PAGE_END);
 	}
 	@Override
 	public Dimension getPreferredSize(){

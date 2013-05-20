@@ -64,33 +64,33 @@ public class JCardsArea extends JPanel {
 			add(temp);
 		}
 	}
+	/*
 	@Override
 	public Dimension getMinimumSize(){
 		return getPreferredSize();
-	}
+	}*/
 	
 	@Override
 	public Dimension getPreferredSize(){
 		if (getParent() == null)
 			return null;
-		Dimension size = getParent().getSize();
-		return new Dimension(size.width, 150 );
+		return getParent().getSize();
 	}
-	@Override
+	/*@Override
 	public Dimension getMaximumSize(){
 		return getPreferredSize();
-	}
-	@Override
+	}*/
+	/*@Override
     protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		Graphics2D g2d = (Graphics2D) g;
+		/*Graphics2D g2d = (Graphics2D) g;
 		Dimension size = getSize();
 		Rectangle rect = new Rectangle(0,0 ,size.width ,size.height);		
 		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, size.width, size.height);
 		g2d.setColor(Color.BLACK);
 		g2d.draw(rect);
-	}
+	}*/
 	
 	public void update() {
 		removeAll();
