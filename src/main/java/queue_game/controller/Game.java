@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.lang.Math;
 
+import org.ietf.jgss.MessageProp;
+
 import queue_game.model.DeckOfDeliveryCards;
 import queue_game.model.DeliveryCard;
 import queue_game.model.GameAction;
@@ -182,7 +184,6 @@ public class Game implements Runnable {
 
 
 	private void PCTPhase() throws InterruptedException {
-		System.out.println("PCT");
 		gameState.setCurrentGamePhase(GamePhase.PCT);
 		prepareToQueueJumping();
 		openStores();
@@ -735,7 +736,7 @@ public class Game implements Runnable {
 			gameState.setActivePlayer(player);
 			Player temp=gameState.getPlayersList().get(player);
 			outer: while (temp.getNumberOfPawns() < 5) {
-				System.out.println("Wybierz pionek ktory chcesz usunac");
+				messageForPlayer("Wybierz pionek ktory chcesz usunac");
 				PawnParameters selectedPawn = requestPawn();
 				if (selectedPawn.position == -1) {
 					break;
@@ -771,6 +772,7 @@ public class Game implements Runnable {
 	}
 
 	private void messageForPlayer(String s) {
+		gameState.setMessage(s);
 		System.out.println(s);
 	}
 

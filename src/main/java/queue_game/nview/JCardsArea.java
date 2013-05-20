@@ -1,5 +1,6 @@
 package queue_game.nview;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -11,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import queue_game.controller.Game;
@@ -28,41 +30,50 @@ public class JCardsArea extends JPanel {
 	private static final long serialVersionUID = -3804758455470286800L;
 	private GameState gameState;
 	private Game game;
+	private JLabel messageLabel;
 	public JCardsArea(Game game){
 		super();
 		this.gameState = game.getGameState();
 		this.game = game;
-		FlowLayout layout = new FlowLayout();
-		layout.setVgap(0);
-		layout.setHgap(0);
-		setLayout(layout);	
+		setLayout(new BorderLayout());
 		addCards();
 	}
 	private void addCards(){
 		//for(int i = 0; i < 3; i++)
 		//	cards[i] = gameState.getDeck(gameState.getActivePlayer());
-		//for(int i = 0; i < 3; i++){			
+		//for(int i = 0; i < 3; i++){
+		messageLabel = new JLabel(gameState.getPlayersList().get(gameState.getActivePlayer()).getName() +": " + gameState.getMessage());
+		add(messageLabel, BorderLayout.PAGE_START);
+		JPanel contentPanel = new JPanel();
 		List<QueuingCard> cards = gameState.getPlayersList().get((gameState.getActivePlayer())).getCardsOnHand();
 		Player player = gameState.getPlayersList().get((gameState.getActivePlayer()));
-		if(cards.size() > 0){
+		if(gameState.getCurrentGamePhase() == GamePhase.JUMPING){
 			JButton button = new JButton("PASS");
 			button.addActionListener(new ActionListener(){
 
 				public void actionPerformed(ActionEvent e) {
-					if(game.getGameState().getCurrentGamePhase()==GamePhase.PCT){
-						game.pawnSelected(game.getGameState().getActivePlayer(), null, -1);
-					}
-					else{
-						game.queuingCardSelected(gameState.getActivePlayer(), null); 
-					}
+						game.queuingCardSelected(gameState.getActivePlayer(), null);
 				}
 			});
-			add(button);
+			contentPanel.add(button);
 		}
+
+		if(gameState.getCurrentGamePhase() == GamePhase.PCT){
+			JButton button = new JButton("PASS");
+			button.addActionListener(new ActionListener(){
+
+				public void actionPerformed(ActionEvent e) {
+						game.pawnSelected(game.getGameState().getActivePlayer(), null, -1);
+				}
+			});
+			contentPanel.add(button);
+		}
+		if(gameState.getCurrentGamePhase().ordinal() < 3)
 		for(QueuingCard i: gameState.getPlayersList().get((gameState.getActivePlayer())).getCardsOnHand()){
 			JQueuingCard temp = new JQueuingCard(player,i,game);
-			add(temp);
+			contentPanel.add(temp);
 		}
+		add(contentPanel, BorderLayout.CENTER);
 	}
 	/*
 	@Override

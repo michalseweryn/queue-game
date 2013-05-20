@@ -127,7 +127,9 @@ public class JBoard extends JPanel implements ComponentListener{
 				}
 		}
 	}
-	
+	public JQueue getQueue(ProductType type){
+		return queues.get(type.ordinal());
+	}
 	
 	private double tileWidth;
 	private double tileHeight;

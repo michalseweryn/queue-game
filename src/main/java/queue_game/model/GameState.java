@@ -39,6 +39,8 @@ public class GameState {
 	private GamePhase currentGamePhase = null;
 	private ArrayList<GameAction> actions = new ArrayList<GameAction>();
 	private List<DeliveryCard> currentDeliveryList;
+
+	private String message = "";
 	
 	public GameState(){
 		stores = new Store[ProductType.values().length];
@@ -334,6 +336,12 @@ public class GameState {
 			int queueLength = getStore(offeredProduct).getQueue().size();
 			movePawn(offeredProduct, 0, offeredProduct, queueLength - 1);
 		}
+	}
+	public void setMessage(String message){
+		this.message = message;
+	}
+	public String getMessage(){
+		return message;
 	}
 
 	/**

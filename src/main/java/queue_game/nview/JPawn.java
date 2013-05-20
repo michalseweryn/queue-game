@@ -149,12 +149,12 @@ public class JPawn extends JComponent implements MouseListener {
 
 	public void mouseEntered(MouseEvent e) {
 		mouseOver = true;
-		getParent().repaint();
+		repaint();
 	}
 
 	public void mouseExited(MouseEvent e) {
 		mouseOver = false;
-		getParent().repaint();
+		repaint();
 	}
 
 	public void mousePressed(MouseEvent e) {
