@@ -50,6 +50,7 @@ public class JBoard extends JPanel implements ComponentListener{
 	
 
 	private ArrayList<ArrayList<JPawn>> pawns = new ArrayList<ArrayList<JPawn>>(6);
+	private ArrayList<JPawn> outdoorMarket = new ArrayList<JPawn>();
 	private ArrayList<ArrayList<JProductSquare>> products = new ArrayList<ArrayList<JProductSquare>>(6);
 	private List<JQueue> queues = new ArrayList<JQueue>(6);
 	private List<JStore> stores = new ArrayList<JStore>(6);
@@ -301,6 +302,41 @@ public class JBoard extends JPanel implements ComponentListener{
 			}
 			
 		}
+			List<Integer> ints = gameState.getStore(null).getQueue();
+			List<JPawn> pawnList = outdoorMarket;
+			int isize = ints.size();
+			int psize = pawnList.size();
+			while(isize < psize){
+				layeredPane.remove(pawnList.get(--psize));
+				pawnList.remove(psize);
+			}
+			double x = (5.25) * tileWidth;
+			double y = (11 * tileHeight);
+			double skip = 7 * tileWidth / (isize - 1);
+			if (skip > tileWidth * 0.55)
+				skip = tileWidth * 0.55;
+			while(isize > psize){
+				JPawn pawn = new JPawn(game, null, ints.get(psize), 0, tileHeight * 2);
+				pawn.setBounds((int)(x + psize * skip),(int)(y),(int)(tileHeight),(int)(2 * tileHeight));
+				pawnList.add(pawn);
+				layeredPane.add(pawn, new Integer(PAWN_LAYER0 + psize++));
+			}
+			for(int j = 0; j < isize; j++){
+				JPawn pawn = pawnList.get(j); 
+
+				if(resetBounds)
+					pawn.setBounds((int)(x + psize * skip),(int)(y),(int)(tileHeight),(int)(2 * tileHeight));
+				boolean changed = false;
+				if(pawn.getPlayerId() != ints.get(j)){
+					pawn.setPlayerId(ints.get(j));
+					changed = true;
+				}
+				pawn.setPosition(j);
+				pawn.setPlayerId(ints.get(j)); 
+				if(changed)				
+					pawn.repaint();
+				pawn.setLocation((int) (x + j * skip), (int) y );
+			}
 			
 		ind = 0;
 		for(int i = 0; i < 5; i++){
