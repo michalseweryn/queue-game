@@ -191,20 +191,10 @@ public class Game implements Runnable {
 	private void PCTPhase() throws InterruptedException {
 		gameState.setCurrentGamePhase(GamePhase.PCT);
 		prepareToQueueJumping();
-		openStores();
+		gameState.openStores();
 		pawnsTaking();
 	}
-/**
- * 
- * Set stores open.
- * 
- */
-	private void openStores(){
-		for(ProductType p : ProductType.values()){
-			gameState.getStore(p).setClosed(false);
-		}
-	}
-	///MAM dosc gita!!!!!
+
 	/**
 	 * @author piotr Third Phase of Day. Each player either plays card or
 	 *         passes. Phase is over when all players have passed or there are
@@ -498,6 +488,10 @@ public class Game implements Runnable {
 		ProductType queue = requestQueue();
 		if (queue == null){
 			messageForPlayer("BŁAD. Nie możesz odwrócić kolejki na bazarze.");
+			return false;
+		}
+		if(gameState.getStore(queue).getQueue().size()==1){
+			messageForPlayer("BŁAD. Tu jest tylko jeden samotny spekulant.");
 			return false;
 		}
 		gameState.reverse(queue);
