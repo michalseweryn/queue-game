@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.lang.Math;
 
 import org.ietf.jgss.MessageProp;
@@ -138,8 +139,12 @@ public class Game implements Runnable {
 					messageForPlayer("Wybierz kolejkę w której chcesz ustawić pionka");
 					ProductType queue = requestQueue();
 					gameState.putPlayerPawn(player, queue);
-					newAction(GameActionType.PAWN_PLACED, player + 1,
-							queue.ordinal());
+					if(queue == null)
+						newAction(GameActionType.PAWN_PLACED, player + 1,
+								0);
+					else
+						newAction(GameActionType.PAWN_PLACED, player + 1,
+								queue.ordinal());
 					timeSinceLastPawnLocation = 0;
 				} else {
 					timeSinceLastPawnLocation++;

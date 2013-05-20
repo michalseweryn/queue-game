@@ -39,7 +39,7 @@ public class GameState {
 	private GamePhase currentGamePhase = null;
 	private ArrayList<GameAction> actions = new ArrayList<GameAction>();
 	private List<DeliveryCard> currentDeliveryList;
-
+	private Store market;
 	private String message = "";
 	
 	public GameState(){
@@ -47,6 +47,7 @@ public class GameState {
 		int ind = 0;
 		for (ProductType product : ProductType.values())
 			stores[ind++] = new Store(product);
+		market = new Store(null);
 	}
 
 	public synchronized void reset(int nPlayers) {
@@ -60,6 +61,7 @@ public class GameState {
 		int ind = 0;
 		for (ProductType product : ProductType.values())
 			stores[ind++] = new Store(product);
+		market = new Store(null);
 	}
 
 	/**
@@ -174,12 +176,20 @@ public class GameState {
 	public synchronized Store[] getStores() {
 		return stores;
 	}
-
+	
+	/**
+	 * @return the market
+	 */
+	public synchronized Store getOutDoorMarket() {
+		return market;
+	}
 	public synchronized DeckOfQueuingCards getDeck(int playerNr) {
 		return players.get(playerNr).getDeck();
 	}
 
 	public synchronized Store getStore(ProductType product) {
+		if(product == null)
+			return market;
 		return stores[product.ordinal()];
 	}
 
