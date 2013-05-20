@@ -24,9 +24,9 @@ public class GameState {
 	/**
 	 * Counted from 1, 0 is speculator.
 	 */
-	public static final Color[] playerColors = new Color[] { Color.BLACK,
-			Color.RED, Color.YELLOW, new Color(0, 128, 0),
-			new Color(192, 128, 0), Color.BLUE };
+	public static final Color[] playerColors = new Color[] { new Color(0x000000),
+			new Color(0xff0000), new Color(0xffff00), new Color(0, 128, 0),
+			new Color(192, 128, 0), new Color(0x0000ff) };
 
 	private int dayNumber;
 	private int gameOpeningMarker;

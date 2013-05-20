@@ -32,6 +32,7 @@ public class JPawn extends JComponent implements MouseListener {
 	private ProductType destination;
 	private double pawnHeight;
 	private double pawnDistance;
+	private boolean mouseOver;
 	private static double STROKE = 0.04;
 	private static double LEG_HEIGHT = 1. / 3;
 	private static double LEG_WIDTH = 1. / 6;
@@ -90,6 +91,8 @@ public class JPawn extends JComponent implements MouseListener {
 		this.position = place;
 		this.pawnHeight = pawnHeight;
 		this.pawnDistance = 3 * pawnHeight / 8;
+		generateShape();
+		mouseOver = false;
 		enableInputMethods(true);
 		addMouseListener(this);
 	}
@@ -117,6 +120,15 @@ public class JPawn extends JComponent implements MouseListener {
 	public void setPlayerId(int i) {
 		this.playerId = i;
 	}
+	@Override
+	public boolean contains(int x, int y){
+		return pawnShape.contains(x, y);
+	}
+	private Color lighter(Color c){
+		System.out.println(c.getRed() + " " + c.getGreen() + " " + c.getBlue());
+		return new Color((255 + c.getRed()) / 2, (255 + c.getGreen()) / 2, (255 + c.getBlue()) / 2);
+		
+	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -124,7 +136,13 @@ public class JPawn extends JComponent implements MouseListener {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-		g2d.setColor(GameState.playerColors[playerId + 1]);
+		Color c = GameState.playerColors[playerId + 1];
+		if(mouseOver){
+			System.out.println(c);
+			c = lighter(c);
+			System.out.println(c);
+		}
+		g2d.setColor(c);
 		generateShape();
 		g2d.fill(pawnShape);
 		g2d.setColor(Color.black);
@@ -133,45 +151,23 @@ public class JPawn extends JComponent implements MouseListener {
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		if (pawnShape.contains(e.getPoint())){
-			game.pawnSelected(game.getGameState().getActivePlayer(), destination, position);
-			//System.out.println("Kliknięty " + position + " w kolejce do " + destination);
-			//PAWN  (position) SELECTED, you should inform about it the controller.
-			return;
-		}
-		if(position == 0)
-			return;
-		AffineTransform aT = AffineTransform.getTranslateInstance(0, pawnDistance);
-		Point p = new Point();
-		if (pawnShape.contains(aT.transform(e.getPoint(), p))){
-			game.pawnSelected(game.getGameState().getActivePlayer(), destination, position - 1);
-			//System.out.println("Kliknięty " + (position - 1) + " w kolejce do " + destination);
-			//PAWN  (position - 1) SELECTED, you should inform about it the controller.
-			return;
-		}
-		if(position == 1)
-			return;
-		e.getPoint().translate(0, (int) pawnDistance);
-		if (pawnShape.contains(e.getPoint())){
-			game.pawnSelected(game.getGameState().getActivePlayer(), destination, position - 2);
-			//System.out.println("Kliknięty " + (position - 2) + " w kolejce do " + destination);
-			//PAWN  (position - 2) SELECTED, you should inform about it the controller.
-			return;
-		}
-		game.pawnSelected(game.getGameState().getActivePlayer(), destination,position);
+		game.pawnSelected(game.getGameState().getActivePlayer(), destination, position);
 	}
 
 	public void mouseEntered(MouseEvent e) {
+		mouseOver = true;
+		getParent().repaint();
 	}
 
 	public void mouseExited(MouseEvent e) {
+		mouseOver = false;
+		getParent().repaint();
 	}
 
 	public void mousePressed(MouseEvent e) {
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		game.pawnSelected(playerId, destination, position );
 	}
 	
 	public void setPosition(int j) {
