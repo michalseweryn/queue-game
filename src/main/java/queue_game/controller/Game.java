@@ -204,6 +204,7 @@ public class Game implements Runnable {
 			gameState.getStore(p).setClosed(false);
 		}
 	}
+	///MAM dosc gita!!!!!
 	/**
 	 * @author piotr Third Phase of Day. Each player either plays card or
 	 *         passes. Phase is over when all players have passed or there are
