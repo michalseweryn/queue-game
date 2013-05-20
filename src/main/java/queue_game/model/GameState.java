@@ -257,6 +257,13 @@ public class GameState {
 	public synchronized List<GameAction> getPlayerActions() {
 		return actions;
 	}
+	/**
+	 * Moves pawn.
+	 * @param orig - original store of this pawn
+	 * @param pos - position in original queue
+	 * @param dest - destination of pawn
+	 * @param npos - new position of pawn
+	 */
 	public void movePawn(ProductType orig, int pos, ProductType dest, int npos){
 		Integer pawn = getStore(orig).getQueue().remove(pos);
 		getStore(dest).getQueue().add(npos, pawn);

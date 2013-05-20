@@ -398,8 +398,7 @@ public class Game implements Runnable {
 		}
 		messageForPlayer("Wybierz kolejke do której zostanie przeniesiony pionek");
 		ProductType type = requestQueue();
-		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
-		gameState.getStore(type).getQueue().add(1, gameState.getActivePlayer());
+		gameState.movePawn(pawn.destination, pawn.position, type, 1);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.LUCKY_STRIKE.ordinal());
 		return true;
@@ -424,9 +423,7 @@ public class Game implements Runnable {
 			messageForPlayer("BŁAD.Już jestes pierwszy w tej kolejce.");
 			return false;
 		}
-		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
-		gameState.getStore(pawn.destination).getQueue()
-				.add(pawn.position - 1, p);
+		gameState.movePawn(pawn.destination, pawn.position, pawn.destination, pawn.position-1);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.NOT_YOUR_PLACE.ordinal());
 		return true;
@@ -471,15 +468,11 @@ public class Game implements Runnable {
 	private boolean criticizingAuthorities() throws InterruptedException {
 		messageForPlayer("Wybierz pionek innego gracza, który ma być przesunięty");
 		PawnParameters pawn = requestPawn();
-		int p = gameState.getStore(pawn.destination).getQueue()
-				.get(pawn.position);
 		if(pawn.position==gameState.getStore(pawn.destination).getQueue().size()-1 || pawn.position==gameState.getStore(pawn.destination).getQueue().size()-2){
 			messageForPlayer("BŁAD. On już jest na końcu kolejki.");
 			return false;
 		}
-		gameState.getStore(pawn.destination).getQueue().remove(pawn.position);
-		gameState.getStore(pawn.destination).getQueue()
-				.add(pawn.position + 2, p);
+		gameState.movePawn(pawn.destination, pawn.position, pawn.destination, pawn.position+2);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.CRITICIZING_AUTHORITIES.ordinal());
 		System.out.println("AUTHORITIES");
