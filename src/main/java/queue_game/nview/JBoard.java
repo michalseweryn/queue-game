@@ -167,7 +167,7 @@ public class JBoard extends JPanel implements ComponentListener{
 
 	}
 	public void update() {
-		resetComponents();
+		resetComponents(false);
 	}
 
 	@Override
@@ -204,7 +204,7 @@ public class JBoard extends JPanel implements ComponentListener{
 	public void componentResized(ComponentEvent arg0) {
 		tileWidth = getSize().getWidth() / BOARD_WIDTH;
 		tileHeight = getSize().getHeight() / BOARD_HEIGHT;
-		resetComponents();
+		resetComponents(true);
 		
 		layeredPane.repaint();
 	}
@@ -212,7 +212,7 @@ public class JBoard extends JPanel implements ComponentListener{
 	/**
 	 * 
 	 */
-	private void resetComponents() {
+	private void resetComponents(boolean resetBounds) {
 		if(boardDrawer == null){
 			BoardDrawer boardDrawer = new BoardDrawer();
 	        boardDrawer.setBounds(0, 0, 2000, 2000);
@@ -284,11 +284,17 @@ public class JBoard extends JPanel implements ComponentListener{
 			for(int j = 0; j < isize; j++){
 				JPawn pawn = pawnList.get(j); 
 
-				pawn.setBounds((int)(x),(int)(y + psize * skip),(int)(tileHeight),(int)(2 * tileHeight));
-				pawn.setPlayerId(ints.get(j)); 
+				if(resetBounds)
+					pawn.setBounds((int)(x),(int)(y + psize * skip),(int)(tileHeight),(int)(2 * tileHeight));
+				boolean changed = false;
+				if(pawn.getPlayerId() != ints.get(j)){
+					pawn.setPlayerId(ints.get(j));
+					changed = true;
+				}
 				pawn.setPosition(j);
-				pawn.setPawnDistace(skip);
-				pawn.repaint();
+				pawn.setPlayerId(ints.get(j)); 
+				if(changed)				
+					pawn.repaint();
 				pawn.setLocation((int) x, (int) (y + j * skip));
 			}
 			

@@ -4,11 +4,10 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 
 import javax.swing.JComponent;
@@ -31,7 +30,6 @@ public class JPawn extends JComponent implements MouseListener {
 	private GeneralPath pawnShape;
 	private ProductType destination;
 	private double pawnHeight;
-	private double pawnDistance;
 	private boolean mouseOver;
 	private static double STROKE = 0.04;
 	private static double LEG_HEIGHT = 1. / 3;
@@ -90,7 +88,6 @@ public class JPawn extends JComponent implements MouseListener {
 		this.playerId = playerId;
 		this.position = place;
 		this.pawnHeight = pawnHeight;
-		this.pawnDistance = 3 * pawnHeight / 8;
 		generateShape();
 		mouseOver = false;
 		enableInputMethods(true);
@@ -116,7 +113,7 @@ public class JPawn extends JComponent implements MouseListener {
 		this.pawnHeight = getSize().getHeight();
 		pawnHeight -= 4 * STROKE * pawnHeight;
 	}
-
+	
 	public void setPlayerId(int i) {
 		this.playerId = i;
 	}
@@ -125,8 +122,7 @@ public class JPawn extends JComponent implements MouseListener {
 		return pawnShape.contains(x, y);
 	}
 	private Color lighter(Color c){
-		System.out.println(c.getRed() + " " + c.getGreen() + " " + c.getBlue());
-		return new Color((255 + c.getRed()) / 2, (255 + c.getGreen()) / 2, (255 + c.getBlue()) / 2);
+		return new Color((255 + 2 * c.getRed()) / 3, (255 + 2 * c.getGreen()) / 3, (255 + 2 * c.getBlue()) / 3);
 		
 	}
 
@@ -137,11 +133,8 @@ public class JPawn extends JComponent implements MouseListener {
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		Color c = GameState.playerColors[playerId + 1];
-		if(mouseOver){
-			System.out.println(c);
+		if(mouseOver)
 			c = lighter(c);
-			System.out.println(c);
-		}
 		g2d.setColor(c);
 		generateShape();
 		g2d.fill(pawnShape);
@@ -174,10 +167,12 @@ public class JPawn extends JComponent implements MouseListener {
 		this.position = j;
 		
 	}
-	
-	public void setPawnDistace(double dist) {
-		this.pawnDistance = dist;
-		
+
+	/**
+	 * @return
+	 */
+	public int getPlayerId() {
+		return playerId;
 	}
 
 }
