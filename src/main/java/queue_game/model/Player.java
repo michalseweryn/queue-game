@@ -1,6 +1,7 @@
 package queue_game.model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collection;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Collection;
  */
 public class Player {
 	private int numberOfPawns;
-	private int[] shoppingList = null;
+	private List<Integer> shoppingList = null;
 	private int[] boughtProducts = {0, 0, 0, 0, 0};
 	private ArrayList<QueuingCard> cardsOnHand=new ArrayList<QueuingCard>();
 	private String name;
@@ -36,19 +37,19 @@ public class Player {
 	}
 	/**
 	 * 
-	 * @param shoppingList an array with the number of needed products from
+	 * @param list an array with the number of needed products from
 	 * all stores. The array inside the class will be a clone of this array.
 	 * 
 	 * @throws IllegalArgumentException if argument's length differs
 	 * ProductType.values().length
 	 */
-	public void setShoppingList(int[] shoppingList){
-		if(shoppingList.length != ProductType.values().length)
+	public void setShoppingList(List<Integer> list){
+		if(list.size() != ProductType.values().length)
 			throw new IllegalArgumentException();
-		this.shoppingList = shoppingList.clone();
+		this.shoppingList = list;
 	}
 	
-	public int[] getShoppingList(){
+	public List<Integer> getShoppingList(){
 		return shoppingList;
 	}
 	

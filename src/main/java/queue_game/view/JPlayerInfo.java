@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -48,12 +49,12 @@ public class JPlayerInfo extends JPanel {
 		g.setColor(GameState.playerColors[indexInColorArray]);
 		g.setFont(g.getFont().deriveFont(20f));
 		g.drawString(player.getName(), 60, 27);
-		int[] shList = player.getShoppingList();
+		List<Integer> shList = player.getShoppingList();
 		int[] bProd = player.getBoughtProducts();
 		int i=0;
 		for (Color c : GameState.productColors){
 			g.setColor(c);
-			g.drawString(bProd[i] + "/" + shList[i], 5 + 40*i, 52);
+			g.drawString(bProd[i] + "/" + shList.get(i), 5 + 40*i, 52);
 			i++;
 		}
 		g.setColor(GameState.playerColors[indexInColorArray]);

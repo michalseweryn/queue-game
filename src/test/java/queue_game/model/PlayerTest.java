@@ -2,6 +2,9 @@ package queue_game.model;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,45 +18,30 @@ public class PlayerTest {
 
 	@Test
 	public void setShoppingListTest() {
-		int[] shoppingList = new int[] {0, 1, 2, 3, 4};
+		List<Integer> shoppingList = Arrays.asList(0, 1, 2, 3, 4);
 		player.setShoppingList(shoppingList);
-		assertArrayEquals(shoppingList, player.getShoppingList());
-		shoppingList = new int[] {1, 2, 3, 4, 0};
+		assertEquals(shoppingList, player.getShoppingList());
+		shoppingList = Arrays.asList(1, 2, 3, 4, 0);
 		player.setShoppingList(shoppingList);
-		assertArrayEquals(shoppingList, player.getShoppingList());
-		shoppingList = new int[] {2, 3, 4, 0, 1};
+		assertEquals(shoppingList, player.getShoppingList());
+		shoppingList = Arrays.asList(2, 3, 4, 0, 1);
 		player.setShoppingList(shoppingList);
-		assertArrayEquals(shoppingList, player.getShoppingList());
-		shoppingList = new int[] {3, 4, 0, 1, 2};
+		assertEquals(shoppingList, player.getShoppingList());
+		shoppingList = Arrays.asList(3, 4, 0, 1, 2);
 		player.setShoppingList(shoppingList);
-		assertArrayEquals(shoppingList, player.getShoppingList());
-		shoppingList = new int[] {4, 0, 1, 2, 3};
+		assertEquals(shoppingList, player.getShoppingList());
+		shoppingList = Arrays.asList(4, 0, 1, 2, 3);
 		player.setShoppingList(shoppingList);
-		assertArrayEquals(shoppingList, player.getShoppingList());
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void setShoppingListTest2() {
-		player.setShoppingList(new int[] {0, 1, 3, 2, 4});
+		assertEquals(shoppingList, player.getShoppingList());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void setShoppingListTest3() {
-		player.setShoppingList(new int[] {0, 1, 2, 3});
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void setShoppingListTest4() {
-		player.setShoppingList(new int[] {0, 1, 2, 3, 5});
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void setShoppingListTest5() {
-		player.setShoppingList(new int[] {1, 2, 3, 4, 5});
+		player.setShoppingList(Arrays.asList(0, 1, 2, 3));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void setShoppingListTest6() {
-		player.setShoppingList(new int[] {-1, 0, 1, 2, 3});
+		player.setShoppingList(Arrays.asList(-1, 0, 1, 2, 3));
 	}
 }

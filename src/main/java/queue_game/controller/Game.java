@@ -72,7 +72,6 @@ public class Game implements Runnable {
 	 * Creates new thread for the game.
 	 */
 	public void startGame(int nPlayers) {
-		gameState.reset(nPlayers);
 		this.nPlayers = nPlayers;
 		gameThread = new Thread(this);
 		gameThread.start();
@@ -111,16 +110,31 @@ public class Game implements Runnable {
 	 * 
 	 */
 	public void PreparingToGamePhase() throws InterruptedException {
-		gameState.reset(nPlayers);
-		gameState.resetNumberOfProductsLeft();
-		gameState.resetPlayers();
+		List<String> names= generateNames();
+		ArrayList<List<Integer>> lists = generateShoppingLists();
+		gameState.initGame(names, lists.subList(0, nPlayers));
 		resetQueuingCards();
-		gameState.resetShoppingList();
 		queuingUpPhase();
 		gameState.putSpeculators();
 		for (ProductType pt : ProductType.values()) {
 			newAction(GameActionType.PAWN_PLACED, 0, pt.ordinal());
 		}
+	}
+	private List<String> generateNames(){
+		ArrayList<String> names= new ArrayList<String>();
+		for(int i = 0; i < nPlayers; i++)
+			names.add("Gracz " + (i + 1));
+		return names;
+	}
+	
+	private ArrayList<List<Integer>> generateShoppingLists(){
+		ArrayList<List<Integer>> lists = new ArrayList<List<Integer>>();
+		lists.add(Arrays.asList( 4, 0, 2, 1, 3 )); 
+		lists.add(Arrays.asList( 3, 4, 1, 0, 2 ));
+		lists.add(Arrays.asList( 2, 3, 0, 4, 1 ));
+		lists.add(Arrays.asList( 1, 2, 4, 3, 0 )); 
+		lists.add(Arrays.asList( 0, 1, 3, 2, 4 ));
+		return lists;
 	}
 
 	/**
@@ -237,7 +251,7 @@ public class Game implements Runnable {
 						break outer;
 				} else {
 					if (!cardsOnHand.contains(card)) {
-						messageForPlayer("Nie posiadasz tej karty.");
+						messageForPlayer("Nie posiadasz  tej karty.");
 						continue;
 					}
 					switch (card) {

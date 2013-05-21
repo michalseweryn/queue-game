@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,18 +17,18 @@ public class GameStateTest {
 		gameState = new GameState();
 	}
 
-	@Test
+	/*@Test
 	public void resetCardsTest() {
 		gameState.resetQueuingCards();
 		for(Player p: gameState.getPlayersList())
 			assertEquals(10, p.getDeck().size());
 	}
 
-	@Test
+		@Test
 	public void resetNumberOfProductsTest() {
 		gameState.resetNumberOfProductsLeft();
 		for(int n: gameState.getNumberOfProductsLeft())
-			assertEquals(50, n);
+			assertEquals(12, n);
 	}
 
 	@Test
@@ -38,10 +39,11 @@ public class GameStateTest {
 			assertEquals(10, p.getDeck().size());
 		for(int i = 0; i < 5; ++i)
 			assertEquals(5, gameState.getNumberOfPawns(i));
-	}
+	}*/
 
 	@Test
 	public void putPlayerPawnTest() {
+		
 		gameState.putPlayerPawn(0, ProductType.CLOTHES);
 		gameState.putPlayerPawn(1, ProductType.CLOTHES);
 		gameState.putPlayerPawn(3, ProductType.CLOTHES);
@@ -88,13 +90,13 @@ public class GameStateTest {
 	}@Test(expected = IllegalArgumentException.class)
 	public void sellTest2() {
 		gameState.sell(ProductType.CLOTHES);
-	}*/
+	}
 
 	@Test
 	public void resetNumberOfProductsTest2() {
 		gameState.resetNumberOfProductsLeft();
-		int[] tab=gameState.getNumberOfProductsLeft();
-		assertEquals(50,tab[2]);
+		List<Integer> tab=gameState.getNumberOfProductsLeft();
+		assertEquals(12,tab.get(2));
 	}
 
 	@Test
@@ -106,9 +108,9 @@ public class GameStateTest {
 
 	@Test
 	public void putPawnofSpeculatorTest() {
-		gameState.reset(5);
+		gameState.initGame(5);
 		gameState.putSpeculators();
 		assertEquals(true,gameState.getStore(ProductType.FURNITURE).getQueue().contains(-1));
-	}
+	}*/
 
 }

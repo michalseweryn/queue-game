@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -37,7 +38,7 @@ public class JPlayerInfo extends JPanel {
 		panel3.setLayout(new GridLayout(1, 5));
 		for (int i = 0; i < 5; i++) {
 			JLabel productLabel = new JLabel("" + player.getBoughtProducts()[i]
-					+ "/" + player.getShoppingList()[i]);
+					+ "/" + player.getShoppingList().get(i));
 			productLabel.setHorizontalAlignment(JLabel.CENTER);
 			productLabel.setBackground(GameState.productColors[i]);
 			productLabel.setOpaque(true);
@@ -72,12 +73,12 @@ public class JPlayerInfo extends JPanel {
 		g.setColor(GameState.playerColors[indexInColorArray]);
 		g.setFont(g.getFont().deriveFont(20f));
 		g.drawString(player.getName(), 60, 27);
-		int[] shList = player.getShoppingList();
+		List<Integer> shList = player.getShoppingList();
 		int[] bProd = player.getBoughtProducts();
 		int i = 0;
 		for (Color c : GameState.productColors) {
 			g.setColor(c);
-			g.drawString(bProd[i] + "/" + shList[i], 5 + 40 * i, 52);
+			g.drawString(bProd[i] + "/" + shList.get(i), 5 + 40 * i, 52);
 			i++;
 		}
 		g.setColor(GameState.playerColors[indexInColorArray]);
