@@ -87,23 +87,26 @@ public class GameAction {
 	public String toString() {
 		switch(type) {
 		case PAWN_PLACED:
-			return "Gracz " + (info[0] + 1) + " dodał pionek do kolejki " + (info[1] + 1) + ".";
+			if(info[0] == 0)
+				return "Do kolejki " + (info[1] == -1 ? "do bazaru" : info[1] + 1) + " został dodany spekulator.";
+			else
+				return "Gracz " + info[0] + " dodał pionek do kolejki " + (info[1] == -1 ? "do bazaru" : info[1] + 1) + ".";
 		case PRODUCT_DELIVERED:
 			return "Dostawa do sklepu " + (info[0] + 1) + ".";
 		case CARD_PLAYED:
-			return "Gracz " + (info[0] + 1) + " zagrał kartę " + (QueuingCard.values()[info[1]]) + ".";
+			return "Gracz " + info[0] + " zagrał kartę " + (QueuingCard.values()[info[1]]) + ".";
 		case PASSED:
-			return "Gracz " + (info[0] + 1) + " spasował.";
+			return "Gracz " + info[0] + " spasował.";
 		case PRODUCT_BOUGHT:
-			return "Gracz " + (info[0] + 1) + " kupił produkt " + (info[1] + 1) + ".";
+			return "Gracz " + info[0] + " kupił produkt " + (info[1] + 1) + ".";
 		case GAME_OVER:
 			return "Koniec gry";
 		case CHAT:
 			return "Czat.";
 		case PRODUCT_EXCHANGE_ONE:
-			return "Gracz " + (info[0] + 1) + " wymienił produkty " + info[1] + " na " + info[2];
+			return "Gracz " + info[0] + " wymienił produkty " + info[1] + " na " + info[2];
 		case PRODUCT_EXCHANGE_TWO:
-			return "Gracz " + (info[0] + 1) + " wymienił produkt" + info[1] + " " + info[2] + " na " + info[3];
+			return "Gracz " + info[0] + " wymienił produkt" + info[1] + " " + info[2] + " na " + info[3];
 		default:
 			throw new RuntimeException("Unimplemented action");
 		}
