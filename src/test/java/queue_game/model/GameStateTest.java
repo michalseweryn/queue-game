@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
@@ -237,28 +238,68 @@ public class GameStateTest {
 		
 	}
 	
+	@Test
+	public void closeOpenTest(){
+		assertEquals(false, gameState.getStore(ProductType.values()[4]).isClosed());
+		gameState.close(ProductType.values()[4]);
+		assertEquals(true, gameState.getStore(ProductType.values()[4]).isClosed());
+		gameState.openStores();
+		assertEquals(false, gameState.getStore(ProductType.values()[4]).isClosed());
+		
+	}
 	
-	//temporarily out of use
-	/*
-
+	@Test
+	public void movePawnAndRemovePawnTest(){
+		LinkedList<Integer> list = new LinkedList<Integer>();
+		list.add(0);
+		list.add(1);
+		list.add(2);
+		gameState.getStore(ProductType.values()[0]).setQueue(list);
+		gameState.getStore(ProductType.values()[1]).setQueue(new LinkedList<Integer>(list));
+		gameState.movePawn(ProductType.values()[0], 1, ProductType.values()[1], 1);
+		
+		assertEquals(true, (gameState.getStore(ProductType.values()[0]).getQueue().equals(
+				Arrays.asList(0,2))));
+		assertEquals(true, (gameState.getStore(ProductType.values()[1]).getQueue().equals(
+				Arrays.asList(0,1,1,2))));
+		
+		gameState.getPlayersList().get(1).setNumberOfPawns(3);
+		gameState.removePlayerPawn(1, 1, ProductType.values()[1]);
+		
+		assertEquals(4, gameState.getPlayersList().get(1).getNumberOfPawns());
+		assertEquals(true, (gameState.getStore(ProductType.values()[1]).getQueue().equals(
+				Arrays.asList(0,1,2))));
+		
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void removePlayerPawnTestException1(){
+		gameState.removePlayerPawn(5, 1, ProductType.values()[1]);
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void removePlayerPawnTestException2(){
+		gameState.getPlayersList().get(1).setNumberOfPawns(5);
+		gameState.getStore(ProductType.values()[0]).setQueue(new LinkedList<Integer>());
+		gameState.removePlayerPawn(0, 0, ProductType.values()[0]);
+	}
+	
+	
+	
+/*
 	@Test
 	public void sellTest() {
 		gameState.putPlayerPawn(0, ProductType.CLOTHES);
 		gameState.putPlayerPawn(4, ProductType.CLOTHES);
 		gameState.putPlayerPawn(2, ProductType.CLOTHES);
-		gameState.sell(ProductType.CLOTHES);
+		gameState.sell(ProductType.CLOTHES, ProductType.CLOTHES);
 		assertEquals(new ArrayList<Integer>(Arrays.asList(4, 2)), gameState.getStore(ProductType.CLOTHES).getQueue());
-	}@Test(expected = IllegalArgumentException.class)
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
 	public void sellTest2() {
 		gameState.sell(ProductType.CLOTHES);
 	}
-
-
-	@Test
-	public void putPawnofSpeculatorTest() {
-		gameState.initGame(5);
-		gameState.putSpeculators();
-		assertEquals(true,gameState.getStore(ProductType.FURNITURE).getQueue().contains(-1));
-	}*/
+*/
 
 }
