@@ -1,6 +1,7 @@
 package queue_game.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * A class which every object contains all the data about the particular player. 
@@ -87,5 +88,33 @@ public class Player {
 	public int[] getBoughtProducts() {
 		return boughtProducts;
 	}
-	
+	/**
+	 * 
+	 * @param ProductType
+	 * @author Jan
+	 */
+	public void removeProduct(ProductType type){
+		if(boughtProducts[type.ordinal()] > 0)
+			boughtProducts[type.ordinal()]--;
+		else
+			throw new IllegalArgumentException("Player doesn't have such product.");
+	}
+	/**
+	 * 
+	 * @param Collection<ProductType>
+	 * @author Jan
+	 */
+	public void removeProducts(Collection<ProductType> typeCollection){
+		int[] products = {0,0,0,0,0};
+		for(ProductType i: typeCollection)
+			products[i.ordinal()]++;
+		
+		for(int i = 0; i < products.length; i++){
+			if(products[i] > boughtProducts[i])
+				throw new IllegalArgumentException("Player doesn't have such product.");
+		}
+		
+		for(int i = 0; i < products.length; i++)
+			boughtProducts[i] -= products[i];				
+	}
 }

@@ -414,15 +414,15 @@ public class GameState {
 			throws IllegalArgumentException{
 		
 		int player = getActivePlayer();
-		getOutDoorMarket().removeProduct(soldProduct);
+		if(getOutDoorMarket().getNumberOf(soldProduct) != 0)
+			getOutDoorMarket().removeProduct(soldProduct);
+		else
+			throw new IllegalArgumentException("Not enough products in market");
+		
 		players.get(player).addPawn();
 		players.get(player).addProduct(soldProduct);
-		players.removeAll(offeredProducts);
-		for(ProductType i: offeredProducts)
-				getOutDoorMarket().addProduct(i);
-		
-		
-		return false;
+		players.get(player).removeProducts(offeredProducts);
+		return true;
 	}
 	
 	public void setMessage(String message){
