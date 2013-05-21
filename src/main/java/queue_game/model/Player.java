@@ -105,6 +105,6 @@ public class Player {
 		}
 		
 		for(int i = 0; i < products.length; i++)
-			boughtProducts[i] -= products[i];				
+			boughtProducts[i] -= products[i];
 	}
 }
