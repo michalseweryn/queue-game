@@ -312,10 +312,11 @@ public class GameState {
 	 * 
 	 * @param orig - Store from product has been taken
 	 * @param dest - store where product is give
+	 * @param product - type of product which is move
 	 */
-	public void transferToAnotherStore(ProductType orig,ProductType dest){
-		getStore(orig).removeProduct(orig);
-		getStore(dest).addProduct(orig);
+	public void transferToAnotherStore(ProductType orig,ProductType dest, ProductType product){
+		getStore(orig).removeProduct(product);
+		getStore(dest).addProduct(product);
 	}
 	/**
 	 * Moves pawn.
