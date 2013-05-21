@@ -1,4 +1,4 @@
-package queue_game.nview;
+package queue_game.view;
 
 import java.awt.Color;
 import java.awt.Dimension;

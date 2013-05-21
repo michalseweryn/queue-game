@@ -1,7 +1,7 @@
 /**
  * 
  */
-package queue_game.nview;
+package queue_game.view;
 
 import java.awt.Dimension;
 import java.awt.Shape;

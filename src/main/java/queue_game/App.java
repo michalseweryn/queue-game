@@ -7,14 +7,14 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import queue_game.controller.Game;
-import queue_game.nview.JGameArea;
-import queue_game.nview.JPlayerList;
+import queue_game.view.JGameArea;
+import queue_game.view.JPlayerList;
 
 /**
  * Main window of game.
  *
  */
-public class NApp {
+public class App {
 	public static void createAndShowGUI(Game game){
 		JFrame frame = new JFrame("FIAO");
 		frame.setPreferredSize(new Dimension(800, 500));
