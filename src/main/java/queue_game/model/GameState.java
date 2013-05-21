@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -19,13 +20,15 @@ public class GameState {
 	/**
 	 * Counted from 0.
 	 */
-	public static final Color[] productColors = new Color[] { new Color(0x5DC049), 
-		new Color(0xFFB451), new Color(0xDF574E), new Color(0x57ACB0), Color.MAGENTA };
+	public static final Color[] productColors = new Color[] {
+			new Color(0x5DC049), new Color(0xFFB451), new Color(0xDF574E),
+			new Color(0x57ACB0), Color.MAGENTA };
 
 	/**
 	 * Counted from 0
 	 */
-	public static final Color[] playerColors = new Color[] {new Color(0xff0000), new Color(0xffff00), new Color(0, 128, 0),
+	public static final Color[] playerColors = new Color[] {
+			new Color(0xff0000), new Color(0xffff00), new Color(0, 128, 0),
 			new Color(192, 128, 0), new Color(0x0670C7) };
 
 	private int dayNumber;
@@ -41,8 +44,8 @@ public class GameState {
 	private List<DeliveryCard> currentDeliveryList;
 	private Store market;
 	private String message = "";
-	
-	public GameState(){
+
+	public GameState() {
 		stores = new Store[ProductType.values().length];
 		int ind = 0;
 		for (ProductType product : ProductType.values())
@@ -50,7 +53,24 @@ public class GameState {
 		market = new Store(null);
 	}
 
-	public synchronized void reset(int nPlayers) {
+	/**
+	 * @param names
+	 * @param arrayList
+	 */
+	public void initGame(ArrayList<String> names,
+			List<List<Integer>> shoppingLists) {
+		if (names.size() != shoppingLists.size())
+			throw new IllegalArgumentException(
+					"Diffrent number of player names and shopping lists");
+		reset(names.size());
+		resetNumberOfProductsLeft();
+		resetPlayers(names);
+		resetQueuingCards();
+		resetShoppingList(shoppingLists);
+
+	}
+
+	private synchronized void reset(int nPlayers) {
 		dayNumber = 0;
 		gameOpeningMarker = 0;
 		activePlayer = 0;
@@ -79,13 +99,13 @@ public class GameState {
 			p.getDeck().getCards(p.getCardsOnHand());
 		}
 	}
-	
+
 	/**
 	 * It doesn't work yet!
 	 * 
-	 * Resets cards of all players due to saturday rules, which means
-	 * that cards which a player is now holding on hand are to be set
-	 * on the end of the lst. 
+	 * Resets cards of all players due to saturday rules, which means that cards
+	 * which a player is now holding on hand are to be set on the end of the
+	 * lst.
 	 */
 	public synchronized void resetQueuingCardsOnSaturday() {
 		for (Player pl : players) {
@@ -97,7 +117,7 @@ public class GameState {
 				pl.getDeck().remove(dC);
 			pl.getDeck().shuffle();
 			pl.getDeck().addListToTheEnd(tempList);
-			
+
 		}
 		for (Player pl : players) {
 			pl.setCardsOnHand(new ArrayList<QueuingCard>());
@@ -110,7 +130,7 @@ public class GameState {
 	 * Resets number of products with our favorite number.
 	 * 
 	 */
-	public synchronized void resetNumberOfProductsLeft() {
+	private synchronized void resetNumberOfProductsLeft() {
 		for (ProductType i : ProductType.values()) {
 			numberOfProductsLeft[i.ordinal()] = 12;
 		}
@@ -119,44 +139,33 @@ public class GameState {
 	/**
 	 * 
 	 * Create new players and adds them pawns.
+	 * @param names 
 	 * 
 	 */
-	public synchronized void resetPlayers() {
+	private synchronized void resetPlayers(List<String> names) {
 		players.clear();
 		int initialNumberOfPawns = 5;
-		for (int i = 0; i < numberOfPlayers; i++) {
-			players.add(new Player(i, "Gracz " + (i + 1)));  
-			players.get(i).setNumberOfPawns(initialNumberOfPawns);
+		int ind = 0;
+		for(String name : names){
+			Player player = new Player(ind++, name);
+			player.setNumberOfPawns(initialNumberOfPawns);
+			players.add(player);
 		}
 	}
 
 	/**
 	 * 
 	 * Create random shopping list and set gameOpeningMarker.
+	 * @param shoppingLists 
 	 * 
 	 */
-	public synchronized void resetShoppingList() {
-		int lists[][]= new int[][] {{4,0,2,1,3},{3,4,1,0,2},{2,3,0,4,1},{1,2,4,3,0},{0,1,3,2,4}};
-		Random r = new Random();
-		int rand=0;
-		rand=r.nextInt(6-numberOfPlayers);
-		int tmp[][]=Arrays.copyOfRange(lists,rand, rand+numberOfPlayers);
-		Collections.shuffle(Arrays.asList(tmp));
-		for (int i = 0; i < numberOfPlayers; i++) {
-			players.get(i).setShoppingList(tmp[i]);
-		}
-		int marker=0;
-		for(int i=0;i<numberOfPlayers;i++){
-			int tab[] = new int[]{0,1,3,2,4};
-			if(Arrays.equals(tmp[i],tab)){
-				marker=i;
-				break;
-			}
-		}
-		this.setGameOpeningMarker(marker);
+	private synchronized void resetShoppingList(List<List<Integer>> shoppingLists) {
+		Iterator<List<Integer>> it = shoppingLists.iterator();
+		for(Player player : players)
+			player.setShoppingList(it.next());
+		this.setGameOpeningMarker(0);
 	}
 
-	
 	public synchronized void setGameOver() {
 		gameOver = true;
 	}
@@ -201,19 +210,20 @@ public class GameState {
 	public synchronized Store[] getStores() {
 		return stores;
 	}
-	
+
 	/**
 	 * @return the market
 	 */
 	public synchronized Store getOutDoorMarket() {
 		return market;
 	}
+
 	public synchronized DeckOfQueuingCards getDeck(int playerNr) {
 		return players.get(playerNr).getDeck();
 	}
 
 	public synchronized Store getStore(ProductType product) {
-		if(product == null)
+		if (product == null)
 			return market;
 		return stores[product.ordinal()];
 	}
@@ -234,15 +244,15 @@ public class GameState {
 		currentGamePhase = phase;
 	}
 
-	public synchronized void setCurrentDeliveryList (
+	public synchronized void setCurrentDeliveryList(
 			List<DeliveryCard> currentDeliveryList) {
-	this.currentDeliveryList = currentDeliveryList;
+		this.currentDeliveryList = currentDeliveryList;
 	}
-	
-	public synchronized List<DeliveryCard> getCurrentDeliveryList () {
+
+	public synchronized List<DeliveryCard> getCurrentDeliveryList() {
 		return currentDeliveryList;
 	}
-	
+
 	/**
 	 * @return ID of player whose turn is now.
 	 */
@@ -264,7 +274,7 @@ public class GameState {
 	public synchronized int[] getNumberOfProductsLeft() {
 		return numberOfProductsLeft;
 	}
-	
+
 	public synchronized int getNumberOfProductsLeft(int numberOfStore) {
 		return numberOfProductsLeft[numberOfStore];
 	}
@@ -272,8 +282,9 @@ public class GameState {
 	public synchronized void setNumberOfProductsLeft(int[] numberOfProductsLeft) {
 		this.numberOfProductsLeft = numberOfProductsLeft;
 	}
-	
-	public synchronized void setNumberOfProductsLeft(int index, int numberOfProductsLeft) {
+
+	public synchronized void setNumberOfProductsLeft(int index,
+			int numberOfProductsLeft) {
 		this.numberOfProductsLeft[index] = numberOfProductsLeft;
 	}
 
@@ -292,39 +303,51 @@ public class GameState {
 	public synchronized List<GameAction> getPlayerActions() {
 		return actions;
 	}
-	public void close(ProductType type){
+
+	public void close(ProductType type) {
 		getStore(type).setClosed(true);
 	}
-	public void reverse(ProductType type){
+
+	public void reverse(ProductType type) {
 		Collections.reverse(getStore(type).getQueue());
 	}
+
 	/**
 	 * 
 	 * Set stores open.
 	 * 
 	 */
-		public void openStores(){
-			for(ProductType p : ProductType.values()){
-				getStore(p).setClosed(false);
-			}
+	public void openStores() {
+		for (ProductType p : ProductType.values()) {
+			getStore(p).setClosed(false);
 		}
+	}
+
 	/**
 	 * 
-	 * @param orig - Store from product has been taken
-	 * @param dest - store where product is give
+	 * @param orig
+	 *            - Store from product has been taken
+	 * @param dest
+	 *            - store where product is give
 	 */
-	public void transferToAnotherStore(ProductType orig,ProductType dest){
+	public void transferToAnotherStore(ProductType orig, ProductType dest) {
 		getStore(orig).removeProduct(orig);
 		getStore(dest).addProduct(orig);
 	}
+
 	/**
 	 * Moves pawn.
-	 * @param orig - original store of this pawn
-	 * @param pos - position in original queue
-	 * @param dest - destination of pawn
-	 * @param npos - new position of pawn
+	 * 
+	 * @param orig
+	 *            - original store of this pawn
+	 * @param pos
+	 *            - position in original queue
+	 * @param dest
+	 *            - destination of pawn
+	 * @param npos
+	 *            - new position of pawn
 	 */
-	public void movePawn(ProductType orig, int pos, ProductType dest, int npos){
+	public void movePawn(ProductType orig, int pos, ProductType dest, int npos) {
 		Integer pawn = getStore(orig).getQueue().remove(pos);
 		getStore(dest).getQueue().add(npos, pawn);
 	}
@@ -335,18 +358,23 @@ public class GameState {
 	 * 
 	 */
 	public synchronized void putSpeculators() {
-		for(Store store : stores)
+		for (Store store : stores)
 			store.getQueue().add(-1);
 	}
-	
+
 	/**
-	 *  Transfers given amount of product to corresponding store.
-	 * @param product type of delivered product
-	 * @throws IllegalArgumentException too large amount of product.
+	 * Transfers given amount of product to corresponding store.
+	 * 
+	 * @param product
+	 *            type of delivered product
+	 * @throws IllegalArgumentException
+	 *             too large amount of product.
 	 */
-	public void transferProductToStore(ProductType product, int amount) throws IllegalArgumentException{
-		if(numberOfProductsLeft[product.ordinal()] == 0)
-			throw new IllegalArgumentException("No more pieces of product left: " + product);
+	public void transferProductToStore(ProductType product, int amount)
+			throws IllegalArgumentException {
+		if (numberOfProductsLeft[product.ordinal()] == 0)
+			throw new IllegalArgumentException(
+					"No more pieces of product left: " + product);
 		numberOfProductsLeft[product.ordinal()] -= amount;
 		stores[product.ordinal()].addProducts(amount);
 	}
@@ -368,18 +396,20 @@ public class GameState {
 		players.get(player).setNumberOfPawns(nPawns - 1);
 		this.getStore(destination).getQueue().add(player);
 	}
+
 	/**
 	 * 
 	 */
 	public void removePlayerPawn(int player, int position,
 			ProductType destination) {
-		if(player<0 || player>=numberOfPlayers)
-			throw new IllegalArgumentException("No such player"+ player);
-		int nPawns=getNumberOfPawns(player);
-		if(nPawns==5){
-			throw new IllegalArgumentException("Player has no Pawn on Map"+ player);
+		if (player < 0 || player >= numberOfPlayers)
+			throw new IllegalArgumentException("No such player" + player);
+		int nPawns = getNumberOfPawns(player);
+		if (nPawns == 5) {
+			throw new IllegalArgumentException("Player has no Pawn on Map"
+					+ player);
 		}
-		players.get(player).setNumberOfPawns(nPawns+1);
+		players.get(player).setNumberOfPawns(nPawns + 1);
 		this.getStore(destination).getQueue().remove(position);
 	}
 
@@ -387,15 +417,16 @@ public class GameState {
 	 * @param type
 	 * 
 	 */
-	public synchronized void sell(ProductType offeredProduct, ProductType soldProduct) throws IllegalArgumentException{
+	public synchronized void sell(ProductType offeredProduct,
+			ProductType soldProduct) throws IllegalArgumentException {
 		if (getStore(offeredProduct).getQueue().isEmpty())
 			throw new IllegalArgumentException("Empty queue: " + offeredProduct);
 		int player = getStore(offeredProduct).getQueue().peek();
 		getStore(offeredProduct).removeProduct(soldProduct);
-		
+
 		if (player >= 0 && player < numberOfPlayers) {
 			getStore(offeredProduct).getQueue().remove();
-			
+
 			players.get(player).addPawn();
 			players.get(player).addProduct(soldProduct);
 		}
@@ -404,31 +435,32 @@ public class GameState {
 			movePawn(offeredProduct, 0, offeredProduct, queueLength - 1);
 		}
 	}
-	
+
 	/**
 	 * Method for outdoormarket.
 	 * 
 	 * @author Jan
 	 */
-	public synchronized boolean trade(ProductType soldProduct, Collection<ProductType> offeredProducts) 
-			throws IllegalArgumentException{
-		
+	public synchronized boolean trade(ProductType soldProduct,
+			Collection<ProductType> offeredProducts)
+			throws IllegalArgumentException {
+
 		int player = getActivePlayer();
 		getOutDoorMarket().removeProduct(soldProduct);
 		players.get(player).addPawn();
 		players.get(player).addProduct(soldProduct);
 		players.removeAll(offeredProducts);
-		for(ProductType i: offeredProducts)
-				getOutDoorMarket().addProduct(i);
-		
-		
+		for (ProductType i : offeredProducts)
+			getOutDoorMarket().addProduct(i);
+
 		return false;
 	}
-	
-	public void setMessage(String message){
+
+	public void setMessage(String message) {
 		this.message = message;
 	}
-	public String getMessage(){
+
+	public String getMessage() {
 		return message;
 	}
 
@@ -437,10 +469,9 @@ public class GameState {
 	 * @return
 	 */
 	public boolean wasDelivered(ProductType type) {
-		for(DeliveryCard card : currentDeliveryList)
-			if(card.getProductType().equals(type))
+		for (DeliveryCard card : currentDeliveryList)
+			if (card.getProductType().equals(type))
 				return true;
 		return false;
 	}
-
 }
