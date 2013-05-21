@@ -5,13 +5,10 @@ package queue_game.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.lang.Math;
 
-import org.ietf.jgss.MessageProp;
 
 import queue_game.model.DeckOfDeliveryCards;
 import queue_game.model.DeckOfQueuingCards;
@@ -42,8 +39,6 @@ public class Game implements Runnable {
 	private ProductType selectedQueue = null;
 	private Thread gameThread = null;
 	private QueuingCard selectedQueuingCard = null;
-	private boolean iPass[] = new boolean[6];
-	private boolean pass = false;
 	private DeckOfDeliveryCards deckOfDeliveryCards = new DeckOfDeliveryCards();
 	private DeckOfQueuingCards deck[]=new DeckOfQueuingCards[5];
 	
