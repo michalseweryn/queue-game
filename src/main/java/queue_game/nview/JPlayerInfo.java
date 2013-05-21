@@ -1,12 +1,20 @@
 package queue_game.nview;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.Rectangle;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import queue_game.model.GameState;
 import queue_game.model.Player;
@@ -14,51 +22,66 @@ import queue_game.model.Player;
 public class JPlayerInfo extends JPanel {
 	private static final long serialVersionUID = 557224757921396872L;
 	private Player player;
+
 	public JPlayerInfo(Player player) {
 		this.player = player;
-	}
-	
-	@Override
-	public Dimension getMinimumSize() {
-		return new Dimension(480, 360);
+		setBorder(BorderFactory.createLineBorder(Color.black));
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		JPanel panel1 = new JPanel();
+		//panel1.setLayout(new BoxLayout(panel1, BoxLayout.LINE_AXIS));
+		JLabel colorLabel = createColoredLabel(GameState.playerColors[player.getID()], new Point(0, 0));
+		panel1.add(colorLabel);
+		panel1.add(new JLabel(player.getName()));
+		JLabel label2 = new JLabel("Dostępne pionki: " +player.getNumberOfPawns());
+		JPanel panel3 = new JPanel();
+		panel3.setLayout(new GridLayout(1, 5));
+		for (int i = 0; i < 5; i++) {
+			JLabel productLabel = new JLabel("" + player.getBoughtProducts()[i]
+					+ "/" + player.getShoppingList()[i]);
+			productLabel.setHorizontalAlignment(JLabel.CENTER);
+			productLabel.setBackground(GameState.productColors[i]);
+			productLabel.setOpaque(true);
+			productLabel.setForeground(Color.black);
+			panel3.add(productLabel, 0, i);
+		}
+		panel1.setAlignmentX(Component.LEFT_ALIGNMENT);
+		label2.setAlignmentX(LEFT_ALIGNMENT);
+		panel3.setAlignmentX(Component.LEFT_ALIGNMENT);
+		add(panel1);
+		add(label2);
+		add(panel3);
+		setPreferredSize(new Dimension(150, 80));
+
 	}
 
-	@Override
-	public Dimension getPreferredSize() {
-		return new Dimension(getParent().getSize().width, getParent().getSize().height/5);
+	private JLabel createColoredLabel(Color color, Point origin) {
+		JLabel label = new JLabel();
+		label.setOpaque(true);
+		label.setBackground(color);
+		label.setBorder(BorderFactory.createLineBorder(Color.black));
+		label.setMinimumSize(new Dimension(15, 15));
+		label.setPreferredSize(new Dimension(15, 15));
+		return label;
 	}
 
-	@Override
-	public Dimension getMaximumSize() {
-		return new Dimension(700, 700);
-	}
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2d = (Graphics2D) g;
-		Dimension size = getSize();
-		Rectangle rect = new Rectangle(0, 0, size.width - 1, size.height - 1);
-		g2d.draw(rect);
-		paintingComponentActualFunction(g);
-	}
-	
 	protected void paintingComponentActualFunction(Graphics g) {
-		int indexInColorArray = player.getID()+1;
-		if(indexInColorArray >= GameState.playerColors.length) throw new ArrayIndexOutOfBoundsException("players' list is " +
-					"longer than colors' number");
+		int indexInColorArray = player.getID() + 1;
+		if (indexInColorArray >= GameState.playerColors.length)
+			throw new ArrayIndexOutOfBoundsException("players' list is "
+					+ "longer than colors' number");
 		g.setColor(GameState.playerColors[indexInColorArray]);
 		g.setFont(g.getFont().deriveFont(20f));
 		g.drawString(player.getName(), 60, 27);
 		int[] shList = player.getShoppingList();
 		int[] bProd = player.getBoughtProducts();
-		int i=0;
-		for (Color c : GameState.productColors){
+		int i = 0;
+		for (Color c : GameState.productColors) {
 			g.setColor(c);
-			g.drawString(bProd[i] + "/" + shList[i], 5 + 40*i, 52);
+			g.drawString(bProd[i] + "/" + shList[i], 5 + 40 * i, 52);
 			i++;
 		}
 		g.setColor(GameState.playerColors[indexInColorArray]);
 		g.drawString("Dostępne pionki: " + player.getNumberOfPawns(), 5, 77);
 	}
-
 
 }

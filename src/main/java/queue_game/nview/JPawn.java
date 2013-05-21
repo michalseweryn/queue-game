@@ -132,7 +132,9 @@ public class JPawn extends JComponent implements MouseListener {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-		Color c = GameState.playerColors[playerId + 1];
+		Color c = Color.black;
+		if(playerId >= 0)
+			c = GameState.playerColors[playerId];
 		if(mouseOver)
 			c = lighter(c);
 		g2d.setColor(c);
