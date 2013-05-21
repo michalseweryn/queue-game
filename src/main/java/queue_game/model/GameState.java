@@ -5,12 +5,10 @@ package queue_game.model;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 /**
  * @author michal A model part of MVC. Illustrates current situation on Board.
