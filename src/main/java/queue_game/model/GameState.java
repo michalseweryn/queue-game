@@ -81,14 +81,13 @@ public class GameState {
 	}
 
 	
-		/**
+	/*	/**
 	 * It doesn't work yet!
 	 * 
 	 * Resets cards of all players due to saturday rules, which means that cards
 	 * which a player is now holding on hand are to be set on the end of the
 	 * lst.
 	 */
-
 	/**
 	 * 
 	 * Resets number of products with our favorite number.
@@ -331,7 +330,7 @@ public class GameState {
 	 */
 	public void transferProductToStore(ProductType product, int amount)
 			throws IllegalArgumentException {
-		if (numberOfProductsLeft[product.ordinal()] == 0)
+		if (numberOfProductsLeft[product.ordinal()] < amount)
 			throw new IllegalArgumentException(
 					"No more pieces of product left: " + product);
 		numberOfProductsLeft[product.ordinal()] -= amount;
@@ -381,7 +380,8 @@ public class GameState {
 		if (getStore(offeredProduct).getQueue().isEmpty())
 			throw new IllegalArgumentException("Empty queue: " + offeredProduct);
 		int player = getStore(offeredProduct).getQueue().peek();
-		getStore(offeredProduct).removeProduct(soldProduct);
+		if(player != -1)
+			getStore(offeredProduct).removeProduct(soldProduct);
 
 		if (player >= 0 && player < numberOfPlayers) {
 			getStore(offeredProduct).getQueue().remove();
@@ -392,6 +392,7 @@ public class GameState {
 		if (player == -1) {
 			int queueLength = getStore(offeredProduct).getQueue().size();
 			movePawn(offeredProduct, 0, offeredProduct, queueLength - 1);
+			transferToAnotherStore(offeredProduct, null, soldProduct);
 		}
 	}
 
