@@ -219,6 +219,8 @@ public class GameState {
 	 * Sets ID of player whose turn is now.
 	 */
 	public synchronized void setActivePlayer(int id) {
+		if(id < 0 || id >= numberOfPlayers)
+			throw new IllegalArgumentException("No such player: " + id);
 		activePlayer = id;
 	}
 
@@ -358,15 +360,11 @@ public class GameState {
 	/**
 	 * 
 	 */
-	public void removePlayerPawn(int player, int position,
-			ProductType destination) {
-		if (player < 0 || player >= numberOfPlayers)
-			throw new IllegalArgumentException("No such player" + player);
-		int nPawns = getNumberOfPawns(player);
-		if (nPawns == 5) {
-			throw new IllegalArgumentException("Player has no Pawn on Map"
-					+ player);
-		}
+	public void removePlayerPawn(int position, ProductType destination) {
+		if(position < 0 || this.getStore(destination).getQueue().size() <= position)
+			throw new IllegalArgumentException("No such position in queue: " + position);
+		int player = this.getStore(destination).getQueue().get(position);
+		int nPawns = players.get(player).getNumberOfPawns();
 		players.get(player).setNumberOfPawns(nPawns + 1);
 		this.getStore(destination).getQueue().remove(position);
 	}

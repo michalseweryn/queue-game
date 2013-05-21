@@ -827,8 +827,7 @@ public class Game implements Runnable {
 					if (gameState.getStore(selectedPawn.destination).getQueue()
 							.get(selectedPawn.position).equals(player)) {
 						gameState
-								.removePlayerPawn(player,
-										selectedPawn.position,
+								.removePlayerPawn(selectedPawn.position,
 										selectedPawn.destination);
 					} else {
 						continue outer;

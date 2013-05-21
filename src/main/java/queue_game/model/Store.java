@@ -110,7 +110,7 @@ public class Store {
 	public void removeProducts(int numberOfRemovedProducts){
 		numberOf[productType.ordinal()]-=numberOfRemovedProducts;
 		if(numberOf[productType.ordinal()]<0)
-			throw new RuntimeException("Not enough products");
+			throw new IllegalArgumentException("Not enough products");
 	}
 	/**
 	 * 
@@ -121,6 +121,6 @@ public class Store {
 	public void removeProducts(int numberOfRemovedProducts, ProductType type){
 		numberOf[type.ordinal()]-=numberOfRemovedProducts;
 		if(numberOf[type.ordinal()]<0)
-			throw new RuntimeException("Not enough products");
+			throw new IllegalArgumentException("Not enough products");
 	}
 }
