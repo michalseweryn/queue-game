@@ -264,7 +264,7 @@ public class GameState {
 		actions.add(action);
 	}
 
-	public synchronized List<GameAction> getPlayerActions() {
+	public synchronized List<GameAction> getGameActions() {
 		return actions;
 	}
 

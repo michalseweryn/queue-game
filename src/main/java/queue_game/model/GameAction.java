@@ -82,4 +82,26 @@ public class GameAction {
 		}
 		return action;
 	}
+
+	@Override
+	public String toString() {
+		switch(type) {
+		case PAWN_PLACED:
+			return "Gracz " + (info[0] + 1) + " dodał pionek do kolejki " + (info[1] + 1) + ".";
+		case PRODUCT_DELIVERED:
+			return "Dostawa do sklepu " + (info[0] + 1) + ".";
+		case CARD_PLAYED:
+			return "Gracz " + (info[0] + 1) + " zagrał kartę " + (QueuingCard.values()[info[1]]) + ".";
+		case PASSED:
+			return "Gracz " + (info[0] + 1) + " spasował.";
+		case PRODUCT_BOUGHT:
+			return "Gracz " + (info[0] + 1) + " kupił produkt " + (info[1] + 1) + ".";
+		case GAME_OVER:
+			return "Koniec gry";
+		case CHAT:
+			return "Czat.";
+		default:
+			throw new RuntimeException("Unimplemented action");
+		}
+	}
 }
