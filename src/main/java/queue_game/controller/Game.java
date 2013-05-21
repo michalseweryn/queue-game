@@ -380,6 +380,7 @@ public class Game implements Runnable {
 				if(gameState.trade(soldProduct,offeredProducts)){					
 					queue.remove();
 					messageForPlayer("Transakcja udana.");
+					--queueIterator;
 				}else{
 					messageForPlayer("Transakcja nie udana.");
 					--queueIterator;
