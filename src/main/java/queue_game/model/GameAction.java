@@ -100,6 +100,10 @@ public class GameAction {
 			return "Koniec gry";
 		case CHAT:
 			return "Czat.";
+		case PRODUCT_EXCHANGE_ONE:
+			return "Gracz " + (info[0] + 1) + " wymienił produkty " + info[1] + " " + info[2] + " na " + info[3];
+		case PRODUCT_EXCHANGE_TWO:
+			return "Gracz " + (info[0] + 1) + " wymienił produkt" + info[1] + " " + info[2] + " na " + info[3];
 		default:
 			throw new RuntimeException("Unimplemented action");
 		}

@@ -359,12 +359,14 @@ public class Game implements Runnable {
 				soldProduct = requestProduct().product;
 				if(soldProduct == null){
 					messageForPlayer("Gracz spasował");
+					newAction(GameActionType.PASSED,player);
 					continue;
 				}
 				messageForPlayer("Wybierz produkt który chcesz wymienić lub spasuj");
 				product = requestProduct().product;
 				if(product == null){
 					messageForPlayer("Gracz spasował");
+					newAction(GameActionType.PASSED,player);
 					continue;
 				}
 				offeredProducts.add(product);
@@ -373,12 +375,20 @@ public class Game implements Runnable {
 					product = requestProduct().product;
 					if(product == null){
 						messageForPlayer("Gracz spasował");
+						newAction(GameActionType.PASSED,player);
 						continue;
 					}
 					offeredProducts.add(product);
 				}
 				if(gameState.trade(soldProduct,offeredProducts)){					
 					queue.remove();
+					if(offeredProducts.size() > 1)
+						newAction(GameActionType.PRODUCT_EXCHANGE_TWO,player,soldProduct.ordinal(),
+								offeredProducts.get(0).ordinal(), offeredProducts.get(1).ordinal());
+					else
+						newAction(GameActionType.PRODUCT_EXCHANGE_ONE,player,soldProduct.ordinal(),
+								offeredProducts.getFirst().ordinal());
+						
 					messageForPlayer("Transakcja udana.");
 					--queueIterator;
 				}else{
