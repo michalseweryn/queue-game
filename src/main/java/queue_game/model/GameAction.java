@@ -101,7 +101,7 @@ public class GameAction {
 		case CHAT:
 			return "Czat.";
 		case PRODUCT_EXCHANGE_ONE:
-			return "Gracz " + (info[0] + 1) + " wymienił produkty " + info[1] + " " + info[2] + " na " + info[3];
+			return "Gracz " + (info[0] + 1) + " wymienił produkty " + info[1] + " na " + info[2];
 		case PRODUCT_EXCHANGE_TWO:
 			return "Gracz " + (info[0] + 1) + " wymienił produkt" + info[1] + " " + info[2] + " na " + info[3];
 		default:
