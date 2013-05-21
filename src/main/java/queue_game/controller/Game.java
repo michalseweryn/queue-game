@@ -346,6 +346,8 @@ public class Game implements Runnable {
 		LinkedList<ProductType> offeredProducts = new LinkedList<ProductType>();
 		int player,pawn,queueIterator = 0;
 		ProductType product;
+		ProductParameters prod;
+		boolean wasTrade = false;
 		while(queueIterator < queue.size()){	
 				offeredProducts.clear();
 				pawn = queue.get(queueIterator++);
@@ -356,10 +358,34 @@ public class Game implements Runnable {
 				
 				gameState.setActivePlayer(player);			
 				messageForPlayer("Wybierz towar który chcesz kupić lub spasuj");
-				soldProduct = requestProduct().product;
-				if(soldProduct == null){
+				prod = requestProduct();
+				while(prod.store != null){
+					prod = requestProduct();				
+					if(prod.product == null){
+						messageForPlayer("Gracz spasował");
+						newAction(GameActionType.PASSED,player);
+						if(wasTrade)
+							queue.remove();
+						wasTrade = false;
+						continue;
+					}
+				}
+				soldProduct = prod.product;
+				
+				if(prod.product == null){
 					messageForPlayer("Gracz spasował");
 					newAction(GameActionType.PASSED,player);
+					if(wasTrade)
+						queue.remove();
+					wasTrade = false;
+					continue;
+				}
+				if(prod.product == null){
+					messageForPlayer("Gracz spasował");
+					newAction(GameActionType.PASSED,player);
+					if(wasTrade)
+						queue.remove();
+					wasTrade = false;
 					continue;
 				}
 				messageForPlayer("Wybierz produkt który chcesz wymienić lub spasuj");
@@ -367,6 +393,9 @@ public class Game implements Runnable {
 				if(product == null){
 					messageForPlayer("Gracz spasował");
 					newAction(GameActionType.PASSED,player);
+					if(wasTrade)
+						queue.remove();
+					wasTrade = false;
 					continue;
 				}
 				offeredProducts.add(product);
@@ -376,12 +405,14 @@ public class Game implements Runnable {
 					if(product == null){
 						messageForPlayer("Gracz spasował");
 						newAction(GameActionType.PASSED,player);
+						if(wasTrade)
+							queue.remove();
 						continue;
 					}
 					offeredProducts.add(product);
 				}
 				if(gameState.trade(soldProduct,offeredProducts)){					
-					queue.remove();
+					wasTrade = true;
 					if(offeredProducts.size() > 1)
 						newAction(GameActionType.PRODUCT_EXCHANGE_TWO,player,soldProduct.ordinal(),
 								offeredProducts.get(0).ordinal(), offeredProducts.get(1).ordinal());
@@ -393,6 +424,7 @@ public class Game implements Runnable {
 					--queueIterator;
 				}else{
 					messageForPlayer("Transakcja nie udana.");
+					wasTrade = false;
 					--queueIterator;
 				}
 			}
