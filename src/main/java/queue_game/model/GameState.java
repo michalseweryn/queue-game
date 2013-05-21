@@ -187,10 +187,6 @@ public class GameState {
 		return stores[product.ordinal()];
 	}
 
-	public synchronized void setNumberOfPlayers(int nPlayers) {
-		numberOfPlayers = nPlayers;
-	}
-
 	public synchronized int getNumberOfPlayers() {
 		return numberOfPlayers;
 	}

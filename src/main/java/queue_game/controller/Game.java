@@ -152,7 +152,7 @@ public class Game implements Runnable {
 					gameState.putPlayerPawn(player, queue);
 					if(queue == null)
 						newAction(GameActionType.PAWN_PLACED, player + 1,
-								0);
+								-1);
 					else
 						newAction(GameActionType.PAWN_PLACED, player + 1,
 								queue.ordinal());

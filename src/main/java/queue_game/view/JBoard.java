@@ -388,8 +388,10 @@ public class JBoard extends JPanel implements ComponentListener{
 		double side = (1.5 * tileHeight);
 		Store store = game.getGameState().getStore(null);
 		for(ProductType type: ProductType.values())
-			if(store.getNumberOf(type) > 0)
+			if(store.getNumberOf(type) > 0){
 				count++;
+				System.out.println(count);
+			}
 		int lsize = list.size();
 		if(count != lsize)
 			rep = true;

@@ -4,18 +4,15 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
-import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 import queue_game.model.GameState;
 import queue_game.model.Player;
@@ -23,6 +20,8 @@ import queue_game.model.Player;
 public class JPlayerInfo extends JPanel {
 	private static final long serialVersionUID = 557224757921396872L;
 	private Player player;
+	private JLabel pawnsLeftLabel;
+	private List<JLabel> products = new ArrayList<JLabel>();
 
 	public JPlayerInfo(Player player) {
 		this.player = player;
@@ -35,7 +34,7 @@ public class JPlayerInfo extends JPanel {
 		JLabel colorLabel = createColoredLabel(GameState.playerColors[player.getID()], new Point(0, 0));
 		panel1.add(colorLabel);
 		panel1.add(new JLabel(player.getName()));
-		JLabel label2 = new JLabel("Dostępne pionki: " +player.getNumberOfPawns());
+		pawnsLeftLabel = new JLabel("Dostępne pionki: " +player.getNumberOfPawns());
 		JPanel panel3 = new JPanel();
 		panel3.setLayout(new GridLayout(1, 5));
 		for (int i = 0; i < 5; i++) {
@@ -45,14 +44,16 @@ public class JPlayerInfo extends JPanel {
 			productLabel.setBackground(GameState.productColors[i]);
 			productLabel.setOpaque(true);
 			productLabel.setForeground(Color.black);
+			products.add(productLabel);
 			panel3.add(productLabel, 0, i);
 		}
 		panel1.setAlignmentX(Component.LEFT_ALIGNMENT);
-		label2.setAlignmentX(LEFT_ALIGNMENT);
+		pawnsLeftLabel.setAlignmentX(LEFT_ALIGNMENT);
 		panel3.setAlignmentX(Component.LEFT_ALIGNMENT);
 		add(panel1);
-		add(label2);
+		add(pawnsLeftLabel);
 		add(panel3);
+		//as short as possible
 		setPreferredSize(new Dimension(150, 80));
 
 	}
@@ -85,6 +86,16 @@ public class JPlayerInfo extends JPanel {
 		}
 		g.setColor(GameState.playerColors[indexInColorArray]);
 		g.drawString("Dostępne pionki: " + player.getNumberOfPawns(), 5, 77);
+	}
+
+	/**
+	 * 
+	 */
+	public void update() {
+		pawnsLeftLabel.setText("Dostępne pionki: " +player.getNumberOfPawns());
+		for(int i = 0; i < 5; i++)
+			products.get(i).setText("" + player.getBoughtProducts()[i]
+					+ "/" + player.getShoppingList().get(i));
 	}
 
 }

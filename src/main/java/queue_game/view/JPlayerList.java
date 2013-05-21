@@ -25,6 +25,7 @@ public class JPlayerList extends JPanel implements queue_game.view.View {
 	private static final long serialVersionUID = 6386690129053320221L;
 	private GameState gameState; 
 	private ArrayList<JPlayerInfo> list = new ArrayList<JPlayerInfo>();
+	JTextArea log = new JTextArea();
 	public JPlayerList(Game game) {
 		super();
 		this.gameState = game.getGameState();
@@ -42,10 +43,9 @@ public class JPlayerList extends JPanel implements queue_game.view.View {
 		{
 			JPlayerInfo temp = new JPlayerInfo(p);
 			add(temp);
-			add(Box.createRigidArea(new Dimension(0, 10)));
+			add(Box.createRigidArea(new Dimension(0, 5)));
 			list.add(temp);
 		}
-		JTextArea log = new JTextArea();
 		log.setEditable(false);
 		log.setLineWrap(true);
 		log.setText(makeLog(gameState.getGameActions()));
@@ -72,8 +72,9 @@ public class JPlayerList extends JPanel implements queue_game.view.View {
 	}
 	
 	public void update(){
-		removeAll();
-		addFields();
+		for(JPlayerInfo info : list)
+			info.update();
+		log.setText(makeLog(gameState.getGameActions()));
 		revalidate();
 	}
 
