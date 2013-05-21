@@ -112,7 +112,7 @@ public class Game implements Runnable {
 		gameState.reset(nPlayers);
 		gameState.resetNumberOfProductsLeft();
 		gameState.resetPlayers();
-		gameState.resetCards();
+		gameState.resetQueuingCards();
 		gameState.resetShoppingList();
 		queuingUpPhase();
 		gameState.putSpeculators();
@@ -167,7 +167,6 @@ public class Game implements Runnable {
 		ProductType type;
 		for (DeliveryCard dC : tempDCList){
 			type = dC.getProductType();
-			Store deliveredStore = gameState.getStore(type);
 			int numberOfProductsLeft =
 					gameState.getNumberOfProductsLeft(type.ordinal());
 			if(numberOfProductsLeft !=0 )
@@ -190,9 +189,18 @@ public class Game implements Runnable {
 
 	private void PCTPhase() throws InterruptedException {
 		gameState.setCurrentGamePhase(GamePhase.PCT);
+		if(gameState.getDayNumber()%1==0)
+			SaturdayPhase();
 		prepareToQueueJumping();
 		gameState.openStores();
 		pawnsTaking();
+	}
+	
+	private void SaturdayPhase(){
+		System.out.println("\n\n Sobota!!!");
+		System.out.println(gameState.getDayNumber() + "\n\n");
+		deckOfDeliveryCards.fill();
+		gameState.resetQueuingCardsOnSaturday();
 	}
 
 	/**

@@ -69,7 +69,7 @@ public class GameState {
 	 * Reset cards of all players.
 	 * 
 	 */
-	public synchronized void resetCards() {
+	public synchronized void resetQueuingCards() {
 		for (Player pl : players) {
 			pl.setDeck(new DeckOfQueuingCards());
 			pl.getDeck().fill();
@@ -77,6 +77,29 @@ public class GameState {
 		}
 		for (Player p : players) {
 			p.getDeck().getCards(p.getCardsOnHand());
+		}
+	}
+	
+	/**
+	 * Resets cards of all players due to saturday rules, which means
+	 * that cards which a player is now holding on hand are to be set
+	 * on the end of the lst. 
+	 */
+	public synchronized void resetQueuingCardsOnSaturday() {
+		for (Player pl : players) {
+			List<QueuingCard> tempList = pl.getCardsOnHand();
+			pl.setDeck(new DeckOfQueuingCards());
+			System.out.println(pl.getDeck().size());
+			pl.getDeck().fill();
+			for (QueuingCard dC : tempList)
+				pl.getDeck().remove(dC);
+			pl.getDeck().shuffle();
+			pl.getDeck().addListToTheEnd(tempList);
+			
+		}
+		for (Player pl : players) {
+			pl.setCardsOnHand(new ArrayList<QueuingCard>());
+			pl.getDeck().getCards(pl.getCardsOnHand());
 		}
 	}
 

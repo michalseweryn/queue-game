@@ -27,6 +27,32 @@ public class DeckOfQueuingCards {
 			deck.remove(deck.size() - 1);
 		}
 	}
+	
+	/**
+	 * @author krzysiek
+	 * Removes the first occurrence of the specified element from this list,
+	 * if it is present.
+	 * If this list does not contain the element, it is unchanged. 
+	 * @return true if this list contained the specified element
+	 */
+	public boolean remove(QueuingCard queuingCard){
+		return deck.remove(queuingCard);
+	}
+	
+	/**
+	 * @author krzysiek
+	 * A function similar to addAll function. 
+	 */
+	public void addListToTheEnd(List<QueuingCard> list){
+		try {
+			deck.addAll(list);
+		} catch (NullPointerException e){
+			//nothing
+		}
+	}
+
+	
+	
 	/**
 	 * 
 	 * @return
