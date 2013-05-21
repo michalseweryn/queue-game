@@ -80,6 +80,8 @@ public class GameState {
 	}
 	
 	/**
+	 * It doesn't work yet!
+	 * 
 	 * Resets cards of all players due to saturday rules, which means
 	 * that cards which a player is now holding on hand are to be set
 	 * on the end of the lst. 

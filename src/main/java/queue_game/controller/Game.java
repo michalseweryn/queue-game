@@ -188,16 +188,17 @@ public class Game implements Runnable {
 
 	private void PCTPhase() throws InterruptedException {
 		gameState.setCurrentGamePhase(GamePhase.PCT);
-		if(gameState.getDayNumber()%1==0)
+		if(gameState.getDayNumber()%5==4)
 			SaturdayPhase();
 		prepareToQueueJumping();
 		gameState.openStores();
 		pawnsTaking();
 	}
 	
+	/**
+	 * Doesn't work yet!
+	 */
 	private void SaturdayPhase(){
-		System.out.println("\n\n Sobota!!!");
-		System.out.println(gameState.getDayNumber() + "\n\n");
 		deckOfDeliveryCards.fill();
 		gameState.resetQueuingCardsOnSaturday();
 	}
