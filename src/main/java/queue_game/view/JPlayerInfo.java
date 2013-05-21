@@ -4,23 +4,18 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 import queue_game.model.GameState;
 import queue_game.model.Player;
-import queue_game.model.ProductType;
 
 public class JPlayerInfo extends JPanel {
 	private static final long serialVersionUID = 557224757921396872L;
