@@ -57,7 +57,18 @@ public class JCardsArea extends JPanel {
 			});
 			contentPanel.add(button);
 		}
+		
+		if(gameState.getCurrentGamePhase() == GamePhase.EXCHANGING){
+			JButton button = new JButton("PASS");
+			button.addActionListener(new ActionListener(){
 
+				public void actionPerformed(ActionEvent e) {
+						game.productSelected(gameState.getActivePlayer(), null,null);
+				}
+			});
+			contentPanel.add(button);
+		}
+		
 		if(gameState.getCurrentGamePhase() == GamePhase.PCT){
 			JButton button = new JButton("PASS");
 			button.addActionListener(new ActionListener(){

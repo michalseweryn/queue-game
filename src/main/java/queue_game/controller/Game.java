@@ -345,7 +345,7 @@ public class Game implements Runnable {
 		ProductType soldProduct;
 		LinkedList<ProductType> offeredProducts = new LinkedList<ProductType>();
 		int player,pawn,queueIterator = 0;
-		ProductParameters product;
+		ProductType product;
 		while(queueIterator < queue.size()){	
 				offeredProducts.clear();
 				pawn = queue.get(queueIterator++);
@@ -356,27 +356,26 @@ public class Game implements Runnable {
 				
 				gameState.setActivePlayer(player);			
 				messageForPlayer("Wybierz towar który chcesz kupić lub spasuj");
-				product = requestProduct();
-				if(product == null){
+				soldProduct = requestProduct().product;
+				if(soldProduct == null){
 					messageForPlayer("Gracz spasował");
 					continue;
 				}
-				soldProduct = product.product;
 				messageForPlayer("Wybierz produkt który chcesz wymienić lub spasuj");
-				product = requestProduct();
+				product = requestProduct().product;
 				if(product == null){
 					messageForPlayer("Gracz spasował");
 					continue;
 				}
-				offeredProducts.add(product.product);
+				offeredProducts.add(product);
 				if(soldProduct.ordinal() != gameState.getDayNumber()){//NIE PEWNE!!
 					messageForPlayer("Wybierz produkt który chcesz wymienić lub spasuj");
-					product = requestProduct();
+					product = requestProduct().product;
 					if(product == null){
 						messageForPlayer("Gracz spasował");
 						continue;
 					}
-					offeredProducts.add(product.product);
+					offeredProducts.add(product);
 				}
 				if(gameState.trade(soldProduct,offeredProducts)){					
 					queue.remove();
