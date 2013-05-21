@@ -24,7 +24,7 @@ public class JPlayerList extends JPanel implements queue_game.view.View {
 		this.gameState = game.getGameState();
 		FlowLayout layout = new FlowLayout();
 		setLayout(layout);
-		setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		//setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
 		addFields();
 	}

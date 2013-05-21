@@ -26,9 +26,11 @@ public class JPlayerInfo extends JPanel {
 
 	public JPlayerInfo(Player player) {
 		this.player = player;
+		setBackground(Color.white);
 		setBorder(BorderFactory.createLineBorder(Color.black));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JPanel panel1 = new JPanel();
+		panel1.setOpaque(false);
 		//panel1.setLayout(new BoxLayout(panel1, BoxLayout.LINE_AXIS));
 		JLabel colorLabel = createColoredLabel(GameState.playerColors[player.getID()], new Point(0, 0));
 		panel1.add(colorLabel);
