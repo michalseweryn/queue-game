@@ -213,8 +213,8 @@ public class Game implements Runnable {
 			ArrayList<QueuingCard> cardsOnHand = gameState.getPlayersList()
 					.get(player).getCardsOnHand();
 			boolean success = false;
-			do {
 				messageForPlayer("Wybierz kartę przepychanek, lub spasuj.");
+			do {
 				card = requestQueuingCard();
 				if (card == null) {
 					finished[player] = true;

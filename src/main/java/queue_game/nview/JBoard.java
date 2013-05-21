@@ -360,7 +360,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			}
 			while(count > lsize){
 				JProductSquare square = new JProductSquare(game, ProductType.values()[0], 0, ProductType.values()[i]);
-				square.setBounds((int)(3 * tileWidth * ind + (lsize % 3) * side), (int)(tileHeight + side * (lsize / 3)), (int)side, (int)side);
+				square.setBounds((int)(tileWidth * (3 * ind + 0.5) + (2 - lsize % 3) * side), (int)(tileHeight + side * (lsize / 3)), (int)side, (int)side);
 				lsize++;
 				list.add(square);
 				layeredPane.add(square, PRODUCT_LAYER);
@@ -370,13 +370,13 @@ public class JBoard extends JPanel implements ComponentListener{
 			for(int j = 0; j < count; j++){
 				while(store.getNumberOf(ProductType.values()[++pr]) == 0);
 				JProductSquare square = list.get(j); 
-				square.setBounds((int)(3 * tileWidth * ind + j * side), (int)(tileHeight), (int)side, (int)side);
+				square.setBounds((int)(tileWidth * (3 * ind + 0.5) + (2 - j % 3) * side), (int)(tileHeight + side * (j / 3)), (int)side, (int)side);
 				if(square.setAmount(store.getNumberOf(ProductType.values()[pr])))
 					rep = true;
 				if(square.setType(ProductType.values()[pr]))
 					rep = true;
 				square.repaint();
-				square.setLocation((int)(3 * tileWidth * ind + j * side), (int)(tileHeight));
+				square.setLocation((int)(tileWidth * (3 * ind + 0.5) + (2 - j % 3) * side), (int)(tileHeight + side * (j / 3)));
 			}
 			if(rep)
 				stores.get(i).repaint();
