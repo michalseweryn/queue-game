@@ -17,14 +17,14 @@ public class GameStateTest {
 		gameState = new GameState();
 	}
 
-	@Test
+	/*@Test
 	public void resetCardsTest() {
 		gameState.resetQueuingCards();
 		for(Player p: gameState.getPlayersList())
 			assertEquals(10, p.getDeck().size());
 	}
 
-	/*	@Test
+		@Test
 	public void resetNumberOfProductsTest() {
 		gameState.resetNumberOfProductsLeft();
 		for(int n: gameState.getNumberOfProductsLeft())

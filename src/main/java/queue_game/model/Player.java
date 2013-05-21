@@ -12,7 +12,6 @@ import java.util.Collection;
  */
 public class Player {
 	private int numberOfPawns;
-	private DeckOfQueuingCards deck=null;
 	private List<Integer> shoppingList = null;
 	private int[] boughtProducts = {0, 0, 0, 0, 0};
 	private ArrayList<QueuingCard> cardsOnHand=new ArrayList<QueuingCard>();
@@ -52,15 +51,6 @@ public class Player {
 	
 	public List<Integer> getShoppingList(){
 		return shoppingList;
-	}
-	
-
-	public void setDeck(DeckOfQueuingCards deck) {
-		this.deck = deck;
-	}
-	
-	public DeckOfQueuingCards getDeck() {
-		return deck;
 	}
 	
 	public void setCardsOnHand(ArrayList<QueuingCard> cards){
