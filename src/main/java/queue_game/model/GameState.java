@@ -274,6 +274,16 @@ public class GameState {
 	}
 	/**
 	 * 
+	 * Set stores open.
+	 * 
+	 */
+		public void openStores(){
+			for(ProductType p : ProductType.values()){
+				getStore(p).setClosed(false);
+			}
+		}
+	/**
+	 * 
 	 * @param orig - Store from product has been taken
 	 * @param dest - store where product is give
 	 */
