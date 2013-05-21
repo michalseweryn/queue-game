@@ -287,7 +287,7 @@ public class GameState {
 	 * 
 	 * @param orig - Store from product has been taken
 	 * @param dest - store where product is give
-	 * @param product - type of product
+	 * @param product - type of product which is moved
 	 */
 	public void transferToAnotherStore(ProductType orig,ProductType dest, ProductType product){
 		getStore(orig).removeProduct(product);
