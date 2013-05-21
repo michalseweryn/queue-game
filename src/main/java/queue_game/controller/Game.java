@@ -244,6 +244,8 @@ public class Game implements Runnable {
 				if (card == null) {
 					finished[player] = true;
 					success = true;
+					deck[player].addListToTheEnd(cardsOnHand);
+					cardsOnHand.clear();
 					nFinished++;
 					if (nFinished == nPlayers)
 						break outer;
@@ -869,6 +871,9 @@ public class Game implements Runnable {
 			getDeck(i).getCards(gameState.getPlayersList().get(i).getCardsOnHand());
 		}
 	}
+	/*
+	 * Fills the deck with new cards at the end of the week
+	 */
 	public synchronized void resetQueuingCardsOnSaturday() {
 		int nPlayers=gameState.getNumberOfPlayers();
 		for (int i=0; i<nPlayers; i++) {
