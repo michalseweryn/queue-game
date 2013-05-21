@@ -1,6 +1,7 @@
 package queue_game.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A class which every object contains all the data about the particular player. 
@@ -45,6 +46,7 @@ public class Player {
 	public void setShoppingList(int[] shoppingList){
 		if(shoppingList.length != ProductType.values().length)
 			throw new IllegalArgumentException();
+		
 		this.shoppingList = shoppingList.clone();
 	}
 	
