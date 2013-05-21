@@ -1,6 +1,7 @@
 package queue_game;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -16,6 +17,7 @@ import queue_game.nview.JPlayerList;
 public class NApp {
 	public static void createAndShowGUI(Game game){
 		JFrame frame = new JFrame("FIAO");
+		frame.setPreferredSize(new Dimension(800, 500));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BorderLayout());
         JGameArea gameArea = new JGameArea(game);

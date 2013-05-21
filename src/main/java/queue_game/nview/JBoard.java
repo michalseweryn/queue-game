@@ -52,6 +52,7 @@ public class JBoard extends JPanel implements ComponentListener{
 	private ArrayList<ArrayList<JPawn>> pawns = new ArrayList<ArrayList<JPawn>>(6);
 	private ArrayList<JPawn> outdoorMarket = new ArrayList<JPawn>();
 	private ArrayList<ArrayList<JProductSquare>> products = new ArrayList<ArrayList<JProductSquare>>(6);
+	private ArrayList<JProductSquare> outdoorProducts = new ArrayList<JProductSquare>(6);
 	private List<JQueue> queues = new ArrayList<JQueue>(6);
 	private List<JStore> stores = new ArrayList<JStore>(6);
 	
@@ -137,7 +138,7 @@ public class JBoard extends JPanel implements ComponentListener{
 	
 	@Override
 	public Dimension getPreferredSize(){
-		int maxH = (int) (getParent().getSize().getHeight() - 180);
+		int maxH = (int) getParent().getSize().getHeight() - 180;
 		int maxW = (int) getParent().getSize().getWidth();
 		if(maxH * BOARD_WIDTH * TILE_SIDES_RATIO < maxW * BOARD_HEIGHT)
 			return new Dimension((int) (maxH * BOARD_WIDTH * TILE_SIDES_RATIO / BOARD_HEIGHT), maxH);
@@ -147,11 +148,12 @@ public class JBoard extends JPanel implements ComponentListener{
 
 	public JBoard(Game game) {
 		super();
+		setOpaque(true);
 		this.game = game;
 		this.gameState = game.getGameState();
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		layeredPane = new JLayeredPane();
-        layeredPane.setPreferredSize(new Dimension(300, 310));
+        //layeredPane.setPreferredSize(new Dimension(300, 310));
         layeredPane.setBorder(BorderFactory.createTitledBorder(
                 "JBoard"));
         for(int i = 0; i < 6; i++)
@@ -162,6 +164,7 @@ public class JBoard extends JPanel implements ComponentListener{
         	pawns.add(new ArrayList<JPawn>());
         for(ProductType store : ProductType.values())
         	products.add(new ArrayList<JProductSquare>());
+        outdoorProducts = new ArrayList<JProductSquare>();
         BoardDrawer boardDrawer = new BoardDrawer();
         boardDrawer.setBounds(0, 0, 2000, 2000);
 		layeredPane.add(boardDrawer, new Integer(0));
@@ -312,7 +315,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			}
 			double x = (5.25) * tileWidth;
 			double y = (11 * tileHeight);
-			double skip = 7 * tileWidth / (isize - 1);
+			double skip = 6 * tileWidth / (isize - 1);
 			if (skip > tileWidth * 0.55)
 				skip = tileWidth * 0.55;
 			while(isize > psize){
@@ -343,7 +346,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			boolean rep = false;
 			ArrayList<JProductSquare> list = products.get(i);
 			int count = 0;
-			double side = (int)((2.75 * tileWidth) / 5);
+			double side = (1.5 * tileHeight);
 			Store store = game.getGameState().getStores()[i];
 			for(ProductType type: ProductType.values())
 				if(store.getNumberOf(type) > 0)
@@ -357,7 +360,8 @@ public class JBoard extends JPanel implements ComponentListener{
 			}
 			while(count > lsize){
 				JProductSquare square = new JProductSquare(game, ProductType.values()[0], 0, ProductType.values()[i]);
-				square.setBounds((int)(3 * tileWidth * ind + lsize++ * side), (int)(tileHeight), (int)side, (int)side);
+				square.setBounds((int)(tileWidth * (3 * ind + 0.5) + (2 - lsize % 3) * side), (int)(tileHeight + side * (lsize / 3)), (int)side, (int)side);
+				lsize++;
 				list.add(square);
 				layeredPane.add(square, PRODUCT_LAYER);
 				square.repaint();
@@ -366,18 +370,54 @@ public class JBoard extends JPanel implements ComponentListener{
 			for(int j = 0; j < count; j++){
 				while(store.getNumberOf(ProductType.values()[++pr]) == 0);
 				JProductSquare square = list.get(j); 
-				square.setBounds((int)(3 * tileWidth * ind + j * side), (int)(tileHeight), (int)side, (int)side);
+				square.setBounds((int)(tileWidth * (3 * ind + 0.5) + (2 - j % 3) * side), (int)(tileHeight + side * (j / 3)), (int)side, (int)side);
 				if(square.setAmount(store.getNumberOf(ProductType.values()[pr])))
 					rep = true;
 				if(square.setType(ProductType.values()[pr]))
 					rep = true;
 				square.repaint();
-				square.setLocation((int)(3 * tileWidth * ind + j * side), (int)(tileHeight));
+				square.setLocation((int)(tileWidth * (3 * ind + 0.5) + (2 - j % 3) * side), (int)(tileHeight + side * (j / 3)));
 			}
 			if(rep)
 				stores.get(i).repaint();
 			ind++;
 		}
+		boolean rep = false;
+		ArrayList<JProductSquare> list = outdoorProducts;
+		int count = 0;
+		double side = (1.5 * tileHeight);
+		Store store = game.getGameState().getStore(null);
+		for(ProductType type: ProductType.values())
+			if(store.getNumberOf(type) > 0)
+				count++;
+		int lsize = list.size();
+		if(count != lsize)
+			rep = true;
+		while(count < lsize){
+			layeredPane.remove(list.get(--lsize));
+			list.remove(lsize);
+		}
+		while(count > lsize){
+			JProductSquare square = new JProductSquare(game, null, 0, null);
+			square.setBounds((int)(3 * tileWidth * ind + lsize++ * side), (int)(tileHeight), (int)side, (int)side);
+			list.add(square);
+			layeredPane.add(square, PRODUCT_LAYER);
+			square.repaint();
+		}
+		int pr = -1;
+		for(int j = 0; j < count; j++){
+			while(store.getNumberOf(ProductType.values()[++pr]) == 0);
+			JProductSquare square = list.get(j); 
+			square.setBounds((int)(3 * tileWidth * ind + j * side), (int)(tileHeight), (int)side, (int)side);
+			if(square.setAmount(store.getNumberOf(ProductType.values()[pr])))
+				rep = true;
+			if(square.setType(ProductType.values()[pr]))
+				rep = true;
+			square.repaint();
+			square.setLocation((int)(0.125 * tileWidth + j * side), (int)(12 * tileHeight));
+		}
+		if(rep)
+			repaint();
 		
 	}
 	

@@ -33,6 +33,7 @@ public class JCardsArea extends JPanel implements View{
 		this.gameState = game.getGameState();
 		this.game = game;
 		FlowLayout layout = new FlowLayout();
+		setOpaque(true);
 		layout.setVgap(0);
 		layout.setHgap(0);
 		setLayout(layout);	

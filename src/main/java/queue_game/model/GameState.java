@@ -18,15 +18,14 @@ public class GameState {
 	/**
 	 * Counted from 0.
 	 */
-	public static final Color[] productColors = new Color[] { Color.BLUE,
-			Color.GREEN, Color.PINK, Color.ORANGE, Color.MAGENTA };
+	public static final Color[] productColors = new Color[] { new Color(0x5DC049), 
+		new Color(0xFFB451), new Color(0xDF574E), new Color(0x57ACB0), Color.MAGENTA };
 
 	/**
-	 * Counted from 1, 0 is speculator.
+	 * Counted from 0
 	 */
-	public static final Color[] playerColors = new Color[] { new Color(0x000000),
-			new Color(0xff0000), new Color(0xffff00), new Color(0, 128, 0),
-			new Color(192, 128, 0), new Color(0x0000ff) };
+	public static final Color[] playerColors = new Color[] {new Color(0xff0000), new Color(0xffff00), new Color(0, 128, 0),
+			new Color(192, 128, 0), new Color(0x0670C7) };
 
 	private int dayNumber;
 	private int gameOpeningMarker;
