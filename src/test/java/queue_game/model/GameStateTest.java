@@ -261,4 +261,129 @@ public class GameStateTest {
 		assertEquals(true,gameState.getStore(ProductType.FURNITURE).getQueue().contains(-1));
 	}*/
 
+	@Test
+	public void sellTest() {
+		gameState.putPlayerPawn(0, ProductType.CLOTHES);
+		gameState.putPlayerPawn(1, ProductType.CLOTHES);
+		gameState.putPlayerPawn(3, ProductType.CLOTHES);
+		gameState.putPlayerPawn(2, ProductType.CLOTHES);
+		gameState.putPlayerPawn(4, ProductType.CLOTHES);
+		gameState.getStore(ProductType.CLOTHES).addProducts(3);
+		gameState.getStore(ProductType.CLOTHES).addProduct(ProductType.FOOD);
+		gameState.getStore(ProductType.CLOTHES).addProduct(ProductType.FURNITURE);
+		gameState.sell(ProductType.CLOTHES, ProductType.FURNITURE);
+		assertEquals(new ArrayList<Integer>(Arrays.asList(1, 3, 2, 4)), gameState.getStore(ProductType.CLOTHES).getQueue());
+		gameState.sell(ProductType.CLOTHES, ProductType.CLOTHES);
+		assertEquals(new ArrayList<Integer>(Arrays.asList(3, 2, 4)), gameState.getStore(ProductType.CLOTHES).getQueue());
+		gameState.sell(ProductType.CLOTHES, ProductType.CLOTHES);
+		assertEquals(new ArrayList<Integer>(Arrays.asList(2, 4)), gameState.getStore(ProductType.CLOTHES).getQueue());
+		gameState.sell(ProductType.CLOTHES, ProductType.CLOTHES);
+		assertEquals(new ArrayList<Integer>(Arrays.asList(4)), gameState.getStore(ProductType.CLOTHES).getQueue());
+		gameState.sell(ProductType.CLOTHES, ProductType.FOOD);
+		assertEquals(new ArrayList<Integer>(), gameState.getStore(ProductType.CLOTHES).getQueue());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void sellTest2() {
+		gameState.sell(ProductType.CLOTHES, ProductType.CLOTHES);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void sellTest3() {
+		gameState.putPlayerPawn(0, ProductType.CLOTHES);
+		gameState.getStore(ProductType.CLOTHES).addProducts(3);
+		gameState.sell(ProductType.CLOTHES, ProductType.FOOD);
+	}
+
+	@Test
+	public void reverseTest() {
+		gameState.putPlayerPawn(0, ProductType.CLOTHES);
+		gameState.putPlayerPawn(1, ProductType.CLOTHES);
+		gameState.putPlayerPawn(3, ProductType.CLOTHES);
+		gameState.putPlayerPawn(2, ProductType.CLOTHES);
+		gameState.putPlayerPawn(4, ProductType.CLOTHES);
+		gameState.reverse(ProductType.CLOTHES);
+		gameState.reverse(ProductType.FOOD);
+		gameState.reverse(ProductType.FURNITURE);
+		gameState.reverse(ProductType.KIOSK);
+		gameState.reverse(ProductType.RTV_AGD);
+		assertEquals(new ArrayList<Integer>(Arrays.asList(4, 2, 3, 1, 0)), gameState.getStore(ProductType.CLOTHES).getQueue());
+	}
+
+	@Test
+	public void setActivePlayerTest() {
+		gameState.setActivePlayer(0);
+		assertEquals(0, gameState.getActivePlayer());
+		gameState.setActivePlayer(1);
+		assertEquals(1, gameState.getActivePlayer());
+		gameState.setActivePlayer(2);
+		assertEquals(2, gameState.getActivePlayer());
+		gameState.setActivePlayer(3);
+		assertEquals(3, gameState.getActivePlayer());
+		gameState.setActivePlayer(4);
+		assertEquals(4, gameState.getActivePlayer());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void setActivePlayerTest2() {
+		gameState.setActivePlayer(-1);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void setActivePlayerTest3() {
+		gameState.setActivePlayer(5);
+	}
+
+	@Test
+	public void setCurrentGamePhaseTest() {
+		gameState.setCurrentGamePhase(GamePhase.QUEUING_UP);
+		assertEquals(GamePhase.QUEUING_UP, gameState.getCurrentGamePhase());
+		gameState.setCurrentGamePhase(GamePhase.DELIVERY);
+		assertEquals(GamePhase.DELIVERY, gameState.getCurrentGamePhase());
+		gameState.setCurrentGamePhase(GamePhase.JUMPING);
+		assertEquals(GamePhase.JUMPING, gameState.getCurrentGamePhase());
+		gameState.setCurrentGamePhase(GamePhase.OPENING);
+		assertEquals(GamePhase.OPENING, gameState.getCurrentGamePhase());
+		gameState.setCurrentGamePhase(GamePhase.EXCHANGING);
+		assertEquals(GamePhase.EXCHANGING, gameState.getCurrentGamePhase());
+		gameState.setCurrentGamePhase(GamePhase.PCT);
+		assertEquals(GamePhase.PCT, gameState.getCurrentGamePhase());
+	}
+
+	@Test
+	public void removePlayerPawnTest() {
+		gameState.putPlayerPawn(0, ProductType.CLOTHES);
+		gameState.putPlayerPawn(1, ProductType.CLOTHES);
+		gameState.putPlayerPawn(3, ProductType.CLOTHES);
+		gameState.putPlayerPawn(2, ProductType.CLOTHES);
+		gameState.putPlayerPawn(4, ProductType.CLOTHES);
+		gameState.removePlayerPawn(3, 2, ProductType.CLOTHES);
+		assertEquals(new ArrayList<Integer>(Arrays.asList(0, 1, 2, 4)), gameState.getStore(ProductType.CLOTHES).getQueue());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void removePlayerPawnTest2() {
+		gameState.removePlayerPawn(0, 0, ProductType.CLOTHES);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void removePlayerPawnTest3() {
+		gameState.removePlayerPawn(-1, 0, ProductType.CLOTHES);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void removePlayerPawnTest4() {
+		gameState.removePlayerPawn(0, -1, ProductType.CLOTHES);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void removePlayerPawnTest5() {
+		gameState.putPlayerPawn(0, ProductType.CLOTHES);
+		gameState.putPlayerPawn(1, ProductType.CLOTHES);
+		gameState.putPlayerPawn(3, ProductType.CLOTHES);
+		gameState.putPlayerPawn(2, ProductType.CLOTHES);
+		gameState.putPlayerPawn(4, ProductType.CLOTHES);
+		gameState.removePlayerPawn(3, 3, ProductType.CLOTHES);
+	}
+
 }
