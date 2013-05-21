@@ -64,46 +64,15 @@ public class GameState {
 		market = new Store(null);
 	}
 
-	/**
-	 * 
-	 * Reset cards of all players.
-	 * 
-	 */
-	public synchronized void resetQueuingCards() {
-		for (Player pl : players) {
-			pl.setDeck(new DeckOfQueuingCards());
-			pl.getDeck().fill();
-			pl.getDeck().shuffle();
-		}
-		for (Player p : players) {
-			p.getDeck().getCards(p.getCardsOnHand());
-		}
-	}
 	
-	/**
+		/**
 	 * It doesn't work yet!
 	 * 
 	 * Resets cards of all players due to saturday rules, which means
 	 * that cards which a player is now holding on hand are to be set
 	 * on the end of the lst. 
 	 */
-	public synchronized void resetQueuingCardsOnSaturday() {
-		for (Player pl : players) {
-			List<QueuingCard> tempList = pl.getCardsOnHand();
-			pl.setDeck(new DeckOfQueuingCards());
-			System.out.println(pl.getDeck().size());
-			pl.getDeck().fill();
-			for (QueuingCard dC : tempList)
-				pl.getDeck().remove(dC);
-			pl.getDeck().shuffle();
-			pl.getDeck().addListToTheEnd(tempList);
-			
-		}
-		for (Player pl : players) {
-			pl.setCardsOnHand(new ArrayList<QueuingCard>());
-			pl.getDeck().getCards(pl.getCardsOnHand());
-		}
-	}
+	
 
 	/**
 	 * 
@@ -208,9 +177,7 @@ public class GameState {
 	public synchronized Store getOutDoorMarket() {
 		return market;
 	}
-	public synchronized DeckOfQueuingCards getDeck(int playerNr) {
-		return players.get(playerNr).getDeck();
-	}
+	
 
 	public synchronized Store getStore(ProductType product) {
 		if(product == null)
@@ -279,6 +246,10 @@ public class GameState {
 
 	public synchronized ArrayList<Player> getPlayersList() {
 		return players;
+	}
+	
+	public synchronized Player getPlayer(int i){
+		return players.get(i);
 	}
 
 	public synchronized void setPlayersList(ArrayList<Player> players) {
