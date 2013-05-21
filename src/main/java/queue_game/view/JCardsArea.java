@@ -1,12 +1,7 @@
 package queue_game.view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -19,6 +14,7 @@ import queue_game.controller.Game;
 import queue_game.model.GamePhase;
 import queue_game.model.GameState;
 import queue_game.model.Player;
+import queue_game.model.ProductType;
 import queue_game.model.QueuingCard;
 
 /**
@@ -84,7 +80,35 @@ public class JCardsArea extends JPanel {
 			JQueuingCard temp = new JQueuingCard(player,i,game);
 			contentPanel.add(temp);
 		}
+		if(gameState.getCurrentGamePhase() == GamePhase.EXCHANGING){
+			int id = gameState.getActivePlayer();
+			for(ProductType type : ProductType.values()){
+				int bought = gameState.getPlayer(id).getBoughtProducts()[type.ordinal()];
+				if(bought > 0){
+					System.out.println(type + " " + bought);
+					JProductSquare square = new JProductSquare(game, type, bought, null);
+					square.setMinimumSize(new Dimension(30, 30));
+					square.setPreferredSize(new Dimension(30, 30));
+					contentPanel.add(square);
+				}
+			}
+			JButton button = new JButton("PASS");
+			button.addActionListener(new ActionListener(){
+
+				public void actionPerformed(ActionEvent e) {
+						game.productSelected(game.getGameState().getActivePlayer(), null, null);
+				}
+			});
+			contentPanel.add(button);
+
+			
+			
+		}
 		add(contentPanel, BorderLayout.CENTER);
+		
+	}
+	private void addExchangeComponents(){
+		
 	}
 	/*
 	@Override
