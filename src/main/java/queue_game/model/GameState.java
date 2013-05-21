@@ -6,6 +6,7 @@ package queue_game.model;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -403,6 +404,27 @@ public class GameState {
 			movePawn(offeredProduct, 0, offeredProduct, queueLength - 1);
 		}
 	}
+	
+	/**
+	 * Method for outdoormarket.
+	 * 
+	 * @author Jan
+	 */
+	public synchronized boolean trade(ProductType soldProduct, Collection<ProductType> offeredProducts) 
+			throws IllegalArgumentException{
+		
+		int player = getActivePlayer();
+		getOutDoorMarket().removeProduct(soldProduct);
+		players.get(player).addPawn();
+		players.get(player).addProduct(soldProduct);
+		players.removeAll(offeredProducts);
+		for(ProductType i: offeredProducts)
+				getOutDoorMarket().addProduct(i);
+		
+		
+		return false;
+	}
+	
 	public void setMessage(String message){
 		this.message = message;
 	}
