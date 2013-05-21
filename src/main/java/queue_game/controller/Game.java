@@ -365,7 +365,7 @@ public class Game implements Runnable {
 						messageForPlayer("Gracz spasował");
 						newAction(GameActionType.PASSED,player);
 						if(wasTrade)
-							queue.remove();
+							queue.remove(queueIterator - 1);
 						wasTrade = false;
 						continue;
 					}
@@ -376,7 +376,7 @@ public class Game implements Runnable {
 					messageForPlayer("Gracz spasował");
 					newAction(GameActionType.PASSED,player);
 					if(wasTrade)
-						queue.remove();
+						queue.remove(queueIterator - 1);
 					wasTrade = false;
 					continue;
 				}
@@ -384,7 +384,7 @@ public class Game implements Runnable {
 					messageForPlayer("Gracz spasował");
 					newAction(GameActionType.PASSED,player);
 					if(wasTrade)
-						queue.remove();
+						queue.remove(queueIterator - 1);
 					wasTrade = false;
 					continue;
 				}
@@ -394,7 +394,7 @@ public class Game implements Runnable {
 					messageForPlayer("Gracz spasował");
 					newAction(GameActionType.PASSED,player);
 					if(wasTrade)
-						queue.remove();
+						queue.remove(queueIterator - 1);
 					wasTrade = false;
 					continue;
 				}
@@ -406,7 +406,7 @@ public class Game implements Runnable {
 						messageForPlayer("Gracz spasował");
 						newAction(GameActionType.PASSED,player);
 						if(wasTrade)
-							queue.remove();
+							queue.remove(queueIterator - 1);
 						continue;
 					}
 					offeredProducts.add(product);
