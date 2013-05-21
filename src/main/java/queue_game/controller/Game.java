@@ -452,7 +452,7 @@ public class Game implements Runnable {
 			messageForPlayer("BŁĄD. Nie można przenieść produktu do bazaru.");
 			return false;
 		}
-		gameState.transferToAnotherStore(prod.product, p);
+		gameState.transferToAnotherStore(store.productType, p, prod.product);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.DELIVERY_ERROR.ordinal(),
 				store.productType.ordinal());
