@@ -336,27 +336,47 @@ public class Game implements Runnable {
 		LinkedList<Integer> queue = market.getQueue();
 		ProductType soldProduct;
 		LinkedList<ProductType> offeredProducts = new LinkedList<ProductType>();
-		int player,pawn;
-		
-		while(queue.size() > 0){
-				pawn = queue.peek();
+		int player,pawn,queueIterator = 0;
+		ProductParameters product;
+		while(queueIterator < queue.size()){	
+				offeredProducts.clear();
+				pawn = queue.get(queueIterator++);
+				
 				player = gameState.getActivePlayer();
 				while(player != pawn)
-					player= (player + 1) % gameState.getNumberOfPlayers();
+					player = (player + 1) % gameState.getNumberOfPlayers();
 				
-				gameState.setActivePlayer(player);
-				
+				gameState.setActivePlayer(player);			
 				messageForPlayer("Wybierz towar który chcesz kupić lub spasuj");
-				soldProduct = requestProduct().product;
-				messageForPlayer("Wybierz produkt który chcesz wymienić");
-				offeredProducts.add(requestProduct().product);
-				if(soldProduct.ordinal() != gameState.getDayNumber()){//NIE PEWNE!!
-					messageForPlayer("Wybierz produkt który chcesz wymienić");
-					offeredProducts.add(requestProduct().product);
+				product = requestProduct();
+				if(product == null){
+					messageForPlayer("Gracz spasował");
+					continue;
 				}
-				if(gameState.trade(soldProduct,offeredProducts))					
+				soldProduct = product.product;
+				messageForPlayer("Wybierz produkt który chcesz wymienić lub spasuj");
+				product = requestProduct();
+				if(product == null){
+					messageForPlayer("Gracz spasował");
+					continue;
+				}
+				offeredProducts.add(product.product);
+				if(soldProduct.ordinal() != gameState.getDayNumber()){//NIE PEWNE!!
+					messageForPlayer("Wybierz produkt który chcesz wymienić lub spasuj");
+					product = requestProduct();
+					if(product == null){
+						messageForPlayer("Gracz spasował");
+						continue;
+					}
+					offeredProducts.add(product.product);
+				}
+				if(gameState.trade(soldProduct,offeredProducts)){					
 					queue.remove();
-				
+					messageForPlayer("Transakcja udana.");
+				}else{
+					messageForPlayer("Transakcja nie udana.");
+					--queueIterator;
+				}
 			}
 	}
 	
@@ -526,7 +546,7 @@ public class Game implements Runnable {
 			messageForPlayer("BŁĄD. Nie można przenieść produktu do bazaru.");
 			return false;
 		}
-		gameState.transferToAnotherStore(prod.product, p);
+		gameState.transferToAnotherStore(store.productType, p, prod.product);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.DELIVERY_ERROR.ordinal(),
 				store.productType.ordinal());

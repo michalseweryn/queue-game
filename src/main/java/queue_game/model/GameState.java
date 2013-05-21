@@ -325,14 +325,13 @@ public class GameState {
 
 	/**
 	 * 
-	 * @param orig
-	 *            - Store from product has been taken
-	 * @param dest
-	 *            - store where product is give
+	 * @param orig - Store from product has been taken
+	 * @param dest - store where product is give
+	 * @param product - type of product which is move
 	 */
-	public void transferToAnotherStore(ProductType orig, ProductType dest) {
-		getStore(orig).removeProduct(orig);
-		getStore(dest).addProduct(orig);
+	public void transferToAnotherStore(ProductType orig,ProductType dest, ProductType product){
+		getStore(orig).removeProduct(product);
+		getStore(dest).addProduct(product);
 	}
 
 	/**
@@ -446,14 +445,15 @@ public class GameState {
 			throws IllegalArgumentException {
 
 		int player = getActivePlayer();
-		getOutDoorMarket().removeProduct(soldProduct);
+		if(getOutDoorMarket().getNumberOf(soldProduct) != 0)
+			getOutDoorMarket().removeProduct(soldProduct);
+		else
+			throw new IllegalArgumentException("Not enough products in market");
+		
 		players.get(player).addPawn();
 		players.get(player).addProduct(soldProduct);
-		players.removeAll(offeredProducts);
-		for (ProductType i : offeredProducts)
-			getOutDoorMarket().addProduct(i);
-
-		return false;
+		players.get(player).removeProducts(offeredProducts);
+		return true;
 	}
 
 	public void setMessage(String message) {
