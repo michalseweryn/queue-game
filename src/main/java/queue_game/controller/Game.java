@@ -91,6 +91,7 @@ public class Game implements Runnable {
 				deliveryPhase();
 				queueJumpingPhase();
 				openingStoresPhase();
+				exchangingPhase();
 				PCTPhase();
 			}
 			gameState.setGameOver();
@@ -112,7 +113,7 @@ public class Game implements Runnable {
 		gameState.reset(nPlayers);
 		gameState.resetNumberOfProductsLeft();
 		gameState.resetPlayers();
-		gameState.resetCards();
+		gameState.resetQueuingCards();
 		gameState.resetShoppingList();
 		queuingUpPhase();
 		gameState.putSpeculators();
@@ -162,12 +163,10 @@ public class Game implements Runnable {
 	 * @author krzysiek & Helena
 	 */
 	public void deliveryPhase() {
-		System.out.println("Dostawa");
 		List<DeliveryCard> tempDCList = deckOfDeliveryCards.removeThreeCards();
 		ProductType type;
 		for (DeliveryCard dC : tempDCList){
 			type = dC.getProductType();
-			Store deliveredStore = gameState.getStore(type);
 			int numberOfProductsLeft =
 					gameState.getNumberOfProductsLeft(type.ordinal());
 			if(numberOfProductsLeft !=0 )
@@ -190,9 +189,19 @@ public class Game implements Runnable {
 
 	private void PCTPhase() throws InterruptedException {
 		gameState.setCurrentGamePhase(GamePhase.PCT);
+		if(gameState.getDayNumber()%5==4)
+			SaturdayPhase();
 		prepareToQueueJumping();
 		gameState.openStores();
 		pawnsTaking();
+	}
+	
+	/**
+	 * Doesn't work yet!
+	 */
+	private void SaturdayPhase(){
+		deckOfDeliveryCards.fill();
+		gameState.resetQueuingCardsOnSaturday();
 	}
 
 	/**
@@ -214,8 +223,8 @@ public class Game implements Runnable {
 			ArrayList<QueuingCard> cardsOnHand = gameState.getPlayersList()
 					.get(player).getCardsOnHand();
 			boolean success = false;
-			do {
 				messageForPlayer("Wybierz kartę przepychanek, lub spasuj.");
+			do {
 				card = requestQueuingCard();
 				if (card == null) {
 					finished[player] = true;
@@ -288,6 +297,67 @@ public class Game implements Runnable {
 	}
 
 	/**
+	 * Fourth Phase of Day. For each store with products, removes the right
+	 * amount of product and pawns.
+	 * 
+	 * @author Jan
+	 */
+	public void openingStoresPhase() {
+		for(Store store : gameState.getStores()){
+			if(store.isClosed())
+				continue;
+			int queueLength = store.getQueue().size();
+			while(queueLength-- > 0){
+				for(ProductType product: ProductType.values()){
+					if(store.getNumberOf(product) > 0 && !store.isClosed()){
+						gameState.sell(store.productType, product);
+						// no full information anyway.
+						// newAction(GameActionType.PRODUCT_BOUGHT,
+						//		gameState.sell(type) + 1, type.ordinal());
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Fifth Phase of Day. Players can exchange products on market.
+	 * 
+	 * @author Jan
+	 */
+	public void exchangingPhase() throws InterruptedException {
+		gameState.setCurrentGamePhase(GamePhase.EXCHANGING);
+		Store market = gameState.getOutDoorMarket();
+		LinkedList<Integer> queue = market.getQueue();
+		ProductType soldProduct;
+		LinkedList<ProductType> offeredProducts = new LinkedList<ProductType>();
+		int player,pawn;
+		
+		while(queue.size() > 0){
+				pawn = queue.peek();
+				player = gameState.getActivePlayer();
+				while(player != pawn)
+					player= (player + 1) % gameState.getNumberOfPlayers();
+				
+				gameState.setActivePlayer(player);
+				
+				messageForPlayer("Wybierz towar który chcesz kupić lub spasuj");
+				soldProduct = requestProduct().product;
+				messageForPlayer("Wybierz produkt który chcesz wymienić");
+				offeredProducts.add(requestProduct().product);
+				if(soldProduct.ordinal() != gameState.getDayNumber()){//NIE PEWNE!!
+					messageForPlayer("Wybierz produkt który chcesz wymienić");
+					offeredProducts.add(requestProduct().product);
+				}
+				if(gameState.trade(soldProduct,offeredProducts))					
+					queue.remove();
+				
+			}
+	}
+	
+	
+	/**
 	 * @return
 	 * @throws InterruptedException
 	 */
@@ -320,9 +390,9 @@ public class Game implements Runnable {
 	 */
 	private boolean tippingFriend() {
 		List<DeliveryCard> deliveryCards=deckOfDeliveryCards.peekTwoCards();
-		messageForPlayer("Oto 2 karty dostawy:");
-		messageForPlayer("Pierwsza : sklep - "+deliveryCards.get(0).getProductType()+" ilość - "+deliveryCards.get(0).getAmount());
-		messageForPlayer("Druga : sklep - "+deliveryCards.get(1).getProductType()+" ilość - "+deliveryCards.get(1).getAmount());
+		System.out.println("Oto 2 karty dostawy:");
+		System.out.println("Pierwsza : sklep - "+deliveryCards.get(0).getProductType()+" ilość - "+deliveryCards.get(0).getAmount());
+		System.out.println("Druga : sklep - "+deliveryCards.get(1).getProductType()+" ilość - "+deliveryCards.get(1).getAmount());
 		return true;
 	}
 
@@ -347,7 +417,7 @@ public class Game implements Runnable {
 			return false;
 		}
 		if (store.isClosed()) {
-			System.out.println("BŁĄD. Ten sklep jest zamknięty.");
+			messageForPlayer("BŁĄD. Ten sklep jest zamknięty.");
 			return false;
 		}
 		gameState.sell(prod.store, prod.product);
@@ -443,7 +513,7 @@ public class Game implements Runnable {
 			return false;
 		}
 		if (store.isClosed()) {
-			System.out.println("BŁĄD. Ten sklep jest zamknięty.");
+			messageForPlayer("BŁĄD. Ten sklep jest zamknięty.");
 			return false;
 		}
 		messageForPlayer("Wybierz sklep w którym ma być dodany towar");
@@ -456,7 +526,6 @@ public class Game implements Runnable {
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.DELIVERY_ERROR.ordinal(),
 				store.productType.ordinal());
-		System.out.println("DELIVERY");
 		return true;
 	}
 
@@ -474,7 +543,6 @@ public class Game implements Runnable {
 		gameState.movePawn(pawn.destination, pawn.position, pawn.destination, pawn.position+2);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.CRITICIZING_AUTHORITIES.ordinal());
-		System.out.println("AUTHORITIES");
 		return true;
 	}
 
@@ -497,7 +565,6 @@ public class Game implements Runnable {
 		gameState.reverse(queue);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.COMMUNITY_LIST.ordinal(), queue.ordinal());
-		System.out.println("USING COMMUNITY LIST");
 		return true;
 	}
 
@@ -513,36 +580,10 @@ public class Game implements Runnable {
 			return false;
 		}
 		gameState.close(queue);
-		System.out.println("CLOSED");
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.CLOSED_FOR_STOCKTAKING.ordinal());
 		return true;
 
-	}
-
-	/**
-	 * Fourth Phase of Day. For each store with products, removes the right
-	 * amount of product and pawns.
-	 * 
-	 * @author Jan
-	 */
-	public void openingStoresPhase() {
-		for(Store store : gameState.getStores()){
-			if(store.isClosed())
-				continue;
-			int queueLength = store.getQueue().size();
-			while(queueLength-- > 0){
-				for(ProductType product: ProductType.values()){
-					if(store.getNumberOf(product) > 0 && !store.isClosed()){
-						gameState.sell(store.productType, product);
-						// no full information anyway.
-						// newAction(GameActionType.PRODUCT_BOUGHT,
-						//		gameState.sell(type) + 1, type.ordinal());
-						break;
-					}
-				}
-			}
-		}
 	}
 
 	/**
@@ -560,7 +601,6 @@ public class Game implements Runnable {
 		expectedType = null;
 		PawnParameters pawn = selectedPawn;
 		selectedPawn = null;
-		System.out.println("pionek" + pawn.position + "do" + pawn.destination);
 		return pawn;
 
 	}
@@ -591,7 +631,6 @@ public class Game implements Runnable {
 		expectedType = ProductParameters.class;
 		updateViews();
 		while (expectedType != null) {
-			System.out.println("czekamy");
 			wait();
 		}
 
@@ -773,7 +812,6 @@ public class Game implements Runnable {
 
 	private void messageForPlayer(String s) {
 		gameState.setMessage(s);
-		System.out.println(s);
 	}
 
 }

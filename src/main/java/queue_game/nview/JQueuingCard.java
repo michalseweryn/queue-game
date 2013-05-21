@@ -59,7 +59,7 @@ public class JQueuingCard extends JPanel implements MouseListener {
 		Graphics2D g2d = (Graphics2D) g;
 		Dimension size = getSize();
 		Rectangle rect = new Rectangle(0, 0, size.width - 1, size.height - 1);
-		int indexInColorArray = player.getID() + 1;
+		int indexInColorArray = player.getID();
 		if (indexInColorArray >= GameState.playerColors.length)
 			throw new ArrayIndexOutOfBoundsException("players' list is "
 					+ "longer than colors' number");

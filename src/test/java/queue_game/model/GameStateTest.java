@@ -18,7 +18,7 @@ public class GameStateTest {
 
 	@Test
 	public void resetCardsTest() {
-		gameState.resetCards();
+		gameState.resetQueuingCards();
 		for(Player p: gameState.getPlayersList())
 			assertEquals(10, p.getDeck().size());
 	}

@@ -18,7 +18,7 @@ public class JGameArea extends JPanel implements queue_game.view.View{
 	
 	private static final long serialVersionUID = -1161332361871600948L;
 	
-	private Dimension defaultSize = new Dimension(640, 480);
+	private Dimension defaultSize = new Dimension(800, 600);
 	private ProductPanel productPanel;
 	private JBoard board;
 	private JCardsArea cardsArea;
@@ -30,11 +30,6 @@ public class JGameArea extends JPanel implements queue_game.view.View{
 		add(productPanel, BorderLayout.PAGE_START);
 		add(board, BorderLayout.CENTER);
 		add(cardsArea, BorderLayout.PAGE_END);
-	}
-	@Override
-	public Dimension getPreferredSize(){
-		return defaultSize;
-		
 	}
 	public void update() {
 		productPanel.repaint();

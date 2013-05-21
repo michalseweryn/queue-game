@@ -6,6 +6,7 @@ package queue_game.model;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -18,15 +19,14 @@ public class GameState {
 	/**
 	 * Counted from 0.
 	 */
-	public static final Color[] productColors = new Color[] { Color.BLUE,
-			Color.GREEN, Color.PINK, Color.ORANGE, Color.MAGENTA };
+	public static final Color[] productColors = new Color[] { new Color(0x5DC049), 
+		new Color(0xFFB451), new Color(0xDF574E), new Color(0x57ACB0), Color.MAGENTA };
 
 	/**
-	 * Counted from 1, 0 is speculator.
+	 * Counted from 0
 	 */
-	public static final Color[] playerColors = new Color[] { new Color(0x000000),
-			new Color(0xff0000), new Color(0xffff00), new Color(0, 128, 0),
-			new Color(192, 128, 0), new Color(0x0000ff) };
+	public static final Color[] playerColors = new Color[] {new Color(0xff0000), new Color(0xffff00), new Color(0, 128, 0),
+			new Color(192, 128, 0), new Color(0x0670C7) };
 
 	private int dayNumber;
 	private int gameOpeningMarker;
@@ -69,7 +69,7 @@ public class GameState {
 	 * Reset cards of all players.
 	 * 
 	 */
-	public synchronized void resetCards() {
+	public synchronized void resetQueuingCards() {
 		for (Player pl : players) {
 			pl.setDeck(new DeckOfQueuingCards());
 			pl.getDeck().fill();
@@ -77,6 +77,31 @@ public class GameState {
 		}
 		for (Player p : players) {
 			p.getDeck().getCards(p.getCardsOnHand());
+		}
+	}
+	
+	/**
+	 * It doesn't work yet!
+	 * 
+	 * Resets cards of all players due to saturday rules, which means
+	 * that cards which a player is now holding on hand are to be set
+	 * on the end of the lst. 
+	 */
+	public synchronized void resetQueuingCardsOnSaturday() {
+		for (Player pl : players) {
+			List<QueuingCard> tempList = pl.getCardsOnHand();
+			pl.setDeck(new DeckOfQueuingCards());
+			System.out.println(pl.getDeck().size());
+			pl.getDeck().fill();
+			for (QueuingCard dC : tempList)
+				pl.getDeck().remove(dC);
+			pl.getDeck().shuffle();
+			pl.getDeck().addListToTheEnd(tempList);
+			
+		}
+		for (Player pl : players) {
+			pl.setCardsOnHand(new ArrayList<QueuingCard>());
+			pl.getDeck().getCards(pl.getCardsOnHand());
 		}
 	}
 
@@ -380,6 +405,27 @@ public class GameState {
 			movePawn(offeredProduct, 0, offeredProduct, queueLength - 1);
 		}
 	}
+	
+	/**
+	 * Method for outdoormarket.
+	 * 
+	 * @author Jan
+	 */
+	public synchronized boolean trade(ProductType soldProduct, Collection<ProductType> offeredProducts) 
+			throws IllegalArgumentException{
+		
+		int player = getActivePlayer();
+		getOutDoorMarket().removeProduct(soldProduct);
+		players.get(player).addPawn();
+		players.get(player).addProduct(soldProduct);
+		players.removeAll(offeredProducts);
+		for(ProductType i: offeredProducts)
+				getOutDoorMarket().addProduct(i);
+		
+		
+		return false;
+	}
+	
 	public void setMessage(String message){
 		this.message = message;
 	}
