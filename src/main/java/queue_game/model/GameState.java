@@ -385,7 +385,8 @@ public class GameState {
 		if (getStore(offeredProduct).getQueue().isEmpty())
 			throw new IllegalArgumentException("Empty queue: " + offeredProduct);
 		int player = getStore(offeredProduct).getQueue().peek();
-		getStore(offeredProduct).removeProduct(soldProduct);
+		if(player != -1)
+			getStore(offeredProduct).removeProduct(soldProduct);
 
 		if (player >= 0 && player < numberOfPlayers) {
 			getStore(offeredProduct).getQueue().remove();
@@ -396,6 +397,7 @@ public class GameState {
 		if (player == -1) {
 			int queueLength = getStore(offeredProduct).getQueue().size();
 			movePawn(offeredProduct, 0, offeredProduct, queueLength - 1);
+			transferToAnotherStore(offeredProduct, null, soldProduct);
 		}
 	}
 
