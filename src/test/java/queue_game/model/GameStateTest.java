@@ -1,6 +1,6 @@
 package queue_game.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +15,14 @@ public class GameStateTest {
 	@Before
 	public void setUp() throws Exception {
 		gameState = new GameState();
+		ArrayList<List<Integer>> lists = new ArrayList<List<Integer>>();
+		lists.add(Arrays.asList( 4, 0, 2, 1, 3 )); 
+		lists.add(Arrays.asList( 3, 4, 1, 0, 2 ));
+		lists.add(Arrays.asList( 2, 3, 0, 4, 1 ));
+		lists.add(Arrays.asList( 1, 2, 4, 3, 0 )); 
+		lists.add(Arrays.asList( 0, 1, 3, 2, 4 ));
+		gameState.initGame(Arrays.asList("Gracz 1", "Gracz 2", "Gracz 3", 
+				"Gracz 4", "Gracz 5"), lists);
 	}
 
 	/*@Test
@@ -53,7 +61,7 @@ public class GameStateTest {
 		gameState.putPlayerPawn(2, ProductType.FOOD);
 		gameState.putPlayerPawn(1, ProductType.FOOD);
 		gameState.putPlayerPawn(0, ProductType.FURNITURE);
-		gameState.putPlayerPawn(5, ProductType.FURNITURE);
+		gameState.putPlayerPawn(0, ProductType.FURNITURE);
 		gameState.putPlayerPawn(4, ProductType.FURNITURE);
 		gameState.putPlayerPawn(3, ProductType.KIOSK);
 		gameState.putPlayerPawn(1, ProductType.KIOSK);
@@ -63,7 +71,7 @@ public class GameStateTest {
 		gameState.putPlayerPawn(1, ProductType.RTV_AGD);
 		assertEquals(new ArrayList<Integer>(Arrays.asList(0, 1, 3, 2, 4)), gameState.getStore(ProductType.CLOTHES).getQueue());
 		assertEquals(new ArrayList<Integer>(Arrays.asList(3, 2, 1)), gameState.getStore(ProductType.FOOD).getQueue());
-		assertEquals(new ArrayList<Integer>(Arrays.asList(0, 5, 4)), gameState.getStore(ProductType.FURNITURE).getQueue());
+		assertEquals(new ArrayList<Integer>(Arrays.asList(0, 0, 4)), gameState.getStore(ProductType.FURNITURE).getQueue());
 		assertEquals(new ArrayList<Integer>(Arrays.asList(3, 1, 4)), gameState.getStore(ProductType.KIOSK).getQueue());
 		assertEquals(new ArrayList<Integer>(Arrays.asList(2, 3, 1)), gameState.getStore(ProductType.RTV_AGD).getQueue());
 	}
@@ -102,7 +110,7 @@ public class GameStateTest {
 	@Test
 	public void resetPlayersTest2() {
 		gameState.reset(5);
-		gameState.resetPlayers();
+		gameState.resetPlayers();ale 
 		assertEquals(5,gameState.getPlayersList().get(1).getNumberOfPawns());
 	}
 
