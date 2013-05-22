@@ -264,7 +264,7 @@ public class GameStateTest {
 				Arrays.asList(0,1,1,2))));
 		
 		gameState.getPlayersList().get(1).setNumberOfPawns(3);
-		gameState.removePlayerPawn(1, 1, ProductType.values()[1]);
+		gameState.removePlayerPawn( 1, ProductType.values()[1]);
 		
 		assertEquals(4, gameState.getPlayersList().get(1).getNumberOfPawns());
 		assertEquals(true, (gameState.getStore(ProductType.values()[1]).getQueue().equals(
@@ -274,14 +274,14 @@ public class GameStateTest {
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void removePlayerPawnTestException1(){
-		gameState.removePlayerPawn(5, 1, ProductType.values()[1]);
+		gameState.removePlayerPawn( 1, ProductType.values()[1]);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void removePlayerPawnTestException2(){
 		gameState.getPlayersList().get(1).setNumberOfPawns(5);
 		gameState.getStore(ProductType.values()[0]).setQueue(new LinkedList<Integer>());
-		gameState.removePlayerPawn(0, 0, ProductType.values()[0]);
+		gameState.removePlayerPawn( 0, ProductType.values()[0]);
 	}
 	
 	
