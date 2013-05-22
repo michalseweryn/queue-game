@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import queue_game.DeckOfDeliveryCards;
 
 /**
  * @author krzysiek

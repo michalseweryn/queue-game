@@ -1,11 +1,10 @@
 /**
  * 
  */
-package queue_game;
+package queue_game.model;
 
 import java.util.Collection;
 
-import queue_game.model.DeliveryCard;
 
 /**
  * @author michal
