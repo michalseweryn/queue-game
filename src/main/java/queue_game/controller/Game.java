@@ -355,39 +355,19 @@ public class Game implements Runnable {
 				player = gameState.getActivePlayer();
 				while(player != pawn)
 					player = (player + 1) % gameState.getNumberOfPlayers();
+				gameState.setActivePlayer(player);		
 				
-				gameState.setActivePlayer(player);			
 				messageForPlayer("Wybierz towar który chcesz kupić lub spasuj");
-				prod = requestProduct();
-				while(prod.store != null){
-					prod = requestProduct();				
-					if(prod.product == null){
-						messageForPlayer("Gracz spasował");
-						newAction(GameActionType.PASSED,player);
-						if(wasTrade)
-							queue.remove(queueIterator - 1);
-						wasTrade = false;
-						continue;
-					}
+				soldProduct = requestProduct().product;
+				if(soldProduct == null){
+					messageForPlayer("Gracz spasował");
+					newAction(GameActionType.PASSED,player);
+					if(wasTrade)
+						queue.remove(queueIterator - 1);
+					wasTrade = false;
+					continue;
 				}
-				soldProduct = prod.product;
 				
-				if(prod.product == null){
-					messageForPlayer("Gracz spasował");
-					newAction(GameActionType.PASSED,player);
-					if(wasTrade)
-						queue.remove(queueIterator - 1);
-					wasTrade = false;
-					continue;
-				}
-				if(prod.product == null){
-					messageForPlayer("Gracz spasował");
-					newAction(GameActionType.PASSED,player);
-					if(wasTrade)
-						queue.remove(queueIterator - 1);
-					wasTrade = false;
-					continue;
-				}
 				messageForPlayer("Wybierz produkt który chcesz wymienić lub spasuj");
 				product = requestProduct().product;
 				if(product == null){

@@ -2,10 +2,13 @@ Co kto zrobił
 sklepy:
 	view - Szymon
 	model - Piotr
+	
 pionki:
 	model, view - Helena
+	
 kolejki (view):
 	Michał
+	
 dostawa + produkty:
 	Krzysztof
 
@@ -30,8 +33,14 @@ Panel z listą graczy:
 Listy zakupów:
 	Helena
 
-Testy:
+Testy (I iteracja):
 	Szymon
+	
+Karty dostawy + testy:
+	Krzysztof
+
+Testy do GameState (II iteracja):
+	Krzysztof , Szymon
 
 
 
