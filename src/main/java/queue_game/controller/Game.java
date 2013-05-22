@@ -891,7 +891,6 @@ public class Game implements Runnable {
 	public synchronized void resetQueuingCardsOnSaturday() {
 		int nPlayers=gameState.getNumberOfPlayers();
 		for (int i=0; i<nPlayers; i++) {
-			Player pl=gameState.getPlayersList().get(i);
 			setDeck(i,new StandardDeckOfQueuingCards());
 			getDeck(i).reset();
 			
