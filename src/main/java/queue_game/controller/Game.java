@@ -5,12 +5,13 @@ package queue_game.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.lang.Math;
 
 
-import queue_game.model.DeckOfDeliveryCards;
+import queue_game.model.StandardDeckOfDeliveryCards;
 import queue_game.model.DeckOfQueuingCards;
 import queue_game.model.DeliveryCard;
 import queue_game.model.GameAction;
@@ -39,7 +40,7 @@ public class Game implements Runnable {
 	private ProductType selectedQueue = null;
 	private Thread gameThread = null;
 	private QueuingCard selectedQueuingCard = null;
-	private DeckOfDeliveryCards deckOfDeliveryCards = new DeckOfDeliveryCards();
+	private StandardDeckOfDeliveryCards deckOfDeliveryCards = new StandardDeckOfDeliveryCards();
 	private DeckOfQueuingCards deck[]=new DeckOfQueuingCards[5];
 	
 
@@ -173,7 +174,7 @@ public class Game implements Runnable {
 	 * @author krzysiek & Helena
 	 */
 	public void deliveryPhase() {
-		List<DeliveryCard> tempDCList = deckOfDeliveryCards.removeThreeCards();
+		Collection<DeliveryCard> tempDCList = deckOfDeliveryCards.removeThreeCards();
 		ProductType type;
 		for (DeliveryCard dC : tempDCList){
 			type = dC.getProductType();

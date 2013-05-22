@@ -1,21 +1,24 @@
 package queue_game.model;
 
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import queue_game.DeckOfDeliveryCards;
+
 /**
  * @author krzysiek
  */
-public class DeckOfDeliveryCards {
+public class StandardDeckOfDeliveryCards implements DeckOfDeliveryCards{
 	private LinkedList<DeliveryCard> deck=new LinkedList<DeliveryCard>();
 	
 	/**
 	 * Creates new list and calls fill() function
 	 */
-	public DeckOfDeliveryCards()
+	public StandardDeckOfDeliveryCards()
 	{
 		fill();
 		shuffle();
@@ -36,11 +39,11 @@ public class DeckOfDeliveryCards {
 	 * Removes 3 cards from the top of the deck and returns them as a list.
 	 * @throws NoSuchElementException if the deck is empty
 	 */
-	public List<DeliveryCard> removeThreeCards(){
+	public Collection<DeliveryCard> removeThreeCards(){
 		List<DeliveryCard> res = new LinkedList<DeliveryCard>();
 		for (int i=0; i<3; i++)
 			res.add(deck.removeFirst());
-		return res;
+		return (Collection<DeliveryCard>) res;
 	}
 	/**
 	 * Returns and not removes 2 cards from the top of the deck

@@ -39,7 +39,7 @@ public class GameState {
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private GamePhase currentGamePhase = null;
 	private ArrayList<GameAction> actions = new ArrayList<GameAction>();
-	private List<DeliveryCard> currentDeliveryList;
+	private Collection<DeliveryCard> currentDeliveryList;
 	private Store market;
 	private String message = "";
 
@@ -200,11 +200,11 @@ public class GameState {
 	}
 
 	public synchronized void setCurrentDeliveryList(
-			List<DeliveryCard> currentDeliveryList) {
-		this.currentDeliveryList = currentDeliveryList;
+			Collection<DeliveryCard> tempDCList) {
+		this.currentDeliveryList = tempDCList;
 	}
 
-	public synchronized List<DeliveryCard> getCurrentDeliveryList() {
+	public synchronized Collection<DeliveryCard> getCurrentDeliveryList() {
 		return currentDeliveryList;
 	}
 

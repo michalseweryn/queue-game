@@ -2,6 +2,7 @@ package queue_game.model;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -9,11 +10,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class DeckOfDeliveryCardsTest {
-	private DeckOfDeliveryCards testDeck;
+	private StandardDeckOfDeliveryCards testDeck;
 	
 	@Before
 	public void setUp() throws Exception {
-		testDeck = new DeckOfDeliveryCards();
+		testDeck = new StandardDeckOfDeliveryCards();
 	}
 	
 	@Test
@@ -49,7 +50,7 @@ public class DeckOfDeliveryCardsTest {
 	public void removeThreeCardsTest1() {
 		testDeck.fill();
 		for (ProductType pT : ProductType.values()){
-			List<DeliveryCard> temp = testDeck.removeThreeCards();
+			Collection<DeliveryCard> temp = testDeck.removeThreeCards();
 			int i=1;
 			for (DeliveryCard dC: temp){
 				assertEquals(pT, dC.getProductType());

@@ -42,6 +42,12 @@ Karty dostawy + testy:
 Testy do GameState (II iteracja):
 	Krzysztof , Szymon
 
+Karty akcji:
+	Helena
+
+
+GUI (brand new):
+	Michał
 
 
 
