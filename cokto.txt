@@ -39,6 +39,9 @@ Szymon
 Lista akcji
 	Szymon
 
+Lista akcji
+	Szymon
+
 Testy (I iteracja):
 Szymon
 
