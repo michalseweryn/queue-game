@@ -33,6 +33,9 @@ Panel z listą graczy:
 Listy zakupów:
 	Helena
 
+Lista akcji
+	Szymon
+
 Testy (I iteracja):
 	Szymon
 	

@@ -91,7 +91,6 @@ public class Game implements Runnable {
 				PCTPhase();
 			}
 			gameState.setGameOver();
-			newAction(GameActionType.GAME_OVER);
 			updateViews();
 		} catch (InterruptedException e) {
 			return;
@@ -362,7 +361,7 @@ public class Game implements Runnable {
 				soldProduct = requestProduct().product;
 				if(soldProduct == null){
 					messageForPlayer("Gracz spasował");
-					newAction(GameActionType.PASSED,player);
+					newAction(GameActionType.PRODUCT_EXCHANGED_PASSED,player);
 					if(wasTrade)
 						queue.remove(queueIterator - 1);
 					wasTrade = false;
@@ -373,7 +372,7 @@ public class Game implements Runnable {
 				product = requestProduct().product;
 				if(product == null){
 					messageForPlayer("Gracz spasował");
-					newAction(GameActionType.PASSED,player);
+					newAction(GameActionType.PRODUCT_EXCHANGED_PASSED,player);
 					if(wasTrade)
 						queue.remove(queueIterator - 1);
 					wasTrade = false;
@@ -385,7 +384,7 @@ public class Game implements Runnable {
 					product = requestProduct().product;
 					if(product == null){
 						messageForPlayer("Gracz spasował");
-						newAction(GameActionType.PASSED,player);
+						newAction(GameActionType.PRODUCT_EXCHANGED_PASSED,player);
 						if(wasTrade)
 							queue.remove(queueIterator - 1);
 						continue;
@@ -395,10 +394,10 @@ public class Game implements Runnable {
 				if(gameState.trade(soldProduct,offeredProducts)){					
 					wasTrade = true;
 					if(offeredProducts.size() > 1)
-						newAction(GameActionType.PRODUCT_EXCHANGE_TWO,player,soldProduct.ordinal(),
+						newAction(GameActionType.PRODUCT_EXCHANGED_TWO,player,soldProduct.ordinal(),
 								offeredProducts.get(0).ordinal(), offeredProducts.get(1).ordinal());
 					else
-						newAction(GameActionType.PRODUCT_EXCHANGE_ONE,player,soldProduct.ordinal(),
+						newAction(GameActionType.PRODUCT_EXCHANGED_ONE,player,soldProduct.ordinal(),
 								offeredProducts.getFirst().ordinal());
 						
 					messageForPlayer("Transakcja udana.");
@@ -854,13 +853,13 @@ public class Game implements Runnable {
 	}
 
 	/**
-	 * Adds a PlayerAction to the list and writes it to a socket when network
+	 * Adds a GameAction to the list and writes it to a socket when network
 	 * playing
 	 * 
-	 * @param action
-	 *            action to be handled
+	 * @param type type of action
+	 * @param info additional action info
 	 */
-	private void newAction(GameActionType type, int... info) {
+	private void newAction(GameActionType type, Object... info) {
 		GameAction action = new GameAction(type, info);
 		gameState.addGameAction(action);
 	}
