@@ -12,7 +12,7 @@ import java.lang.Math;
 
 
 import queue_game.model.StandardDeckOfDeliveryCards;
-import queue_game.model.DeckOfQueuingCards;
+import queue_game.model.StandardDeckOfQueuingCards;
 import queue_game.model.DeliveryCard;
 import queue_game.model.GameAction;
 import queue_game.model.GameActionType;
@@ -41,7 +41,7 @@ public class Game implements Runnable {
 	private Thread gameThread = null;
 	private QueuingCard selectedQueuingCard = null;
 	private StandardDeckOfDeliveryCards deckOfDeliveryCards = new StandardDeckOfDeliveryCards();
-	private DeckOfQueuingCards deck[]=new DeckOfQueuingCards[5];
+	private StandardDeckOfQueuingCards deck[]=new StandardDeckOfQueuingCards[5];
 	
 
 	private class PawnParameters {
@@ -817,7 +817,7 @@ public class Game implements Runnable {
 	private void prepareToQueueJumping() {
 		int nPlayers=gameState.getNumberOfPlayers();
 		for (int i=0; i<nPlayers; i++) {
-			this.getDeck(i).getCards(gameState.getPlayersList().get(i).getCardsOnHand());
+			this.getDeck(i).addCards(gameState.getPlayersList().get(i).getCardsOnHand());
 		}
 	}
 	/**
@@ -869,7 +869,7 @@ public class Game implements Runnable {
 		gameState.setMessage(s);
 	}
 	
-	public void setDeck(int player, DeckOfQueuingCards deck){
+	public void setDeck(int player, StandardDeckOfQueuingCards deck){
 		this.deck[player]=deck;
 	}
 	/**
@@ -880,12 +880,11 @@ public class Game implements Runnable {
 	public synchronized void resetQueuingCards() {
 		int nPlayers=gameState.getNumberOfPlayers();
 		for (int i=0; i<nPlayers; i++) {
-			setDeck(i,new DeckOfQueuingCards());
-			getDeck(i).fill();
-			getDeck(i).shuffle();
+			setDeck(i,new StandardDeckOfQueuingCards());
+			getDeck(i).reset();
 		}
 		for (int i=0; i<nPlayers; i++) {
-			getDeck(i).getCards(gameState.getPlayersList().get(i).getCardsOnHand());
+			getDeck(i).addCards(gameState.getPlayersList().get(i).getCardsOnHand());
 		}
 	}
 	/*
@@ -895,22 +894,16 @@ public class Game implements Runnable {
 		int nPlayers=gameState.getNumberOfPlayers();
 		for (int i=0; i<nPlayers; i++) {
 			Player pl=gameState.getPlayersList().get(i);
-			List<QueuingCard> tempList = pl.getCardsOnHand();
-			setDeck(i,new DeckOfQueuingCards());
-			System.out.println(getDeck(i).size());
-			getDeck(i).fill();
-			for (QueuingCard dC : tempList)
-				getDeck(i).remove(dC);
-			getDeck(i).shuffle();
-			getDeck(i).addListToTheEnd(tempList);
+			setDeck(i,new StandardDeckOfQueuingCards());
+			getDeck(i).reset();
 			
 		}
 		for (int i=0; i<nPlayers; i++) {
 			gameState.getPlayer(i).setCardsOnHand(new ArrayList<QueuingCard>());
-			getDeck(i).getCards(gameState.getPlayer(i).getCardsOnHand());
+			getDeck(i).addCards(gameState.getPlayer(i).getCardsOnHand());
 		}
 	}
-	public synchronized DeckOfQueuingCards getDeck(int playerNr) {
+	public synchronized StandardDeckOfQueuingCards getDeck(int playerNr) {
 		return deck[playerNr];
 	}
 
