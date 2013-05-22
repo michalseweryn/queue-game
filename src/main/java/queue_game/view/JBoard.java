@@ -418,8 +418,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			square.repaint();
 			square.setLocation((int)(0.125 * tileWidth + j * side), (int)(12 * tileHeight));
 		}
-		if(rep)
-			repaint();
+		repaint();
 		
 	}
 	

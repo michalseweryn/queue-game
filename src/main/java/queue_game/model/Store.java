@@ -28,7 +28,9 @@ public class Store {
 	}
 	
 			
-	public void addPawn(Integer playerNo){ 
+	public void addPawn(Integer playerNo){
+		if(playerNo < -1 || playerNo >= 5)
+			throw new IllegalArgumentException();
 		queue.addLast(playerNo);
 	}
 	/**
@@ -47,6 +49,8 @@ public class Store {
 	 * products that are typically stored in this shop
 	 */
 	public void addProducts(int numberOfAddedProducts){
+		if(numberOfAddedProducts < 0)
+			throw new IllegalArgumentException();
 		numberOf[productType.ordinal()]+=numberOfAddedProducts;
 	}
 	/**
@@ -108,6 +112,8 @@ public class Store {
 	 * removes declared number of typically stored products
 	 */
 	public void removeProducts(int numberOfRemovedProducts){
+		if(numberOfRemovedProducts < 0)
+			throw new IllegalArgumentException();
 		numberOf[productType.ordinal()]-=numberOfRemovedProducts;
 		if(numberOf[productType.ordinal()]<0)
 			throw new IllegalArgumentException("Not enough products");
