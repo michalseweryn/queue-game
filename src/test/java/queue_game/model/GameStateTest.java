@@ -286,10 +286,13 @@ public class GameStateTest {
 	
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 	
 
 =======
 >>>>>>> refs/remotes/origin/master
+=======
+>>>>>>> branch 'master' of https://github.com/michalseweryn/queue-game.git
 
 	@Test
 	public void sellTest() {

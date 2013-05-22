@@ -36,6 +36,9 @@ Helena
 Lista akcji
 Szymon
 
+Lista akcji
+	Szymon
+
 Testy (I iteracja):
 Szymon
 
@@ -46,11 +49,11 @@ Testy do GameState (II iteracja):
 Krzysztof , Szymon
 
 Karty akcji:
-Helena
+	Helena
 
 
 GUI (brand new):
-Michał
+	Michał
 
 
 
