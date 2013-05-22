@@ -264,7 +264,7 @@ public class GameStateTest {
 				Arrays.asList(0,1,1,2))));
 		
 		gameState.getPlayersList().get(1).setNumberOfPawns(3);
-		gameState.removePlayerPawn(1, 1, ProductType.values()[1]);
+		gameState.removePlayerPawn( 1, ProductType.values()[1]);
 		
 		assertEquals(4, gameState.getPlayersList().get(1).getNumberOfPawns());
 		assertEquals(true, (gameState.getStore(ProductType.values()[1]).getQueue().equals(
@@ -274,19 +274,22 @@ public class GameStateTest {
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void removePlayerPawnTestException1(){
-		gameState.removePlayerPawn(5, 1, ProductType.values()[1]);
+		gameState.removePlayerPawn( 1, ProductType.values()[1]);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void removePlayerPawnTestException2(){
 		gameState.getPlayersList().get(1).setNumberOfPawns(5);
 		gameState.getStore(ProductType.values()[0]).setQueue(new LinkedList<Integer>());
-		gameState.removePlayerPawn(0, 0, ProductType.values()[0]);
+		gameState.removePlayerPawn( 0, ProductType.values()[0]);
 	}
 	
 	
+<<<<<<< HEAD
 	
 
+=======
+>>>>>>> refs/remotes/origin/master
 
 	@Test
 	public void sellTest() {
@@ -384,33 +387,24 @@ public class GameStateTest {
 		gameState.putPlayerPawn(3, ProductType.CLOTHES);
 		gameState.putPlayerPawn(2, ProductType.CLOTHES);
 		gameState.putPlayerPawn(4, ProductType.CLOTHES);
-		gameState.removePlayerPawn(3, 2, ProductType.CLOTHES);
+		gameState.removePlayerPawn(2, ProductType.CLOTHES);
 		assertEquals(new ArrayList<Integer>(Arrays.asList(0, 1, 2, 4)), gameState.getStore(ProductType.CLOTHES).getQueue());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void removePlayerPawnTest2() {
-		gameState.removePlayerPawn(0, 0, ProductType.CLOTHES);
+		gameState.removePlayerPawn(0, ProductType.CLOTHES);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void removePlayerPawnTest3() {
-		gameState.removePlayerPawn(-1, 0, ProductType.CLOTHES);
+		gameState.removePlayerPawn(0, ProductType.CLOTHES);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void removePlayerPawnTest4() {
-		gameState.removePlayerPawn(0, -1, ProductType.CLOTHES);
+		gameState.removePlayerPawn(-1, ProductType.CLOTHES);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void removePlayerPawnTest5() {
-		gameState.putPlayerPawn(0, ProductType.CLOTHES);
-		gameState.putPlayerPawn(1, ProductType.CLOTHES);
-		gameState.putPlayerPawn(3, ProductType.CLOTHES);
-		gameState.putPlayerPawn(2, ProductType.CLOTHES);
-		gameState.putPlayerPawn(4, ProductType.CLOTHES);
-		gameState.removePlayerPawn(3, 3, ProductType.CLOTHES);
-	}
 
 }
