@@ -148,7 +148,7 @@ public class Game implements Runnable {
 					% gameState.getNumberOfPlayers()) {
 				if (gameState.getNumberOfPawns(player) > 0) {
 					gameState.setActivePlayer(player);
-					messageForPlayer("Wybierz kolejkę w której chcesz ustawić pionka");
+					messageForPlayer("Wybierz kolejkę w której chcesz ustawić pionek");
 					ProductType queue = requestQueue();
 					gameState.putPlayerPawn(player, queue);
 					if(queue == null)
