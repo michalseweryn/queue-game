@@ -346,7 +346,6 @@ public class Game implements Runnable {
 		LinkedList<ProductType> offeredProducts = new LinkedList<ProductType>();
 		int player,pawn,queueIterator = 0;
 		ProductType product;
-		ProductParameters prod;
 		boolean wasTrade = false;
 		while(queueIterator < queue.size()){	
 				offeredProducts.clear();
