@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
@@ -363,6 +364,15 @@ public class GameStateTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void removePlayerPawnTest2() {
+		LinkedList<Integer> list = new LinkedList<Integer>();
+		list.add(0);
+		list.add(1);
+		list.add(2);
+		gameState.getStore(ProductType.values()[0]).setQueue(list);
+		gameState.getStore(ProductType.values()[1]).setQueue(list);
+		gameState.movePawn(ProductType.values()[0], 1, ProductType.values()[1], 1);
+		
+		System.out.println(gameState.getStore(ProductType.values()[0]).getQueue());
 		gameState.removePlayerPawn(0, ProductType.CLOTHES);
 	}
 

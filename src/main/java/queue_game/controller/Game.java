@@ -399,7 +399,7 @@ public class Game implements Runnable {
 					continue;
 				}
 				offeredProducts.add(product);
-				if(soldProduct.ordinal() != gameState.getDayNumber()){//NIE PEWNE!!
+				if(soldProduct.ordinal() != gameState.getDayNumber() % 5){//NIE PEWNE!!
 					messageForPlayer("Wybierz produkt który chcesz wymienić lub spasuj");
 					product = requestProduct().product;
 					if(product == null){
