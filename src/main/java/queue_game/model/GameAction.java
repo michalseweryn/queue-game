@@ -1,9 +1,9 @@
 package queue_game.model;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.Arrays;
 
 /**
@@ -13,44 +13,40 @@ import java.util.Arrays;
  */
 public class GameAction {
 	private GameActionType type;
-	private int[] info;
-	private int player;
-	private String message;
+	private Object[] info;
 
 	private GameAction() {
 	}
 
-	public GameAction(GameActionType type, int... info) {
+	public GameAction(GameActionType type, Object... info) {
 		this.type = type;
 		this.info = Arrays.copyOf(info, info.length);
 	}
-	
-	public GameAction(int player, String message) {
-		type = GameActionType.CHAT;
-		this.player = player;
-		this.message = message;
-	}
 
 	/**
-	 * Writes current object to the specified OutputStream (most likely a Socket).
+	 * Writes current object to the specified Writer.
 	 * 
 	 * @param out The stream to write to
 	 * @throws IOException when something goes wrong
 	 */
-	public void write(DataOutputStream out) throws IOException {
-		out.write(type.ordinal());
-		if(type == GameActionType.CHAT) {
-			out.write(player);
-			out.writeUTF(message);
-		} else {
-			out.write(info.length);
-			for(int i = 0; i < info.length; ++i)
-				out.write(info[i]);
-			out.flush();
+	public void write(Writer out) throws IOException {
+		out.write(type.toString());
+		for(Object o: info) {
+			if(o instanceof String) {
+				out.write(Integer.toString(((String) o).length()));
+				out.write(" ");
+				out.write((String) o);
+				out.write(" ");
+			} else {
+				out.write(o.toString());
+				out.write(" ");
+			}
 		}
+		out.write("\n");
+		out.flush();
 	}
 
-	private static int readInt(DataInputStream in) throws IOException {
+	private static int readInt(Reader in) throws IOException {
 		int i = in.read();
 		if(i == -1)
 			throw new EOFException("Unexpected end of stream");
@@ -58,7 +54,7 @@ public class GameAction {
 	}
 
 	/**
-	 * Reads an object from specified InputStream (most likely a socket).
+	 * Reads an object from the specified Reader.
 	 * This function makes almost no attempt to verify whether the object is correct.
 	 * 
 	 * @param in the stream to read from
@@ -66,49 +62,13 @@ public class GameAction {
 	 * @throws IOException when something goes wrong
 	 * @throws EOFException when the stream ends unexpectedly
 	 */
-	public static GameAction read(DataInputStream in) throws IOException {
-		GameAction action = new GameAction();
-		int ordinal = readInt(in);
-		if(ordinal >= GameActionType.values().length)
-			throw new IOException("Incorrect action numer");
-		action.type = GameActionType.values()[ordinal];
-		if(action.type == GameActionType.CHAT) {
-			action.player = readInt(in);
-			action.message = in.readUTF();
-		} else {
-			action.info = new int[readInt(in)];
-			for(int i = 0; i < action.info.length; ++i)
-				action.info[i] = readInt(in);
-		}
-		return action;
+	public static GameAction read(Reader in) throws IOException {
+		//temporarily disabled
+		return new GameAction();
 	}
 
 	@Override
 	public String toString() {
-		switch(type) {
-		case PAWN_PLACED:
-			if(info[0] == 0)
-				return "Do kolejki " + (info[1] == -1 ? "do bazaru" : info[1] + 1) + " został dodany spekulator.";
-			else
-				return "Gracz " + info[0] + " dodał pionek do kolejki " + (info[1] == -1 ? "do bazaru" : info[1] + 1) + ".";
-		case PRODUCT_DELIVERED:
-			return "Dostawa do sklepu " + (info[0] + 1) + ".";
-		case CARD_PLAYED:
-			return "Gracz " + info[0] + " zagrał kartę " + (QueuingCard.values()[info[1]]) + ".";
-		case PASSED:
-			return "Gracz " + info[0] + " spasował.";
-		case PRODUCT_BOUGHT:
-			return "Gracz " + info[0] + " kupił produkt " + (info[1] + 1) + ".";
-		case GAME_OVER:
-			return "Koniec gry";
-		case CHAT:
-			return "Czat.";
-		case PRODUCT_EXCHANGE_ONE:
-			return "Gracz " + info[0] + " wymienił produkty " + info[1] + " na " + info[2];
-		case PRODUCT_EXCHANGE_TWO:
-			return "Gracz " + info[0] + " wymienił produkt" + info[1] + " " + info[2] + " na " + info[3];
-		default:
-			throw new RuntimeException("Unimplemented action");
-		}
+		return "Temporarily disabled";
 	}
 }

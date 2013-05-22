@@ -10,24 +10,23 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class DeckOfQueuingCardsTest {
-	private DeckOfQueuingCards deck;
+	private StandardDeckOfQueuingCards deck;
 
 	@Before
 	public void setUp() throws Exception {
-		deck = new DeckOfQueuingCards();
-		deck.fill();
-		deck.shuffle();
+		deck = new StandardDeckOfQueuingCards();
+		deck.reset();
 	}
 
 	@Test
 	public void getCardsTest() {
 		assertEquals(10, deck.size());
 		ArrayList<QueuingCard> cards = new ArrayList<QueuingCard>();
-		deck.getCards(cards);
+		deck.addCards(cards);
 		assertEquals(7, deck.size());
 		assertEquals(3, cards.size());
 		cards.remove(cards.size() - 1);
-		deck.getCards(cards);
+		deck.addCards(cards);
 		assertEquals(6, deck.size());
 		assertEquals(3, cards.size());
 	}
@@ -38,7 +37,7 @@ public class DeckOfQueuingCardsTest {
 		ArrayList<QueuingCard> temp;
 		ArrayList<QueuingCard> all = new ArrayList<QueuingCard>();
 		while(deck.size() > 0){
-			deck.getCards(temp = new ArrayList<QueuingCard>());
+			deck.addCards(temp = new ArrayList<QueuingCard>());
 			all.addAll(temp);
 		}
 		Collections.sort(all);

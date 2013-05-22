@@ -46,6 +46,9 @@ public class Player {
 	public void setShoppingList(List<Integer> list){
 		if(list.size() != ProductType.values().length)
 			throw new IllegalArgumentException();
+		for(Integer i : list)
+			if(i < 0 || i > 4)
+				throw new IllegalArgumentException();
 		this.shoppingList = list;
 	}
 	

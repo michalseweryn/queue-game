@@ -5,13 +5,14 @@ package queue_game.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.lang.Math;
 
 
-import queue_game.model.DeckOfDeliveryCards;
-import queue_game.model.DeckOfQueuingCards;
+import queue_game.model.StandardDeckOfDeliveryCards;
+import queue_game.model.StandardDeckOfQueuingCards;
 import queue_game.model.DeliveryCard;
 import queue_game.model.GameAction;
 import queue_game.model.GameActionType;
@@ -39,8 +40,8 @@ public class Game implements Runnable {
 	private ProductType selectedQueue = null;
 	private Thread gameThread = null;
 	private QueuingCard selectedQueuingCard = null;
-	private DeckOfDeliveryCards deckOfDeliveryCards = new DeckOfDeliveryCards();
-	private DeckOfQueuingCards deck[]=new DeckOfQueuingCards[5];
+	private StandardDeckOfDeliveryCards deckOfDeliveryCards = new StandardDeckOfDeliveryCards();
+	private StandardDeckOfQueuingCards deck[]=new StandardDeckOfQueuingCards[5];
 	
 
 	private class PawnParameters {
@@ -90,7 +91,6 @@ public class Game implements Runnable {
 				PCTPhase();
 			}
 			gameState.setGameOver();
-			newAction(GameActionType.GAME_OVER);
 			updateViews();
 		} catch (InterruptedException e) {
 			return;
@@ -147,7 +147,7 @@ public class Game implements Runnable {
 					% gameState.getNumberOfPlayers()) {
 				if (gameState.getNumberOfPawns(player) > 0) {
 					gameState.setActivePlayer(player);
-					messageForPlayer("Wybierz kolejkę w której chcesz ustawić pionka");
+					messageForPlayer("Wybierz kolejkę w której chcesz ustawić pionek");
 					ProductType queue = requestQueue();
 					gameState.putPlayerPawn(player, queue);
 					if(queue == null)
@@ -173,7 +173,7 @@ public class Game implements Runnable {
 	 * @author krzysiek & Helena
 	 */
 	public void deliveryPhase() {
-		List<DeliveryCard> tempDCList = deckOfDeliveryCards.removeThreeCards();
+		Collection<DeliveryCard> tempDCList = deckOfDeliveryCards.removeThreeCards();
 		ProductType type;
 		for (DeliveryCard dC : tempDCList){
 			type = dC.getProductType();
@@ -346,7 +346,6 @@ public class Game implements Runnable {
 		LinkedList<ProductType> offeredProducts = new LinkedList<ProductType>();
 		int player,pawn,queueIterator = 0;
 		ProductType product;
-		ProductParameters prod;
 		boolean wasTrade = false;
 		while(queueIterator < queue.size()){	
 				offeredProducts.clear();
@@ -361,7 +360,7 @@ public class Game implements Runnable {
 				soldProduct = requestProduct().product;
 				if(soldProduct == null){
 					messageForPlayer("Gracz spasował");
-					newAction(GameActionType.PASSED,player);
+					newAction(GameActionType.PRODUCT_EXCHANGED_PASSED,player);
 					if(wasTrade)
 						queue.remove(queueIterator - 1);
 					wasTrade = false;
@@ -372,19 +371,19 @@ public class Game implements Runnable {
 				product = requestProduct().product;
 				if(product == null){
 					messageForPlayer("Gracz spasował");
-					newAction(GameActionType.PASSED,player);
+					newAction(GameActionType.PRODUCT_EXCHANGED_PASSED,player);
 					if(wasTrade)
 						queue.remove(queueIterator - 1);
 					wasTrade = false;
 					continue;
 				}
 				offeredProducts.add(product);
-				if(soldProduct.ordinal() != gameState.getDayNumber()){//NIE PEWNE!!
+				if(soldProduct.ordinal() != gameState.getDayNumber() % 5){//NIE PEWNE!!
 					messageForPlayer("Wybierz produkt który chcesz wymienić lub spasuj");
 					product = requestProduct().product;
 					if(product == null){
 						messageForPlayer("Gracz spasował");
-						newAction(GameActionType.PASSED,player);
+						newAction(GameActionType.PRODUCT_EXCHANGED_PASSED,player);
 						if(wasTrade)
 							queue.remove(queueIterator - 1);
 						continue;
@@ -394,10 +393,10 @@ public class Game implements Runnable {
 				if(gameState.trade(soldProduct,offeredProducts)){					
 					wasTrade = true;
 					if(offeredProducts.size() > 1)
-						newAction(GameActionType.PRODUCT_EXCHANGE_TWO,player,soldProduct.ordinal(),
+						newAction(GameActionType.PRODUCT_EXCHANGED_TWO,player,soldProduct.ordinal(),
 								offeredProducts.get(0).ordinal(), offeredProducts.get(1).ordinal());
 					else
-						newAction(GameActionType.PRODUCT_EXCHANGE_ONE,player,soldProduct.ordinal(),
+						newAction(GameActionType.PRODUCT_EXCHANGED_ONE,player,soldProduct.ordinal(),
 								offeredProducts.getFirst().ordinal());
 						
 					messageForPlayer("Transakcja udana.");
@@ -816,7 +815,7 @@ public class Game implements Runnable {
 	private void prepareToQueueJumping() {
 		int nPlayers=gameState.getNumberOfPlayers();
 		for (int i=0; i<nPlayers; i++) {
-			this.getDeck(i).getCards(gameState.getPlayersList().get(i).getCardsOnHand());
+			this.getDeck(i).addCards(gameState.getPlayersList().get(i).getCardsOnHand());
 		}
 	}
 	/**
@@ -839,8 +838,7 @@ public class Game implements Runnable {
 					if (gameState.getStore(selectedPawn.destination).getQueue()
 							.get(selectedPawn.position).equals(player)) {
 						gameState
-								.removePlayerPawn(player,
-										selectedPawn.position,
+								.removePlayerPawn(selectedPawn.position,
 										selectedPawn.destination);
 					} else {
 						continue outer;
@@ -854,13 +852,13 @@ public class Game implements Runnable {
 	}
 
 	/**
-	 * Adds a PlayerAction to the list and writes it to a socket when network
+	 * Adds a GameAction to the list and writes it to a socket when network
 	 * playing
 	 * 
-	 * @param action
-	 *            action to be handled
+	 * @param type type of action
+	 * @param info additional action info
 	 */
-	private void newAction(GameActionType type, int... info) {
+	private void newAction(GameActionType type, Object... info) {
 		GameAction action = new GameAction(type, info);
 		gameState.addGameAction(action);
 	}
@@ -869,7 +867,7 @@ public class Game implements Runnable {
 		gameState.setMessage(s);
 	}
 	
-	public void setDeck(int player, DeckOfQueuingCards deck){
+	public void setDeck(int player, StandardDeckOfQueuingCards deck){
 		this.deck[player]=deck;
 	}
 	/**
@@ -880,12 +878,11 @@ public class Game implements Runnable {
 	public synchronized void resetQueuingCards() {
 		int nPlayers=gameState.getNumberOfPlayers();
 		for (int i=0; i<nPlayers; i++) {
-			setDeck(i,new DeckOfQueuingCards());
-			getDeck(i).fill();
-			getDeck(i).shuffle();
+			setDeck(i,new StandardDeckOfQueuingCards());
+			getDeck(i).reset();
 		}
 		for (int i=0; i<nPlayers; i++) {
-			getDeck(i).getCards(gameState.getPlayersList().get(i).getCardsOnHand());
+			getDeck(i).addCards(gameState.getPlayersList().get(i).getCardsOnHand());
 		}
 	}
 	/*
@@ -895,22 +892,16 @@ public class Game implements Runnable {
 		int nPlayers=gameState.getNumberOfPlayers();
 		for (int i=0; i<nPlayers; i++) {
 			Player pl=gameState.getPlayersList().get(i);
-			List<QueuingCard> tempList = pl.getCardsOnHand();
-			setDeck(i,new DeckOfQueuingCards());
-			System.out.println(getDeck(i).size());
-			getDeck(i).fill();
-			for (QueuingCard dC : tempList)
-				getDeck(i).remove(dC);
-			getDeck(i).shuffle();
-			getDeck(i).addListToTheEnd(tempList);
+			setDeck(i,new StandardDeckOfQueuingCards());
+			getDeck(i).reset();
 			
 		}
 		for (int i=0; i<nPlayers; i++) {
 			gameState.getPlayer(i).setCardsOnHand(new ArrayList<QueuingCard>());
-			getDeck(i).getCards(gameState.getPlayer(i).getCardsOnHand());
+			getDeck(i).addCards(gameState.getPlayer(i).getCardsOnHand());
 		}
 	}
-	public synchronized DeckOfQueuingCards getDeck(int playerNr) {
+	public synchronized StandardDeckOfQueuingCards getDeck(int playerNr) {
 		return deck[playerNr];
 	}
 

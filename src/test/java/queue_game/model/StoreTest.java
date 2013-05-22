@@ -25,7 +25,7 @@ public class StoreTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addPawnTest2() {
-		store.addPawn(-1);
+		store.addPawn(-2);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
