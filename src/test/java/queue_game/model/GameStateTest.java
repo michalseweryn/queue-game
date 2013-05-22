@@ -286,21 +286,7 @@ public class GameStateTest {
 	
 	
 	
-/*
-	@Test
-	public void sellTest() {
-		gameState.putPlayerPawn(0, ProductType.CLOTHES);
-		gameState.putPlayerPawn(4, ProductType.CLOTHES);
-		gameState.putPlayerPawn(2, ProductType.CLOTHES);
-		gameState.sell(ProductType.CLOTHES, ProductType.CLOTHES);
-		assertEquals(new ArrayList<Integer>(Arrays.asList(4, 2)), gameState.getStore(ProductType.CLOTHES).getQueue());
-	}
-	
-	@Test(expected = IllegalArgumentException.class)
-	public void sellTest2() {
-		gameState.sell(ProductType.CLOTHES);
-	}
-*/
+
 
 	@Test
 	public void sellTest() {
