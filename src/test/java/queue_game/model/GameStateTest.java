@@ -284,7 +284,6 @@ public class GameStateTest {
 		gameState.removePlayerPawn( 0, ProductType.values()[0]);
 	}
 	
-	
 
 	@Test
 	public void sellTest() {

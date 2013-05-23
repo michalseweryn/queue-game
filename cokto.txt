@@ -1,49 +1,55 @@
 Co kto zrobił
 sklepy:
-	view - Szymon
-	model - Piotr
-	
-pionki:
-	model, view - Helena
-	
-kolejki (view):
-	Michał
-	
-dostawa + produkty:
-	Krzysztof
+view - Szymon
+model - Piotr
 
-test skelpu, pierwszej fazy: 
-	Helena
+pionki:
+model, view - Helena
+
+kolejki (view):
+Michał
+
+dostawa + produkty:
+Krzysztof
+
+test skelpu, pierwszej fazy:
+Helena
 
 otwarcie sklepu:
-	Jan
+Jan
 
 Przepychanki + Karty akcji:
-	Piotr
-	
+Piotr
+
 Panel z ilością pozostałych towarów:
-	Helena
+Helena
 
 Panel na karty akcji:
-	Jan
+Jan
 
 Panel z listą graczy:
-	Krzysztof
+Krzysztof
 
 Listy zakupów:
-	Helena
+Helena
+
+Lista akcji
+Szymon
+
+Lista akcji
+	Szymon
 
 Lista akcji
 	Szymon
 
 Testy (I iteracja):
-	Szymon
-	
+Szymon
+
 Karty dostawy + testy:
-	Krzysztof
+Krzysztof
 
 Testy do GameState (II iteracja):
-	Krzysztof , Szymon
+Krzysztof , Szymon
 
 Karty akcji:
 	Helena
