@@ -27,7 +27,7 @@ public class LocalGameActionCreator implements ActionCreator {
 	private QueuingCard selectedQueuingCard = null;
 	private List<View> views = new ArrayList<View>();
 	private final String SELECT_QUEUE = "Wybierz kolejkę do której chcesz dostawić pionek";
-
+	private final String SELECT_PAWN = "Wybierz pionek do przeniesienia/usuniecia";
 	private final String OFFER_1_OF_1 = "Wybierz jeden ze swoich produktów";
 	private final String OFFER_1_OF_2 = "Wybierz pierwszy ze swoich produktów";
 	private final String OFFER_2_OF_2 = "Wybierz drugi ze swoich produktów";
@@ -69,7 +69,7 @@ public class LocalGameActionCreator implements ActionCreator {
 		case OPENING:
 			break;
 		case PCT:
-			break;
+			return getPCTAction();
 		case QUEUING_UP:
 			return getQueuingUpAction();
 		default:
@@ -79,6 +79,15 @@ public class LocalGameActionCreator implements ActionCreator {
 		return null;
 	}
 
+	/**
+	 * @return
+	 * @throws InterruptedException
+	 */
+	private GameAction getPCTAction() throws InterruptedException {
+		PawnParameters pawn = requestPawn(SELECT_PAWN);
+		if(pawn.destination.ordinal()==-1)return new GameAction(GameActionType.PAWN_REMOVED_PASSED,gameState.getActivePlayer());
+		else return new GameAction(GameActionType.PAWN_REMOVED,gameState.getActivePlayer(),pawn.destination,pawn.position);
+	}
 	/**
 	 * @return
 	 * @throws InterruptedException
@@ -162,9 +171,10 @@ public class LocalGameActionCreator implements ActionCreator {
 		return selectedQueuingCard;
 	}
 
-	private synchronized PawnParameters requestPawn()
+	private synchronized PawnParameters requestPawn(String message)
 			throws InterruptedException {
 		expectedType = PawnParameters.class;
+		messageForPlayer(message);
 		updateViews();
 		while (selectedPawn == null)
 			wait();
