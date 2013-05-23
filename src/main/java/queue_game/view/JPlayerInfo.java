@@ -38,8 +38,9 @@ public class JPlayerInfo extends JPanel {
 		JPanel panel3 = new JPanel();
 		panel3.setLayout(new GridLayout(1, 5));
 		for (int i = 0; i < 5; i++) {
+			
 			JLabel productLabel = new JLabel("" + player.getBoughtProducts()[i]
-					+ "/" + player.getShoppingList().get(i));
+					+ "/" + (player.getShoppingList()==null?"?":player.getShoppingList().get(i)));
 			productLabel.setHorizontalAlignment(JLabel.CENTER);
 			productLabel.setBackground(GameState.productColors[i]);
 			productLabel.setOpaque(true);

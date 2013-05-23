@@ -20,9 +20,9 @@ public class JPlayerList extends JPanel implements queue_game.view.View {
 	private GameState gameState; 
 	private ArrayList<JPlayerInfo> list = new ArrayList<JPlayerInfo>();
 	JTextArea log = new JTextArea();
-	public JPlayerList(Game game) {
+	public JPlayerList(GameState gameState) {
 		super();
-		this.gameState = game.getGameState();
+		this.gameState = gameState;
 		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
 		setLayout(layout);
 		//setBorder(BorderFactory.createLineBorder(Color.BLACK));

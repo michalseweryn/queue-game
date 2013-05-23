@@ -43,26 +43,26 @@ public class GameState {
 	private Store market;
 	private String message = "";
 
-	public GameState() {
+	public GameState(List<String> names) {
 		stores = new Store[ProductType.values().length];
 		int ind = 0;
 		for (ProductType product : ProductType.values())
 			stores[ind++] = new Store(product);
 		market = new Store(null);
+		resetPlayers(names);
 	}
 
 	/**
 	 * @param names
 	 * @param arrayList
 	 */
-	public void initGame(List<String> names,
+	public void initGame(
 			List<List<Integer>> shoppingLists) {
-		if (names.size() != shoppingLists.size())
+		if (players.size() != shoppingLists.size())
 			throw new IllegalArgumentException(
 					"Diffrent number of player names and shopping lists");
-		reset(names.size());
+		reset(players.size());
 		resetNumberOfProductsLeft();
-		resetPlayers(names);
 		resetShoppingList(shoppingLists);
 	}
 
@@ -423,6 +423,7 @@ public class GameState {
 
 	public void setMessage(String message) {
 		this.message = message;
+		System.out.println(message);
 	}
 
 	public String getMessage() {
@@ -438,5 +439,12 @@ public class GameState {
 			if (card.getProductType().equals(type))
 				return true;
 		return false;
+	}
+
+	/**
+	 * @return
+	 */
+	public ProductType getCheapProduct() {
+		return ProductType.values()[dayNumber % 5];
 	}
 }

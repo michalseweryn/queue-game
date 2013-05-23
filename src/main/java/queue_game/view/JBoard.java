@@ -145,12 +145,19 @@ public class JBoard extends JPanel implements ComponentListener{
 		return new Dimension(maxW, (int) (maxW * BOARD_HEIGHT / (TILE_SIDES_RATIO * BOARD_WIDTH)));
 		
 	}
+	public void setGame(Game game){
+		System.out.println("set game");
+		this.game = game;
+		for(JQueue queue: queues)
+			if(queue != null)
+				queue.setGame(game);
+		resetComponents(true);
+	}
 
-	public JBoard(Game game) {
+	public JBoard(GameState gameState) {
 		super();
 		setOpaque(true);
-		this.game = game;
-		this.gameState = game.getGameState();
+		this.gameState = gameState;
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		layeredPane = new JLayeredPane();
         //layeredPane.setPreferredSize(new Dimension(300, 310));
@@ -173,6 +180,7 @@ public class JBoard extends JPanel implements ComponentListener{
 
 	}
 	public void update() {
+		System.out.println("UPDATE");
 		resetComponents(false);
 	}
 
@@ -230,8 +238,10 @@ public class JBoard extends JPanel implements ComponentListener{
 			boolean newOne = false;
 			if(queue == null){
 				newOne = true;
-				queue = new JQueue(game, product);
+				queue = new JQueue(product);
+				queue.setGame(game);
 			}
+
 			queue.setBounds((int)(3 * tileWidth * ind), (int)(4 * tileHeight), (int) tileWidth, (int)(7 * tileHeight));
 			if(newOne){
 				queues.set(ind, queue);
@@ -245,7 +255,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			boolean newOne = false;
 			if(store == null){
 				newOne = true;
-				store = new JStore(game, product);
+				store = new JStore(gameState, product);
 			}
 			store.setBounds((int)(3 * tileWidth * ind), (int)(0), (int) (2.75 * tileWidth), (int)(4 * tileHeight));
 			if(newOne){
@@ -255,11 +265,14 @@ public class JBoard extends JPanel implements ComponentListener{
 			}
 			ind++;
 		}
+		if(gameState.getCurrentGamePhase() == null)
+			return;
 		JQueue queue = queues.get(5);
 		boolean newOne = false;
 		if(queue == null){
-			queue= new JQueue(game, null);
+			queue= new JQueue(null);
 			newOne = true;
+			queue.setGame(game);
 		}
 		queue.setBounds(new Rectangle((int)(5 * tileWidth), (int)(12 * tileHeight), (int) (7 * tileWidth), (int)tileHeight));
 		queue.setPreferredSize(new Dimension((int)tileWidth, (int)(7 * tileHeight)));

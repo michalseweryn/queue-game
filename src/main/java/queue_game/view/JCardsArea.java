@@ -27,13 +27,18 @@ public class JCardsArea extends JPanel {
 	private GameState gameState;
 	private Game game;
 	private JLabel messageLabel;
-	public JCardsArea(Game game){
+	public JCardsArea(GameState gameState){
 		super();
-		this.gameState = game.getGameState();
-		this.game = game;
+		this.gameState = gameState;
 		setLayout(new BorderLayout());
 		addCards();
 	}
+	
+
+	public void addGame(Game game){
+		this.game = game;
+	}
+	
 	private void addCards(){
 		//for(int i = 0; i < 3; i++)
 		//	cards[i] = gameState.getDeck(gameState.getActivePlayer());
@@ -54,7 +59,6 @@ public class JCardsArea extends JPanel {
 			contentPanel.add(button);
 		}
 		
-		
 		if(gameState.getCurrentGamePhase() == GamePhase.PCT){
 			JButton button = new JButton("PASS");
 			button.addActionListener(new ActionListener(){
@@ -65,7 +69,7 @@ public class JCardsArea extends JPanel {
 			});
 			contentPanel.add(button);
 		}
-		if(gameState.getCurrentGamePhase().ordinal() < 3)
+		if(gameState.getCurrentGamePhase()!= null &&gameState.getCurrentGamePhase().ordinal() < 3)
 		for(QueuingCard i: gameState.getPlayersList().get((gameState.getActivePlayer())).getCardsOnHand()){
 			JQueuingCard temp = new JQueuingCard(player,i,game);
 			contentPanel.add(temp);
@@ -75,7 +79,6 @@ public class JCardsArea extends JPanel {
 			for(ProductType type : ProductType.values()){
 				int bought = gameState.getPlayer(id).getBoughtProducts()[type.ordinal()];
 				if(bought > 0){
-					System.out.println(type + " " + bought);
 					JProductSquare square = new JProductSquare(game, type, bought, null);
 					square.setMinimumSize(new Dimension(30, 30));
 					square.setPreferredSize(new Dimension(30, 30));
@@ -96,6 +99,9 @@ public class JCardsArea extends JPanel {
 		}
 		add(contentPanel, BorderLayout.CENTER);
 		
+	}
+	public void setGame(Game game){
+		this.game = game;
 	}
 	private void addExchangeComponents(){
 		

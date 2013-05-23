@@ -9,12 +9,13 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 
 import queue_game.controller.Game;
+import queue_game.model.GameState;
 
 /**
  * @author michal
  *
  */
-public class JGameArea extends JPanel implements queue_game.view.View{
+public class JGameArea extends JPanel implements View{
 	
 	private static final long serialVersionUID = -1161332361871600948L;
 	
@@ -22,14 +23,20 @@ public class JGameArea extends JPanel implements queue_game.view.View{
 	private ProductPanel productPanel;
 	private JBoard board;
 	private JCardsArea cardsArea;
-	public JGameArea(Game game){
+
+	private Game game;
+	public JGameArea(GameState gameState){
 		super();
-		this.productPanel = new ProductPanel(game, board);
-		this.board = new JBoard(game);
-		this.cardsArea = new JCardsArea(game);
+		this.productPanel = new ProductPanel(gameState, board);
+		this.board = new JBoard(gameState);
+		this.cardsArea = new JCardsArea(gameState);
 		add(productPanel, BorderLayout.PAGE_START);
 		add(board, BorderLayout.CENTER);
 		add(cardsArea, BorderLayout.PAGE_END);
+	}
+	public void setGame(Game game){
+		board.setGame(game);
+		cardsArea.setGame(game);
 	}
 	public void update() {
 		productPanel.repaint();

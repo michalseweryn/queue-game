@@ -13,7 +13,6 @@ import queue_game.controller.Game;
 import queue_game.model.GameState;
 
 /**
- * 
  * @author Helena
  * 
  * Panel with number of products which left in the trucks.
@@ -23,8 +22,8 @@ public class ProductPanel extends JComponent{
 	private static final long serialVersionUID = -3084430883046487464L;
 	private int[] numberOfProducts= new int[5];
 	public Color[] colors;
-	public ProductPanel(Game game,JBoard board){
-		numberOfProducts = game.getGameState().getNumberOfProductsLeft();
+	public ProductPanel(GameState gameState,JBoard board){
+		numberOfProducts = gameState.getNumberOfProductsLeft();
 		colors=GameState.productColors;
 	}
 	@Override

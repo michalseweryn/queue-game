@@ -19,9 +19,10 @@ import queue_game.model.ProductType;
 public class JStore extends JComponent implements MouseListener{
 	private static final long serialVersionUID = 7452536279840255740L;
 	private ProductType product;
-	private Game game;
 	private double STROKE = 0.02;
 	boolean mouseFlag = false;
+	private GameState gameState;
+	private Game game = null;
     private void fillAndDraw(Graphics2D g, Shape shape) {
     	g.fill(shape);
     	Color c = g.getColor();
@@ -44,12 +45,11 @@ public class JStore extends JComponent implements MouseListener{
 		
 		Rectangle2D.Double wall = new Rectangle2D.Double(d, d + height / 4, width, 3 * height / 4);
 		Rectangle2D.Double roof = new Rectangle2D.Double(d, d, width, height / 4);
-		game.getGameState();
 		g2d.setColor(GameState.productColors[product.ordinal()]);
 		fillAndDraw(g2d, wall);
 		g2d.setColor(Color.gray);
 		fillAndDraw(g2d, roof);
-		if(game.getGameState().getStore(product).isClosed()){
+		if(gameState.getStore(product).isClosed()){
 			g2d.setColor(Color.red);
 			g2d.setStroke(new BasicStroke((float)(height * 0.1)));
 			g2d.drawLine((int)d, (int)d, (int)(width + d), (int)(height + d));
@@ -64,8 +64,8 @@ public class JStore extends JComponent implements MouseListener{
 		}*/
 	}
 	
-	public JStore(Game game, ProductType product){
-		this.game = game;
+	public JStore(GameState gameState, ProductType product){
+		this.gameState = gameState;
 		this.product = product;
 		addMouseListener(this);
 	}
@@ -80,8 +80,8 @@ public class JStore extends JComponent implements MouseListener{
 	
 	public void mouseReleased(MouseEvent arg0) {
 		
-		if(mouseFlag)
-			game.queueSelected(game.getGameState().getActivePlayer(), product);
+		if(game != null && mouseFlag)
+			game .queueSelected(gameState.getActivePlayer(), product);
 		mouseFlag = false;
 	}
 	
