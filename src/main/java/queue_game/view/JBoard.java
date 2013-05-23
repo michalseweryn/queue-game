@@ -364,7 +364,6 @@ public class JBoard extends JPanel implements ComponentListener{
 				lsize++;
 				list.add(square);
 				layeredPane.add(square, PRODUCT_LAYER);
-				square.repaint();
 			}
 			int pr = -1;
 			for(int j = 0; j < count; j++){
@@ -404,7 +403,6 @@ public class JBoard extends JPanel implements ComponentListener{
 			square.setBounds((int)(3 * tileWidth * ind + lsize++ * side), (int)(tileHeight), (int)side, (int)side);
 			list.add(square);
 			layeredPane.add(square, PRODUCT_LAYER);
-			square.repaint();
 		}
 		int pr = -1;
 		for(int j = 0; j < count; j++){
