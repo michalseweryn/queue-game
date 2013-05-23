@@ -1,27 +1,31 @@
 /**
  * 
  */
-package handler;
+package queue_game.creator;
 
-import queue_game.ActionGiver;
+import java.util.ArrayList;
+import java.util.List;
+
+import queue_game.ActionCreator;
 import queue_game.model.GameAction;
 import queue_game.model.GameActionType;
 import queue_game.model.GameState;
 import queue_game.model.ProductType;
 import queue_game.model.QueuingCard;
+import queue_game.view.JPlayerList;
 import queue_game.view.View;
 
 /**
  * @author michal
  * 
  */
-public class LocalGameInputAdapter implements ActionGiver {
+public class LocalGameActionCreator implements ActionCreator {
 	private Class<?> expectedType = null;
 	private PawnParameters selectedPawn = null;
 	private ProductParameters selectedProduct = null;
 	private ProductType selectedQueue = null;
 	private QueuingCard selectedQueuingCard = null;
-	private View view;
+	private List<View> views = new ArrayList<View>();
 	private final String SELECT_QUEUE = "Wybierz kolejkę do której chcesz dostawić pionek";
 
 	private final String OFFER_1_OF_1 = "Wybierz jeden ze swoich produktów";
@@ -31,9 +35,11 @@ public class LocalGameInputAdapter implements ActionGiver {
 
 	GameState gameState;
 
-	public LocalGameInputAdapter(View view, GameState gameState) {
+	public LocalGameActionCreator(GameState gameState) {
 		this.gameState = gameState;
-		this.view = view;
+	}
+	public void addView(View view){
+		views.add(view);
 	}
 
 	private class PawnParameters {
@@ -112,7 +118,7 @@ public class LocalGameInputAdapter implements ActionGiver {
 
 	private void messageForPlayer(String message) {
 		gameState.setMessage(message);
-		view.update();
+		updateViews();
 	}
 
 	public synchronized ProductParameters requestProduct(String message)
@@ -234,7 +240,8 @@ public class LocalGameInputAdapter implements ActionGiver {
 	 * Informs all views about changes in model.
 	 */
 	private void updateViews() {
-		view.update();
+		for(View view : views)
+			view.update();
 	}
 
 }

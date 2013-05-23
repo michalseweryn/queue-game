@@ -11,6 +11,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JComponent;
 
 import queue_game.controller.Game;
+import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.GameState;
 import queue_game.model.ProductType;
 
@@ -25,9 +26,11 @@ public class JQueue extends JComponent implements MouseListener{
 	private ProductType product;
 	private boolean mouseFlag;
 	private Game game;
+	private LocalGameActionCreator localGameInputAdapter;
 	
-	public JQueue(ProductType product){
+	public JQueue(ProductType product, LocalGameActionCreator localGameActionCreator){
 		this.product = product;
+		this.localGameInputAdapter = localGameActionCreator;
 		addMouseListener(this);
 	}
 	
@@ -46,6 +49,8 @@ public class JQueue extends JComponent implements MouseListener{
 	public void mouseReleased(MouseEvent arg0) {
 		if(mouseFlag  && game != null)
 			game.queueSelected(game.getGameState().getActivePlayer(), product);//KLIK
+		if(mouseFlag)
+			localGameInputAdapter.queueSelected(game.getGameState().getActivePlayer(), product);
 	}
 
 	/**

@@ -11,6 +11,8 @@ import java.util.List;
 import java.lang.Math;
 
 
+import queue_game.ActionCreator;
+import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.StandardDeckOfDeliveryCards;
 import queue_game.model.StandardDeckOfQueuingCards;
 import queue_game.model.DeliveryCard;
@@ -42,6 +44,7 @@ public class Game implements Runnable {
 	private QueuingCard selectedQueuingCard = null;
 	private StandardDeckOfDeliveryCards deckOfDeliveryCards = new StandardDeckOfDeliveryCards();
 	private StandardDeckOfQueuingCards deck[]=new StandardDeckOfQueuingCards[5];
+	private ActionCreator actionGiver;
 	
 
 	private class PawnParameters {
@@ -60,7 +63,8 @@ public class Game implements Runnable {
 
 	}
 
-	public Game(GameState gameState) {
+	public Game(GameState gameState, ActionCreator giver) {
+		this.actionGiver = giver;
 		this.gameState = gameState;
 	}
 
@@ -109,9 +113,7 @@ public class Game implements Runnable {
 		ArrayList<List<Integer>> lists = generateShoppingLists();
 		gameState.initGame(lists.subList(0, nPlayers));
 		resetQueuingCards();
-		System.out.println("hej ho");
 		queuingUpPhase();
-		System.out.println("hej ho");
 		gameState.putSpeculators();
 		for (ProductType pt : ProductType.values()) {
 			newAction(GameActionType.PAWN_PLACED, 0, pt.ordinal());
@@ -142,7 +144,6 @@ public class Game implements Runnable {
 	 */
 	private void queuingUpPhase() throws InterruptedException {
 		gameState.setCurrentGamePhase(GamePhase.QUEUING_UP);
-		System.out.println("FAZA");
 		int timeSinceLastPawnLocation = 0;
 		outer: while (true) {
 			for (int player = gameState.getGameOpeningMarker(); player < gameState
@@ -150,16 +151,15 @@ public class Game implements Runnable {
 					% gameState.getNumberOfPlayers()) {
 				if (gameState.getNumberOfPawns(player) > 0) {
 					gameState.setActivePlayer(player);
-					System.out.println("mesydż");
-					messageForPlayer("Wybierz kolejkę w której chcesz ustawić pionek");
-					ProductType queue = requestQueue();
-					gameState.putPlayerPawn(player, queue);
-					if(queue == null)
-						newAction(GameActionType.PAWN_PLACED, player + 1,
-								-1);
-					else
-						newAction(GameActionType.PAWN_PLACED, player + 1,
-								queue.ordinal());
+					GameAction action;
+					do{
+						action = actionGiver.getAction();
+						Object[] info = action.getInfo();
+						GameActionType type = action.getType();
+					} while(action.getType() != GameActionType.PAWN_PLACED || action.getInfo().length != 2 || 
+							!(action.getInfo()[0] instanceof Integer) || !(action.getInfo()[1] instanceof ProductType || action.getInfo()[1] == null));
+					update(action);
+					ProductType queue = (ProductType) action.getInfo()[1];
 					timeSinceLastPawnLocation = 0;
 				} else {
 					timeSinceLastPawnLocation++;
@@ -167,6 +167,20 @@ public class Game implements Runnable {
 				if (timeSinceLastPawnLocation > gameState.getNumberOfPlayers())
 					break outer;
 			}
+		}
+	}
+	//This one will be moved to updater.
+	public void update(GameAction action){
+		if(action.getType() == GameActionType.PAWN_PLACED){
+			int player = (Integer) action.getInfo()[0];
+			ProductType queue = (ProductType) action.getInfo()[1];
+			gameState.putPlayerPawn(player, queue);
+			if(queue == null)
+				newAction(GameActionType.PAWN_PLACED, player + 1,
+						-1);
+			else
+				newAction(GameActionType.PAWN_PLACED, player + 1,
+						queue.ordinal());
 		}
 	}
 
@@ -669,7 +683,6 @@ public class Game implements Runnable {
 	 * @throws InterruptedException
 	 */
 	private synchronized ProductType requestQueue() throws InterruptedException {
-		System.out.println("dup");
 		expectedType = ProductType.class;
 		updateViews();
 		while (expectedType != null)
@@ -907,6 +920,14 @@ public class Game implements Runnable {
 	}
 	public synchronized StandardDeckOfQueuingCards getDeck(int playerNr) {
 		return deck[playerNr];
+	}
+
+	/**
+	 * @param adapter
+	 */
+	public void setActionGiver(ActionCreator giver) {
+		this.actionGiver = giver;
+		
 	}
 
 }

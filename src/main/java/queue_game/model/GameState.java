@@ -423,7 +423,6 @@ public class GameState {
 
 	public void setMessage(String message) {
 		this.message = message;
-		System.out.println(message);
 	}
 
 	public String getMessage() {

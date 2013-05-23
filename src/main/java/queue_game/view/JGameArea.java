@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 
 import queue_game.controller.Game;
+import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.GameState;
 
 /**
@@ -25,10 +26,10 @@ public class JGameArea extends JPanel implements View{
 	private JCardsArea cardsArea;
 
 	private Game game;
-	public JGameArea(GameState gameState){
+	public JGameArea(GameState gameState, LocalGameActionCreator creator){
 		super();
-		this.productPanel = new ProductPanel(gameState, board);
-		this.board = new JBoard(gameState);
+		this.productPanel = new ProductPanel(gameState);
+		this.board = new JBoard(gameState, creator);
 		this.cardsArea = new JCardsArea(gameState);
 		add(productPanel, BorderLayout.PAGE_START);
 		add(board, BorderLayout.CENTER);

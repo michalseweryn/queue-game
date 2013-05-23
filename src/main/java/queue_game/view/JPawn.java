@@ -13,6 +13,7 @@ import java.awt.geom.GeneralPath;
 import javax.swing.JComponent;
 
 import queue_game.controller.Game;
+import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.GameState;
 import queue_game.model.ProductType;
 
@@ -31,6 +32,7 @@ public class JPawn extends JComponent implements MouseListener {
 	private ProductType destination;
 	private double pawnHeight;
 	private boolean mouseOver;
+	private LocalGameActionCreator localGameActionCreator;
 	private static double STROKE = 0.04;
 	private static double LEG_HEIGHT = 1. / 3;
 	private static double LEG_WIDTH = 1. / 6;
@@ -82,12 +84,13 @@ public class JPawn extends JComponent implements MouseListener {
 	}
 
 	public JPawn(Game game, ProductType product, int playerId, int place,
-			double pawnHeight) {
+			double pawnHeight, LocalGameActionCreator localGameActionCreator) {
 		this.destination = product;
 		this.game = game;
 		this.playerId = playerId;
 		this.position = place;
 		this.pawnHeight = pawnHeight;
+		this.localGameActionCreator = localGameActionCreator;
 		generateShape();
 		mouseOver = false;
 		enableInputMethods(true);

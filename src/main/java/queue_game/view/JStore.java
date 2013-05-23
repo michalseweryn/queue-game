@@ -13,6 +13,7 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.JComponent;
 
 import queue_game.controller.Game;
+import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.GameState;
 import queue_game.model.ProductType;
 
@@ -23,6 +24,7 @@ public class JStore extends JComponent implements MouseListener{
 	boolean mouseFlag = false;
 	private GameState gameState;
 	private Game game = null;
+	private LocalGameActionCreator localGameActionCreator;
     private void fillAndDraw(Graphics2D g, Shape shape) {
     	g.fill(shape);
     	Color c = g.getColor();
@@ -64,9 +66,11 @@ public class JStore extends JComponent implements MouseListener{
 		}*/
 	}
 	
-	public JStore(GameState gameState, ProductType product){
+	public JStore(Game game, GameState gameState, ProductType product, LocalGameActionCreator localGameActionCreator){
+		this.game = game;
 		this.gameState = gameState;
 		this.product = product;
+		this.localGameActionCreator = localGameActionCreator;
 		addMouseListener(this);
 	}
 	
@@ -80,8 +84,11 @@ public class JStore extends JComponent implements MouseListener{
 	
 	public void mouseReleased(MouseEvent arg0) {
 		
-		if(game != null && mouseFlag)
-			game .queueSelected(gameState.getActivePlayer(), product);
+		if(game != null && mouseFlag){
+			game.queueSelected(gameState.getActivePlayer(), product);
+		}
+		if(mouseFlag)
+			localGameActionCreator.queueSelected(game.getGameState().getActivePlayer(), product);
 		mouseFlag = false;
 	}
 	

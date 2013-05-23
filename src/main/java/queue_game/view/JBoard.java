@@ -24,6 +24,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import queue_game.controller.Game;
+import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.GameState;
 import queue_game.model.ProductType;
 import queue_game.model.Store;
@@ -135,6 +136,7 @@ public class JBoard extends JPanel implements ComponentListener{
 	
 	private double tileWidth;
 	private double tileHeight;
+	private LocalGameActionCreator localGameInputAdapter;
 	
 	@Override
 	public Dimension getPreferredSize(){
@@ -146,7 +148,6 @@ public class JBoard extends JPanel implements ComponentListener{
 		
 	}
 	public void setGame(Game game){
-		System.out.println("set game");
 		this.game = game;
 		for(JQueue queue: queues)
 			if(queue != null)
@@ -154,10 +155,11 @@ public class JBoard extends JPanel implements ComponentListener{
 		resetComponents(true);
 	}
 
-	public JBoard(GameState gameState) {
+	public JBoard(GameState gameState, LocalGameActionCreator adapter) {
 		super();
 		setOpaque(true);
 		this.gameState = gameState;
+		this.localGameInputAdapter = adapter;
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		layeredPane = new JLayeredPane();
         //layeredPane.setPreferredSize(new Dimension(300, 310));
@@ -180,7 +182,6 @@ public class JBoard extends JPanel implements ComponentListener{
 
 	}
 	public void update() {
-		System.out.println("UPDATE");
 		resetComponents(false);
 	}
 
@@ -230,7 +231,7 @@ public class JBoard extends JPanel implements ComponentListener{
 		if(boardDrawer == null){
 			BoardDrawer boardDrawer = new BoardDrawer();
 	        boardDrawer.setBounds(0, 0, 2000, 2000);
-	        layeredPane.add(boardDrawer, new Integer(0));
+	        layeredPane.add(boardDrawer, BOARD_LAYER);
 		}
 		int ind = 0;
 		for(ProductType product : ProductType.values()){
@@ -238,7 +239,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			boolean newOne = false;
 			if(queue == null){
 				newOne = true;
-				queue = new JQueue(product);
+				queue = new JQueue(product, localGameInputAdapter);
 				queue.setGame(game);
 			}
 
@@ -255,7 +256,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			boolean newOne = false;
 			if(store == null){
 				newOne = true;
-				store = new JStore(gameState, product);
+				store = new JStore(game, gameState, product, localGameInputAdapter);
 			}
 			store.setBounds((int)(3 * tileWidth * ind), (int)(0), (int) (2.75 * tileWidth), (int)(4 * tileHeight));
 			if(newOne){
@@ -270,7 +271,7 @@ public class JBoard extends JPanel implements ComponentListener{
 		JQueue queue = queues.get(5);
 		boolean newOne = false;
 		if(queue == null){
-			queue= new JQueue(null);
+			queue= new JQueue(null, localGameInputAdapter);
 			newOne = true;
 			queue.setGame(game);
 		}
@@ -295,7 +296,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			if (skip > tileHeight * 0.75)
 				skip = tileHeight * 0.75;
 			while(isize > psize){
-				JPawn pawn = new JPawn(game, ProductType.values()[i], ints.get(psize), 0, tileHeight * 2);
+				JPawn pawn = new JPawn(game, ProductType.values()[i], ints.get(psize), 0, tileHeight * 2, localGameInputAdapter);
 				pawn.setBounds((int)(x),(int)(y + psize * skip),(int)(tileHeight),(int)(2 * tileHeight));
 				pawnList.add(pawn);
 				layeredPane.add(pawn, new Integer(PAWN_LAYER0 + psize++));
@@ -332,7 +333,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			if (skip > tileWidth * 0.55)
 				skip = tileWidth * 0.55;
 			while(isize > psize){
-				JPawn pawn = new JPawn(game, null, ints.get(psize), 0, tileHeight * 2);
+				JPawn pawn = new JPawn(game, null, ints.get(psize), 0, tileHeight * 2, localGameInputAdapter);
 				pawn.setBounds((int)(x + psize * skip),(int)(y),(int)(tileHeight),(int)(2 * tileHeight));
 				pawnList.add(pawn);
 				layeredPane.add(pawn, new Integer(PAWN_LAYER0 + psize++));
@@ -402,7 +403,6 @@ public class JBoard extends JPanel implements ComponentListener{
 		for(ProductType type: ProductType.values())
 			if(store.getNumberOf(type) > 0){
 				count++;
-				System.out.println(count);
 			}
 		int lsize = list.size();
 		if(count != lsize)

@@ -69,6 +69,20 @@ public class GameAction {
 
 	@Override
 	public String toString() {
-		return "Temporarily disabled";
+		return type + " " + Arrays.asList(info);
+	}
+
+	/**
+	 * @return
+	 */
+	public GameActionType getType() {
+		return type;
+	}
+
+	/**
+	 * @return
+	 */
+	public Object[] getInfo() {
+		return info;
 	}
 }

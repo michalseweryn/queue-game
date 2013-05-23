@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import queue_game.controller.Game;
+import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.GameState;
 import queue_game.view.JGameArea;
 import queue_game.view.JPlayerList;
@@ -19,20 +20,36 @@ import queue_game.view.JPlayerList;
  */
 public class App {
 	JGameArea gameArea;
+	JPlayerList playerList;
 	GameState gameState;
+	LocalGameActionCreator creator;
 	Game game;
 	public App(){
 		gameState = new GameState(Arrays.asList("Adam", "Bob", "Carl", "Dan", "Eve"));
-
-        gameArea = new JGameArea(gameState);
+        
+		creator = new LocalGameActionCreator(gameState);
+        
+		playerList = new JPlayerList(gameState);
+        gameArea = new JGameArea(gameState, creator);
+        creator.addView(playerList);
+        creator.addView(gameArea);
+        
+        
         SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				createAndShowGUI();
 			}
 		});
-        game = new Game(gameState);
+        game = new Game(gameState, creator);
         game.addView(gameArea);
+        game.addView(playerList);
         gameArea.setGame(game);
+        /*try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
         game.startGame(5);
 	}
 	private void createAndShowGUI(){
@@ -41,8 +58,6 @@ public class App {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BorderLayout());
         //gameState.addView(gameArea);
-        
-        JPlayerList playerList = new JPlayerList(gameState);
         //gameState.addView(playerList);
 	
         frame.getContentPane().add(gameArea);

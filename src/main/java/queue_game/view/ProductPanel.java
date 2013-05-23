@@ -22,7 +22,7 @@ public class ProductPanel extends JComponent{
 	private static final long serialVersionUID = -3084430883046487464L;
 	private int[] numberOfProducts= new int[5];
 	public Color[] colors;
-	public ProductPanel(GameState gameState,JBoard board){
+	public ProductPanel(GameState gameState){
 		numberOfProducts = gameState.getNumberOfProductsLeft();
 		colors=GameState.productColors;
 	}
