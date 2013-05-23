@@ -7,11 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import queue_game.ActionCreator;
+import queue_game.controller.Game.PawnParameters;
+import queue_game.controller.Game.ProductParameters;
 import queue_game.model.GameAction;
 import queue_game.model.GameActionType;
 import queue_game.model.GameState;
 import queue_game.model.ProductType;
 import queue_game.model.QueuingCard;
+import queue_game.model.Store;
 import queue_game.view.JPlayerList;
 import queue_game.view.View;
 
@@ -27,18 +30,25 @@ public class LocalGameActionCreator implements ActionCreator {
 	private QueuingCard selectedQueuingCard = null;
 	private List<View> views = new ArrayList<View>();
 	private final String SELECT_QUEUE = "Wybierz kolejkę do której chcesz dostawić pionek";
-	private final String SELECT_PAWN = "Wybierz pionek do przeniesienia/usuniecia";
+	private final String SELECT_CARD = "Wybierz kartę przepychanek, lub spasuj";
+	private final String SELECT_PAWN_TO_REMOVE = "Wybierz pionek do usuniecia";
 	private final String OFFER_1_OF_1 = "Wybierz jeden ze swoich produktów";
 	private final String OFFER_1_OF_2 = "Wybierz pierwszy ze swoich produktów";
 	private final String OFFER_2_OF_2 = "Wybierz drugi ze swoich produktów";
 	private final String SELECT_FROM_MARKET = "Wybierz produkt z bazaru.";
+	private final String SELECT_STORE_INCREASED = "Wybierz sklep w którym ma być zwiększona dostawa";
+	private final String SELECT_PRODUCT_UNDER = "Wybierz towar, który chciałbyś dostać spod lady";
+	private final String SELECT_PAWN_TO_MOVE="Wybierz pionek który ma być przesunięty";
+	private final String SELECT_PRODUCT_TO_MOVE ="Wybierz towar, który ma być przeniesiony";
+	private final String SELECT_STORE_TO_ADD = "Wybierz sklep w którym ma być dodany towar";
 
 	GameState gameState;
 
 	public LocalGameActionCreator(GameState gameState) {
 		this.gameState = gameState;
 	}
-	public void addView(View view){
+
+	public void addView(View view) {
 		views.add(view);
 	}
 
@@ -65,9 +75,9 @@ public class LocalGameActionCreator implements ActionCreator {
 		case EXCHANGING:
 			return getExchangingAction();
 		case JUMPING:
-			break;
+			return getJumpingAction();
 		case OPENING:
-			break;
+			throw new IllegalStateException("No actions for opening right now.");
 		case PCT:
 			return getPCTAction();
 		case QUEUING_UP:
@@ -83,11 +93,69 @@ public class LocalGameActionCreator implements ActionCreator {
 	 * @return
 	 * @throws InterruptedException
 	 */
-	private GameAction getPCTAction() throws InterruptedException {
-		PawnParameters pawn = requestPawn(SELECT_PAWN);
-		if(pawn.destination.ordinal()==-1)return new GameAction(GameActionType.PAWN_REMOVED_PASSED,gameState.getActivePlayer());
-		else return new GameAction(GameActionType.PAWN_REMOVED,gameState.getActivePlayer(),pawn.destination,pawn.position);
+	private GameAction getJumpingAction() throws InterruptedException {
+		QueuingCard card = requestQueuingCard(SELECT_CARD);
+		if (card == null) {
+			return new GameAction(GameActionType.CARD_PLAYED_PASSED,
+					gameState.getActivePlayer());
+		} else {
+			switch (card) {
+			case DELIVERY_ERROR:
+				ProductParameters prod = requestProduct(SELECT_PRODUCT_TO_MOVE);
+				ProductType p=requestQueue(SELECT_STORE_TO_ADD);
+				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
+						QueuingCard.DELIVERY_ERROR.ordinal(),prod.product.ordinal(),prod.store,p.ordinal());
+			case NOT_YOUR_PLACE:
+				PawnParameters pawn1 = requestPawn(SELECT_PAWN_TO_MOVE);
+				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
+						QueuingCard.NOT_YOUR_PLACE.ordinal(),pawn1.destination,pawn1.position);
+			case LUCKY_STRIKE:
+				PawnParameters pawn  = requestPawn(SELECT_PAWN_TO_MOVE);
+				ProductType type = requestQueue(SELECT_QUEUE);
+				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
+						QueuingCard.LUCKY_STRIKE.ordinal(),pawn.destination,pawn.position,type.ordinal());
+			case MOTHER_WITH_CHILD:
+				PawnParameters pawn2  = requestPawn(SELECT_PAWN_TO_MOVE);
+				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
+						QueuingCard.MOTHER_WITH_CHILD.ordinal(),pawn2.destination,pawn2.position);
+			case UNDER_THE_COUNTER_GOODS:
+				ProductParameters prod2 = requestProduct(SELECT_PRODUCT_UNDER);
+				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
+						QueuingCard.UNDER_THE_COUNTER_GOODS.ordinal(),prod2.product.ordinal(),prod2.store);
+			case TIPPING_FRIEND:
+				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
+						QueuingCard.TIPPING_FRIEND.ordinal());
+			case CRITICIZING_AUTHORITIES:
+				PawnParameters pawn4 = requestPawn(SELECT_PAWN_TO_MOVE);
+				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
+						QueuingCard.CRITICIZING_AUTHORITIES.ordinal(),pawn4.destination,pawn4.position);
+			case INCREASED_DELIVERY:
+				ProductType type1 = requestQueue(SELECT_STORE_INCREASED);
+				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
+						QueuingCard.INCREASED_DELIVERY.ordinal(), type1.ordinal());
+			case CLOSED_FOR_STOCKTAKING:
+				
+			case COMMUNITY_LIST:
+				
+			}
+		}
 	}
+
+	/**
+	 * @return
+	 * @throws InterruptedException
+	 */
+	private GameAction getPCTAction() throws InterruptedException {
+		PawnParameters pawn = requestPawn(SELECT_PAWN_TO_REMOVE);
+		if (pawn.position == -1)
+			return new GameAction(GameActionType.PAWN_REMOVED_PASSED,
+					gameState.getActivePlayer());
+		else
+			return new GameAction(GameActionType.PAWN_REMOVED,
+					gameState.getActivePlayer(), pawn.destination,
+					pawn.position);
+	}
+
 	/**
 	 * @return
 	 * @throws InterruptedException
@@ -162,10 +230,10 @@ public class LocalGameActionCreator implements ActionCreator {
 	 * @return destination of selected queue.
 	 * @throws InterruptedException
 	 */
-	public synchronized QueuingCard requestQueuingCard()
+	public synchronized QueuingCard requestQueuingCard(String message)
 			throws InterruptedException {
 		expectedType = QueuingCard.class;
-		updateViews();
+		messageForPlayer(message);
 		while (expectedType != null)
 			wait();
 		return selectedQueuingCard;
@@ -175,7 +243,6 @@ public class LocalGameActionCreator implements ActionCreator {
 			throws InterruptedException {
 		expectedType = PawnParameters.class;
 		messageForPlayer(message);
-		updateViews();
 		while (selectedPawn == null)
 			wait();
 		expectedType = null;
@@ -250,7 +317,7 @@ public class LocalGameActionCreator implements ActionCreator {
 	 * Informs all views about changes in model.
 	 */
 	private void updateViews() {
-		for(View view : views)
+		for (View view : views)
 			view.update();
 	}
 
