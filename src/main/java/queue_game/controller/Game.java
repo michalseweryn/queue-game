@@ -8,13 +8,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.lang.Math;
-
 
 import queue_game.ActionCreator;
-import queue_game.creator.LocalGameActionCreator;
-import queue_game.model.StandardDeckOfDeliveryCards;
-import queue_game.model.StandardDeckOfQueuingCards;
+import queue_game.model.DecksOfQueuingCardsBox;
 import queue_game.model.DeliveryCard;
 import queue_game.model.GameAction;
 import queue_game.model.GameActionType;
@@ -23,6 +19,8 @@ import queue_game.model.GameState;
 import queue_game.model.Player;
 import queue_game.model.ProductType;
 import queue_game.model.QueuingCard;
+import queue_game.model.StandardDeckOfDeliveryCards;
+import queue_game.model.StandardDeckOfQueuingCards;
 import queue_game.model.Store;
 import queue_game.view.View;
 
@@ -43,7 +41,7 @@ public class Game implements Runnable {
 	private Thread gameThread = null;
 	private QueuingCard selectedQueuingCard = null;
 	private StandardDeckOfDeliveryCards deckOfDeliveryCards = new StandardDeckOfDeliveryCards();
-	private StandardDeckOfQueuingCards deck[]=new StandardDeckOfQueuingCards[5];
+	private DecksOfQueuingCardsBox decks;
 	private ActionCreator actionGiver;
 	
 
@@ -71,8 +69,9 @@ public class Game implements Runnable {
 	/**
 	 * Creates new thread for the game.
 	 */
-	public void startGame(int nPlayers) {
+	public void startGame(int nPlayers, DecksOfQueuingCardsBox decks) {
 		this.nPlayers = nPlayers;
+		this.decks = decks;
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
@@ -248,7 +247,7 @@ public class Game implements Runnable {
 		int player = gameState.getGameOpeningMarker();
 		outer: while (true) {
 			gameState.setActivePlayer(player);
-			ArrayList<QueuingCard> cardsOnHand = gameState.getPlayersList()
+			List<QueuingCard> cardsOnHand = gameState.getPlayersList()
 					.get(player).getCardsOnHand();
 			boolean success = false;
 				messageForPlayer("Wybierz kartę przepychanek, lub spasuj.");
@@ -832,7 +831,8 @@ public class Game implements Runnable {
 	private void prepareToQueueJumping() {
 		int nPlayers=gameState.getNumberOfPlayers();
 		for (int i=0; i<nPlayers; i++) {
-			this.getDeck(i).addCards(gameState.getPlayersList().get(i).getCardsOnHand());
+			gameState.getPlayersList().get(i).setCardsOnHand(
+					decks.getCardsToFillTheHandOfPlayer(i));
 		}
 	}
 	/**
@@ -885,9 +885,6 @@ public class Game implements Runnable {
 		gameState.setMessage(s);
 	}
 	
-	public void setDeck(int player, StandardDeckOfQueuingCards deck){
-		this.deck[player]=deck;
-	}
 	/**
 	 * 
 	 * Reset cards of all players.
@@ -895,32 +892,28 @@ public class Game implements Runnable {
 	 */
 	public synchronized void resetQueuingCards() {
 		int nPlayers=gameState.getNumberOfPlayers();
+		decks.resetAllDecks();
 		for (int i=0; i<nPlayers; i++) {
-			setDeck(i,new StandardDeckOfQueuingCards());
-			getDeck(i).reset();
-		}
-		for (int i=0; i<nPlayers; i++) {
-			getDeck(i).addCards(gameState.getPlayersList().get(i).getCardsOnHand());
+			gameState.getPlayersList().get(i).setCardsOnHand(
+					decks.getCardsToFillTheHandOfPlayer(i));
 		}
 	}
-	/*
+	/**
 	 * Fills the deck with new cards at the end of the week
 	 */
 	public synchronized void resetQueuingCardsOnSaturday() {
 		int nPlayers=gameState.getNumberOfPlayers();
-		for (int i=0; i<nPlayers; i++) {
-			setDeck(i,new StandardDeckOfQueuingCards());
-			getDeck(i).reset();
-			
-		}
+		decks.resetAllDecks();
 		for (int i=0; i<nPlayers; i++) {
 			gameState.getPlayer(i).setCardsOnHand(new ArrayList<QueuingCard>());
-			getDeck(i).addCards(gameState.getPlayer(i).getCardsOnHand());
+			gameState.getPlayersList().get(i).setCardsOnHand(
+					decks.getCardsToFillTheHandOfPlayer(i));
 		}
 	}
-	public synchronized StandardDeckOfQueuingCards getDeck(int playerNr) {
-		return deck[playerNr];
-	}
+	
+	/*public synchronized StandardDeckOfQueuingCards getDeck(int playerNr) {
+		return decks.getDeck();
+	}*/
 
 	/**
 	 * @param adapter

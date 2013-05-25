@@ -1,18 +1,17 @@
 package queue_game.model;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-//import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+//import java.util.Arrays;
 
 /**
- * @author Piotr
+ * @author Piotr, everything changed by krzysiek
  * Deck of Cards
  */
-public class StandardDeckOfQueuingCards implements DeckOfQueuingCards{
-	private List<QueuingCard> deck=new ArrayList<QueuingCard>();
+public class StandardDeckOfQueuingCards{
+	private LinkedList<QueuingCard> deck=new LinkedList<QueuingCard>();
 	//private List<QueuingCard> cardsOnHand=new ArrayList<QueuingCard>();
 
 	/**
@@ -21,39 +20,27 @@ public class StandardDeckOfQueuingCards implements DeckOfQueuingCards{
 	 *  Takes card from the top of the deck, and gives it to "on hand" list
 	 */
 	
-	public void addCards(Collection<QueuingCard> cardsOnHand){
-		for (int i = 0; i < 3 && cardsOnHand.size() < 3; i++) {
-			if(size()==0)
-				break;
-			cardsOnHand.add(deck.get(deck.size() - 1));
-			deck.remove(deck.size() - 1);
-		}
+	public StandardDeckOfQueuingCards() {
+		System.out.println("a");
+		reset();
 	}
 	
-	/**
-	 * @author krzysiek
-	 * Removes the first occurrence of the specified element from this list,
-	 * if it is present.
-	 * If this list does not contain the element, it is unchanged. 
-	 * @return true if this list contained the specified element
-	 
-	public boolean remove(QueuingCard queuingCard){
-		return deck.remove(queuingCard);
-	}*/
 	
-	/**
-	 * @author krzysiek
-	 * A function similar to addAll function. 
-	 */
-	public void addListToTheEnd(List<QueuingCard> list){
-		try {
-			deck.addAll(list);
-		} catch (NullPointerException e){
-			//nothing
+	/*public List<QueuingCard> getCardsToFillTheHandOfPlayer(int amount){
+		//for (int i = 0; i < 3 && cardsOnHand.size() < 3; i++) {
+		//	if(size()==0)
+		//		break;
+		//	cardsOnHand.add(deck.get(deck.size() - 1));
+		//	deck.remove(deck.size() - 1);
+		//}
+		List<QueuingCard> res = new LinkedList<QueuingCard>();
+		while(amount-- > 0) {
+			if(size()==0) break;
+			res.add(deck.removeFirst());
 		}
+		return res;
 	}
-
-	
+	*/
 	
 	/**
 	 * 
@@ -80,9 +67,45 @@ public class StandardDeckOfQueuingCards implements DeckOfQueuingCards{
 		
 	}
 	public void reset(){
-		deck = new ArrayList<QueuingCard>();
+		deck = new LinkedList<QueuingCard>();
+		System.out.println(deck);
 		fill();
 		shuffle();
 	}
+	
+	public QueuingCard remove(){
+		return deck.remove();
+	}
+	
+	public boolean hasCard(QueuingCard card){
+		return deck.contains(card);
+	}
 
 }
+
+
+
+/**
+ * @author krzysiek
+ * Removes the first occurrence of the specified element from this list,
+ * if it is present.
+ * If this list does not contain the element, it is unchanged. 
+ * @return true if this list contained the specified element
+ 
+public boolean remove(QueuingCard queuingCard){
+	return deck.remove(queuingCard);
+}*/
+
+/**
+ * @author krzysiek
+ * A function similar to addAll function. 
+ */
+/*
+public void addListToTheEnd(List<QueuingCard> list){
+	try {
+		deck.addAll(list);
+	} catch (NullPointerException e){
+		//nothing
+	}
+}
+*/

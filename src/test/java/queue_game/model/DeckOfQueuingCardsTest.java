@@ -20,7 +20,10 @@ public class DeckOfQueuingCardsTest {
 
 	@Test
 	public void getCardsTest() {
-		assertEquals(10, deck.size());
+		fail("notImplemented");
+	}
+}
+/*		assertEquals(10, deck.size());
 		ArrayList<QueuingCard> cards = new ArrayList<QueuingCard>();
 		deck.addCards(cards);
 		assertEquals(7, deck.size());
@@ -45,3 +48,4 @@ public class DeckOfQueuingCardsTest {
 	}
 
 }
+*/
