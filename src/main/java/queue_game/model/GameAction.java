@@ -1,10 +1,11 @@
 package queue_game.model;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Arrays;
+
+import queue_game.server.Utilities;
 
 /**
  * Class containing actions players that may happen when playing, with additional information
@@ -30,27 +31,15 @@ public class GameAction {
 	 * @throws IOException when something goes wrong
 	 */
 	public void write(Writer out) throws IOException {
-		out.write(type.toString());
+		Utilities.writeObject(out, type);
 		for(Object o: info) {
 			if(o instanceof String) {
-				out.write(Integer.toString(((String) o).length()));
-				out.write(" ");
-				out.write((String) o);
-				out.write(" ");
+				Utilities.writeString(out, (String) o);
 			} else {
-				out.write(o.toString());
-				out.write(" ");
+				Utilities.writeObject(out, o);
 			}
 		}
-		out.write("\n");
-		out.flush();
-	}
-
-	private static int readInt(Reader in) throws IOException {
-		int i = in.read();
-		if(i == -1)
-			throw new EOFException("Unexpected end of stream");
-		return i;
+		Utilities.finishWriting(out);
 	}
 
 	/**
