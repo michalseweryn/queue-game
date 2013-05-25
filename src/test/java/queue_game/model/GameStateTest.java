@@ -16,14 +16,14 @@ public class GameStateTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		gameState = new GameState();
+		gameState = new GameState(Arrays.asList("Gracz 1", "Gracz 2", "Gracz 3", 
+				"Gracz 4", "Gracz 5"));
 		lists.add(Arrays.asList( 4, 0, 2, 1, 3 )); 
 		lists.add(Arrays.asList( 3, 4, 1, 0, 2 ));
 		lists.add(Arrays.asList( 2, 3, 0, 4, 1 ));
 		lists.add(Arrays.asList( 1, 2, 4, 3, 0 )); 
 		lists.add(Arrays.asList( 0, 1, 3, 2, 4 ));
-		gameState.initGame(Arrays.asList("Gracz 1", "Gracz 2", "Gracz 3", 
-				"Gracz 4", "Gracz 5"), lists);
+		gameState.initGame(lists);
 	}
 	
 	

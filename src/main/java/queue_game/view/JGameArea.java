@@ -30,7 +30,7 @@ public class JGameArea extends JPanel implements View{
 		super();
 		this.productPanel = new ProductPanel(gameState);
 		this.board = new JBoard(gameState, creator);
-		this.cardsArea = new JCardsArea(gameState);
+		this.cardsArea = new JCardsArea(gameState, creator);
 		add(productPanel, BorderLayout.PAGE_START);
 		add(board, BorderLayout.CENTER);
 		add(cardsArea, BorderLayout.PAGE_END);

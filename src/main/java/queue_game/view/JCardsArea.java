@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import queue_game.controller.Game;
+import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.GamePhase;
 import queue_game.model.GameState;
 import queue_game.model.Player;
@@ -27,8 +28,10 @@ public class JCardsArea extends JPanel {
 	private GameState gameState;
 	private Game game;
 	private JLabel messageLabel;
-	public JCardsArea(GameState gameState){
+	private LocalGameActionCreator creator;
+	public JCardsArea(GameState gameState, LocalGameActionCreator creator){
 		super();
+		this.creator = creator; 
 		this.gameState = gameState;
 		setLayout(new BorderLayout());
 		addCards();
@@ -69,9 +72,9 @@ public class JCardsArea extends JPanel {
 			});
 			contentPanel.add(button);
 		}
-		if(gameState.getCurrentGamePhase()!= null &&gameState.getCurrentGamePhase().ordinal() < 3)
+		if(gameState.getCurrentGamePhase()!= null && gameState.getCurrentGamePhase().ordinal() < 3)
 		for(QueuingCard i: gameState.getPlayersList().get((gameState.getActivePlayer())).getCardsOnHand()){
-			JQueuingCard temp = new JQueuingCard(player,i,game);
+			JQueuingCard temp = new JQueuingCard(player,i,game, creator);
 			contentPanel.add(temp);
 		}
 		if(gameState.getCurrentGamePhase() == GamePhase.EXCHANGING){

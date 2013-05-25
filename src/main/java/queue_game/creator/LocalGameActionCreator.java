@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import queue_game.ActionCreator;
-import queue_game.controller.Game.PawnParameters;
-import queue_game.controller.Game.ProductParameters;
 import queue_game.model.GameAction;
 import queue_game.model.GameActionType;
 import queue_game.model.GameState;
@@ -29,18 +27,20 @@ public class LocalGameActionCreator implements ActionCreator {
 	private ProductType selectedQueue = null;
 	private QueuingCard selectedQueuingCard = null;
 	private List<View> views = new ArrayList<View>();
-	private final String SELECT_QUEUE = "Wybierz kolejkę do której chcesz dostawić pionek";
-	private final String SELECT_CARD = "Wybierz kartę przepychanek, lub spasuj";
-	private final String SELECT_PAWN_TO_REMOVE = "Wybierz pionek do usuniecia";
-	private final String OFFER_1_OF_1 = "Wybierz jeden ze swoich produktów";
-	private final String OFFER_1_OF_2 = "Wybierz pierwszy ze swoich produktów";
-	private final String OFFER_2_OF_2 = "Wybierz drugi ze swoich produktów";
-	private final String SELECT_FROM_MARKET = "Wybierz produkt z bazaru.";
-	private final String SELECT_STORE_INCREASED = "Wybierz sklep w którym ma być zwiększona dostawa";
-	private final String SELECT_PRODUCT_UNDER = "Wybierz towar, który chciałbyś dostać spod lady";
-	private final String SELECT_PAWN_TO_MOVE="Wybierz pionek który ma być przesunięty";
-	private final String SELECT_PRODUCT_TO_MOVE ="Wybierz towar, który ma być przeniesiony";
-	private final String SELECT_STORE_TO_ADD = "Wybierz sklep w którym ma być dodany towar";
+	private static final String SELECT_QUEUE = "Wybierz kolejkę do której chcesz dostawić pionek";
+	private static final String SELECT_CARD = "Wybierz kartę przepychanek, lub spasuj";
+	private static final String SELECT_PAWN_TO_REMOVE = "Wybierz pionek do usuniecia";
+	private static final String OFFER_1_OF_1 = "Wybierz jeden ze swoich produktów";
+	private static final String OFFER_1_OF_2 = "Wybierz pierwszy ze swoich produktów";
+	private static final String OFFER_2_OF_2 = "Wybierz drugi ze swoich produktów";
+	private static final String SELECT_FROM_MARKET = "Wybierz produkt z bazaru";
+	private static final String SELECT_STORE_INCREASED = "Wybierz sklep w którym ma być zwiększona dostawa";
+	private static final String SELECT_PRODUCT_UNDER = "Wybierz towar, który chciałbyś dostać spod lady";
+	private static final String SELECT_PAWN_TO_MOVE="Wybierz pionek który ma być przesunięty";
+	private static final String SELECT_PRODUCT_TO_MOVE ="Wybierz towar, który ma być przeniesiony";
+	private static final String SELECT_STORE_TO_ADD = "Wybierz sklep w którym ma być dodany towar";
+	private static final String SELECT_STORE_REVERSED = "Wybierz kolejkę do odwrócenia";
+	private static final String SELECT_STORE_TO_CLOSE = "Wybierz sklep do zamknięcia";
 
 	GameState gameState;
 
@@ -95,6 +95,7 @@ public class LocalGameActionCreator implements ActionCreator {
 	 */
 	private GameAction getJumpingAction() throws InterruptedException {
 		QueuingCard card = requestQueuingCard(SELECT_CARD);
+		System.out.println(card);
 		if (card == null) {
 			return new GameAction(GameActionType.CARD_PLAYED_PASSED,
 					gameState.getActivePlayer());
@@ -104,38 +105,46 @@ public class LocalGameActionCreator implements ActionCreator {
 				ProductParameters prod = requestProduct(SELECT_PRODUCT_TO_MOVE);
 				ProductType p=requestQueue(SELECT_STORE_TO_ADD);
 				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
-						QueuingCard.DELIVERY_ERROR.ordinal(),prod.product.ordinal(),prod.store,p.ordinal());
+						QueuingCard.DELIVERY_ERROR,prod.product,prod.store,p);
 			case NOT_YOUR_PLACE:
 				PawnParameters pawn1 = requestPawn(SELECT_PAWN_TO_MOVE);
 				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
-						QueuingCard.NOT_YOUR_PLACE.ordinal(),pawn1.destination,pawn1.position);
+						QueuingCard.NOT_YOUR_PLACE,pawn1.destination,pawn1.position);
 			case LUCKY_STRIKE:
 				PawnParameters pawn  = requestPawn(SELECT_PAWN_TO_MOVE);
 				ProductType type = requestQueue(SELECT_QUEUE);
 				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
-						QueuingCard.LUCKY_STRIKE.ordinal(),pawn.destination,pawn.position,type.ordinal());
+						QueuingCard.LUCKY_STRIKE,pawn.destination,pawn.position,type);
 			case MOTHER_WITH_CHILD:
 				PawnParameters pawn2  = requestPawn(SELECT_PAWN_TO_MOVE);
 				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
-						QueuingCard.MOTHER_WITH_CHILD.ordinal(),pawn2.destination,pawn2.position);
+						QueuingCard.MOTHER_WITH_CHILD,pawn2.destination,pawn2.position);
 			case UNDER_THE_COUNTER_GOODS:
 				ProductParameters prod2 = requestProduct(SELECT_PRODUCT_UNDER);
 				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
-						QueuingCard.UNDER_THE_COUNTER_GOODS.ordinal(),prod2.product.ordinal(),prod2.store);
+						QueuingCard.UNDER_THE_COUNTER_GOODS, prod2.product,prod2.store);
 			case TIPPING_FRIEND:
 				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
-						QueuingCard.TIPPING_FRIEND.ordinal());
+						QueuingCard.TIPPING_FRIEND);
 			case CRITICIZING_AUTHORITIES:
 				PawnParameters pawn4 = requestPawn(SELECT_PAWN_TO_MOVE);
 				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
-						QueuingCard.CRITICIZING_AUTHORITIES.ordinal(),pawn4.destination,pawn4.position);
+						QueuingCard.CRITICIZING_AUTHORITIES,pawn4.destination,pawn4.position);
 			case INCREASED_DELIVERY:
 				ProductType type1 = requestQueue(SELECT_STORE_INCREASED);
 				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
-						QueuingCard.INCREASED_DELIVERY.ordinal(), type1.ordinal());
+						QueuingCard.INCREASED_DELIVERY, type1);
 			case CLOSED_FOR_STOCKTAKING:
+				type = requestQueue(SELECT_STORE_TO_CLOSE);
+				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
+						QueuingCard.CLOSED_FOR_STOCKTAKING, type);
 				
 			case COMMUNITY_LIST:
+				type = requestQueue(SELECT_STORE_REVERSED);
+				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
+						QueuingCard.COMMUNITY_LIST, type);
+			default:
+				return new GameAction(GameActionType.ERROR);
 				
 			}
 		}

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import queue_game.controller.Game;
+import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.StandardDeckOfQueuingCards;
 import queue_game.model.GameState;
 import queue_game.model.Player;
@@ -27,8 +28,10 @@ public class JQueuingCard extends JPanel implements MouseListener {
 	private QueuingCard card;
 	private Player player;
 	private Game game;
+	private LocalGameActionCreator creator;
 
-	public JQueuingCard(Player player, QueuingCard card, Game game) {
+	public JQueuingCard(Player player, QueuingCard card, Game game, LocalGameActionCreator creator) {
+		this.creator = creator;
 		this.card = card;
 		this.player = player;
 		this.game = game;
@@ -120,6 +123,8 @@ public class JQueuingCard extends JPanel implements MouseListener {
 
 	public void mouseClicked(MouseEvent e) {
 		game.queuingCardSelected(player.getID(), card);
+		creator.queuingCardSelected(player.getID(), card);
+		
 	}
 
 	public void mouseEntered(MouseEvent e) {
