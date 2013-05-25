@@ -10,7 +10,9 @@ import javax.swing.SwingUtilities;
 
 import queue_game.controller.Game;
 import queue_game.creator.LocalGameActionCreator;
+import queue_game.model.DecksOfQueuingCardsBox;
 import queue_game.model.GameState;
+import queue_game.model.StandardDeckOfQueuingCards;
 import queue_game.view.JGameArea;
 import queue_game.view.JPlayerList;
 
@@ -24,6 +26,8 @@ public class App {
 	GameState gameState;
 	LocalGameActionCreator creator;
 	Game game;
+	DecksOfQueuingCardsBox queuingCardsDecks;
+	
 	public App(){
 		gameState = new GameState(Arrays.asList("Adam", "Bob", "Carl", "Dan", "Eve"));
         
@@ -33,7 +37,6 @@ public class App {
         gameArea = new JGameArea(gameState, creator);
         creator.addView(playerList);
         creator.addView(gameArea);
-        
         
         SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -50,7 +53,8 @@ public class App {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-        game.startGame(5);
+        queuingCardsDecks = new DecksOfQueuingCardsBox(gameState); 
+        game.startGame(5, queuingCardsDecks);
 	}
 	private void createAndShowGUI(){
 		JFrame frame = new JFrame("FIAO");

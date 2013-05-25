@@ -1,8 +1,9 @@
 package queue_game.model;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A class which every object contains all the data about the particular player. 
@@ -14,7 +15,7 @@ public class Player {
 	private int numberOfPawns;
 	private List<Integer> shoppingList = null;
 	private int[] boughtProducts = {0, 0, 0, 0, 0};
-	private ArrayList<QueuingCard> cardsOnHand=new ArrayList<QueuingCard>();
+	private List<QueuingCard> cardsOnHand=new LinkedList<QueuingCard>();
 	private String name;
 	private int ID;
 	
@@ -56,10 +57,10 @@ public class Player {
 		return shoppingList;
 	}
 	
-	public void setCardsOnHand(ArrayList<QueuingCard> cards){
+	public void setCardsOnHand(List<QueuingCard> cards){
 		cardsOnHand=cards;
 	}
-	public ArrayList<QueuingCard> getCardsOnHand(){
+	public List<QueuingCard> getCardsOnHand(){
 		return cardsOnHand;
 	}
 	
