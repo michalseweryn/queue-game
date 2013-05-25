@@ -37,7 +37,6 @@ public class App {
         gameArea = new JGameArea(gameState, creator);
         creator.addView(playerList);
         creator.addView(gameArea);
-        queuingCardsDecks = new DecksOfQueuingCardsBox(gameState); 
         
         SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -54,6 +53,7 @@ public class App {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
+        queuingCardsDecks = new DecksOfQueuingCardsBox(gameState); 
         game.startGame(5, queuingCardsDecks);
 	}
 	private void createAndShowGUI(){

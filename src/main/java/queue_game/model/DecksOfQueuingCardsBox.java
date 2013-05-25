@@ -12,7 +12,7 @@ public class DecksOfQueuingCardsBox implements DecksOfQueuingCardsBoxInterface {
 	public DecksOfQueuingCardsBox(GameState gameState){
 		this.gameState = gameState;
 		System.out.println(gameState.getNumberOfPlayers());
-		for (int i=0; i<gameState.getNumberOfPlayers(); i++)
+		for (int i=0; i<5; i++)
 			decks[i] = new StandardDeckOfQueuingCards();
 	}
 	
