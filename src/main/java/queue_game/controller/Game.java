@@ -253,68 +253,71 @@ public class Game implements Runnable {
 			boolean success = false;
 				messageForPlayer("Wybierz kartę przepychanek, lub spasuj.");
 			do {
-				card = requestQueuingCard();
-				if (card == null) {
+				GameAction action = actionGiver.getAction();
+				if (action.getType() == GameActionType.CARD_PLAYED_PASSED) {
 					finished[player] = true;
 					success = true;
-					deck[player].addListToTheEnd(cardsOnHand);
-					cardsOnHand.clear();
 					nFinished++;
-					if (nFinished == nPlayers)
+					if (nFinished == nPlayers){
+						System.out.println(nPlayers);
 						break outer;
+					}
 				} else {
+					card = (QueuingCard) action.getInfo()[1];
 					if (!cardsOnHand.contains(card)) {
 						messageForPlayer("Nie posiadasz  tej karty.");
 						continue;
 					}
 					switch (card) {
 					case DELIVERY_ERROR:
-						if (deliveryError())
+						if (deliveryError(action))
 							success = true;
 						break;
 					case NOT_YOUR_PLACE:
-						if (notYourPlace())
+						if (notYourPlace(action))
 							success = true;
 						break;
 					case LUCKY_STRIKE:
-						if (luckyStrike())
+						if (luckyStrike(action))
 							success = true;
 						break;
 					case MOTHER_WITH_CHILD:
-						if (motherWithChild())
+						if (motherWithChild(action))
 							success = true;
 						break;
 					case UNDER_THE_COUNTER_GOODS:
-						if (underTheCounterGoods())
+						if (underTheCounterGoods(action))
 							success = true;
 						break;
 					case TIPPING_FRIEND:
-						if (tippingFriend())
+						if (tippingFriend(action))
 							success = true;
 						break;
 					case CRITICIZING_AUTHORITIES:
-						if (criticizingAuthorities())
+						if (criticizingAuthorities(action))
 							success = true;
 						break;
 					case INCREASED_DELIVERY:
-						if (increasedDelivery())
+						if (increasedDelivery(action))
 							success = true;
 						break;
 					case CLOSED_FOR_STOCKTAKING:
-						if (closedForStocktaking())
+						if (closedForStocktaking(action))
 							success = true;
 						break;
 					case COMMUNITY_LIST:
-						if (communityList())
+						if (communityList(action))
 							success = true;
 						break;
 					}
 				}
-				if (success)
-					cardsOnHand.remove(card);
+				System.out.println(cardsOnHand);
+				if (action.getType() == GameActionType.CARD_PLAYED && success)
+					cardsOnHand.remove((QueuingCard) action.getInfo()[1]);
 				if (cardsOnHand.isEmpty()) {
 					finished[player] = true;
 					success = true;
+					System.out.println("plusplus");
 					nFinished++;
 					if (nFinished == nPlayers)
 						break outer;
@@ -429,12 +432,12 @@ public class Game implements Runnable {
 	
 	
 	/**
+	 * @param action 
 	 * @return
 	 * @throws InterruptedException
 	 */
-	private boolean increasedDelivery() throws InterruptedException {
-		messageForPlayer("Wybierz sklep w którym ma być zwiększona dostawa");
-		ProductType type = requestQueue();
+	private boolean increasedDelivery(GameAction action) throws InterruptedException {
+		ProductType type = (ProductType) action.getInfo()[2];
 		if (type == null) {
 			messageForPlayer("BŁĄD. Nie można zwiększyć dostawy w bazarze.");
 			return false;
@@ -457,9 +460,10 @@ public class Game implements Runnable {
 	}
 
 	/**
+	 * @param action 
 	 * @return
 	 */
-	private boolean tippingFriend() {
+	private boolean tippingFriend(GameAction action) {
 		List<DeliveryCard> deliveryCards=deckOfDeliveryCards.peekTwoCards();
 		System.out.println("Oto 2 karty dostawy:");
 		System.out.println("Pierwsza : sklep - "+deliveryCards.get(0).getProductType()+" ilość - "+deliveryCards.get(0).getAmount());
@@ -468,18 +472,22 @@ public class Game implements Runnable {
 	}
 
 	/**
+	 * @param action 
 	 * @return
 	 * @throws InterruptedException
 	 */
-	private boolean underTheCounterGoods() throws InterruptedException {
+	private boolean underTheCounterGoods(GameAction action) throws InterruptedException {
+		ProductType type = (ProductType) action.getInfo()[2];
+		ProductType store0 = (ProductType) action.getInfo()[3];
+		System.out.println(store0 + " " + type);
 		messageForPlayer("Wybierz towar, który chciałbyś dostać spod lady");
-		ProductParameters prod = requestProduct();
-		if (prod.store == null) {
+		if (store0 == null) {
+			
 			messageForPlayer("BŁĄD. Nie można wziąć towaru spod lady z bazaru.");
 			return false;
 		}
-		Store store = gameState.getStore(prod.store);
-		if (store.getNumberOf(prod.product) <= 0) {
+		Store store = gameState.getStore(store0);
+		if (store.getNumberOf(type) <= 0) {
 			messageForPlayer("BŁĄD. Tego towaru nie ma w sklepie");
 			return false;
 		}
@@ -491,7 +499,7 @@ public class Game implements Runnable {
 			messageForPlayer("BŁĄD. Ten sklep jest zamknięty.");
 			return false;
 		}
-		gameState.sell(prod.store, prod.product);
+		gameState.sell(store0, type);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.UNDER_THE_COUNTER_GOODS.ordinal());
 		return true;
@@ -499,68 +507,66 @@ public class Game implements Runnable {
 	}
 
 	/**
+	 * @param action 
 	 * @return
 	 */
-	private boolean motherWithChild() throws InterruptedException{
-		messageForPlayer("Wybierz twój pionek który ma być przesunięty");
-		PawnParameters pawn  = requestPawn();
-		int p = gameState.getStore(pawn.destination).getQueue()
-				.get(pawn.position);
+	private boolean motherWithChild(GameAction action) throws InterruptedException{
+		ProductType destination = (ProductType) action.getInfo()[2];
+		int position = (Integer) action.getInfo()[3];
+		int p = gameState.getStore(destination).getQueue()
+				.get(position);
 		if(p!=gameState.getActivePlayer()){
 			messageForPlayer("BŁAD. To nie twój pionek.");
 			return false;
 		}
-		if(pawn.position==0){
+		if(position==0){
 			messageForPlayer("BŁAD. Już jestes pierwszy w tej kolejce.");
 			return false;
 		}
-		gameState.movePawn(pawn.destination, pawn.position, pawn.destination, 0);
+		gameState.movePawn(destination, position, destination, 0);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.MOTHER_WITH_CHILD.ordinal());
 		return true;
 	}
 
 	/**
+	 * @param action 
 	 * @return
 	 */
-	private boolean luckyStrike() throws InterruptedException{
-		messageForPlayer("Wybierz twój pionek który ma byc przeniesiony");
-		PawnParameters pawn  = requestPawn();
-		int p = gameState.getStore(pawn.destination).getQueue()
-				.get(pawn.position);
+	private boolean luckyStrike(GameAction action) throws InterruptedException{
+		ProductType destination = (ProductType) action.getInfo()[2];
+		int position = (Integer) action.getInfo()[3];
+		ProductType newdest  = (ProductType) action.getInfo()[4];
+		int p = gameState.getStore(destination).getQueue()
+				.get(position);
 		if(p!=gameState.getActivePlayer()){
 			messageForPlayer("BŁAD.To nie twój pionek.");
 			return false;
 		}
-		messageForPlayer("Wybierz kolejke do której zostanie przeniesiony pionek");
-		ProductType type = requestQueue();
-		if (type == null) {
+		if (newdest == null) {
 			messageForPlayer("BŁĄD. Nie można przenieśc do kolejki w bazarze.");
 			return false;
 		}
-		gameState.movePawn(pawn.destination, pawn.position, type, 1);
+		gameState.movePawn(destination, position, newdest, 1);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.LUCKY_STRIKE.ordinal());
 		return true;
 	}
 
 	/**
+	 * @param action 
 	 * @return
 	 */
-	private boolean notYourPlace() throws InterruptedException{
-		messageForPlayer("Wybierz twój pionek który ma zostać przesunięty");
-		PawnParameters pawn = requestPawn();
-		int p = gameState.getStore(pawn.destination).getQueue()
-				.get(pawn.position);
-		if(p!=gameState.getActivePlayer()){
-			messageForPlayer("BŁAD.To nie twój pionek.");
+	private boolean notYourPlace(GameAction action) throws InterruptedException{
+		ProductType destination = (ProductType) action.getInfo()[2];
+		int position = (Integer) action.getInfo()[3];
+		int p = gameState.getStore(destination).getQueue()
+				.get(position);
+		if(p!=gameState.getActivePlayer())
 			return false;
-		}
-		if(pawn.position==0){
-			messageForPlayer("BŁAD.Już jestes pierwszy w tej kolejce.");
+		if(position==0)
 			return false;
-		}
-		gameState.movePawn(pawn.destination, pawn.position, pawn.destination, pawn.position-1);
+		gameState.movePawn(destination, position, destination, position-1);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.NOT_YOUR_PLACE.ordinal());
 		return true;
@@ -571,29 +577,20 @@ public class Game implements Runnable {
 	 * @throws InterruptedException
 	 * 
 	 */
-	private boolean deliveryError() throws InterruptedException {
-		messageForPlayer("Wybierz towar, który ma być przeniesiony");
-		ProductParameters prod = requestProduct();
-		if (prod.store == null) {
-			messageForPlayer("BŁĄD. Nie można przenieść towaru z bazaru.");
+	private boolean deliveryError(GameAction action) throws InterruptedException {
+		ProductType type = (ProductType) action.getInfo()[2];
+		ProductType store1 = (ProductType) action.getInfo()[3];
+		ProductType store2 = (ProductType) action.getInfo()[4];
+		if (store1 == null)
 			return false;
-		}
-		Store store = gameState.getStore(prod.store);
-		if (store.getNumberOf(prod.product) <= 0) {
-			messageForPlayer("BŁĄD. Tego towaru nie ma w sklepie");
+		Store store = gameState.getStore(store1);
+		if (store.getNumberOf(type) <= 0)
 			return false;
-		}
-		if (store.isClosed()) {
-			messageForPlayer("BŁĄD. Ten sklep jest zamknięty.");
+		if (store.isClosed())
 			return false;
-		}
-		messageForPlayer("Wybierz sklep w którym ma być dodany towar");
-		ProductType p=requestQueue();
-		if (p == null) {
-			messageForPlayer("BŁĄD. Nie można przenieść produktu do bazaru.");
+		if (store2 == null)
 			return false;
-		}
-		gameState.transferToAnotherStore(store.productType, p, prod.product);
+		gameState.transferToAnotherStore(store1, store2, type);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.DELIVERY_ERROR.ordinal(),
 				store.productType.ordinal());
@@ -601,30 +598,32 @@ public class Game implements Runnable {
 	}
 
 	/**
+	 * @param action 
 	 * @return
 	 * 
 	 */
-	private boolean criticizingAuthorities() throws InterruptedException {
-		messageForPlayer("Wybierz pionek innego gracza, który ma być przesunięty");
-		PawnParameters pawn = requestPawn();
-		if(pawn.position==gameState.getStore(pawn.destination).getQueue().size()-1 || pawn.position==gameState.getStore(pawn.destination).getQueue().size()-2){
+	private boolean criticizingAuthorities(GameAction action) throws InterruptedException {
+		ProductType destination = (ProductType) action.getInfo()[2];
+		Integer position = (Integer) action.getInfo()[3];
+		if(position==gameState.getStore(destination).getQueue().size()-1 || position==gameState.getStore(destination).getQueue().size()-2){
 			messageForPlayer("BŁAD. On już jest na końcu kolejki.");
 			return false;
 		}
-		gameState.movePawn(pawn.destination, pawn.position, pawn.destination, pawn.position+2);
+		gameState.movePawn(destination, position, destination, position+2);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.CRITICIZING_AUTHORITIES.ordinal());
 		return true;
 	}
 
 	/**
+	 * @param action 
 	 * @return
 	 * @throws InterruptedException
 	 * 
 	 */
-	private boolean communityList() throws InterruptedException {
+	private boolean communityList(GameAction action) throws InterruptedException {
 		messageForPlayer("Wybierz kolejke która ma zostać odwrócona");
-		ProductType queue = requestQueue();
+		ProductType queue = (ProductType) action.getInfo()[2];
 		if (queue == null){
 			messageForPlayer("BŁAD. Nie możesz odwrócić kolejki na bazarze.");
 			return false;
@@ -640,12 +639,12 @@ public class Game implements Runnable {
 	}
 
 	/**
+	 * @param action 
 	 * @return
 	 * 
 	 */
-	private boolean closedForStocktaking() throws InterruptedException {
-		messageForPlayer("Wybierz sklep do zamkniecia");
-		ProductType queue = requestQueue();
+	private boolean closedForStocktaking(GameAction action) throws InterruptedException {
+		ProductType queue = (ProductType) action.getInfo()[2];
 		if(gameState.getStore(queue).isClosed()){
 			messageForPlayer("BŁAD.Ten sklep jest już zamnknięty.");
 			return false;
@@ -882,6 +881,7 @@ public class Game implements Runnable {
 	}
 
 	private void messageForPlayer(String s) {
+		System.out.println(s);
 		gameState.setMessage(s);
 	}
 	

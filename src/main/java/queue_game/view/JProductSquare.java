@@ -15,6 +15,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JComponent;
 
 import queue_game.controller.Game;
+import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.GameState;
 import queue_game.model.ProductType;
 
@@ -28,12 +29,14 @@ public class JProductSquare extends JComponent implements MouseListener{
 	private ProductType product;
 	private ProductType store;
 	private int amount;
+	private LocalGameActionCreator creator;
 	private static final double STROKE = 0.1;
-	public JProductSquare(Game game, ProductType product, int amount, ProductType store){
+	public JProductSquare(Game game, ProductType product, int amount, ProductType store, LocalGameActionCreator creator){
 		this.game = game;
 		this.product = product;
 		this.amount = amount;
 		this.store = store;
+		this.creator = creator;
 		addMouseListener(this);
 	}
 	public boolean setAmount(int a){
@@ -69,6 +72,7 @@ public class JProductSquare extends JComponent implements MouseListener{
 	}
 	public void mouseClicked(MouseEvent arg0) {
 		game.productSelected(game.getGameState().getActivePlayer(), product, store);
+		creator.productSelected(game.getGameState().getActivePlayer(), product, store);
 		
 	}
 	

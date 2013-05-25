@@ -56,18 +56,19 @@ public class JCardsArea extends JPanel {
 			button.addActionListener(new ActionListener(){
 
 				public void actionPerformed(ActionEvent e) {
-						game.queuingCardSelected(gameState.getActivePlayer(), null);
+					game.queuingCardSelected(gameState.getActivePlayer(), null);
+					creator.queuingCardSelected(gameState.getActivePlayer(), null);
 				}
 			});
 			contentPanel.add(button);
 		}
-		
 		if(gameState.getCurrentGamePhase() == GamePhase.PCT){
 			JButton button = new JButton("PASS");
 			button.addActionListener(new ActionListener(){
 
 				public void actionPerformed(ActionEvent e) {
-						game.pawnSelected(game.getGameState().getActivePlayer(), null, -1);
+					game.pawnSelected(game.getGameState().getActivePlayer(), null, -1);
+					creator.pawnSelected(game.getGameState().getActivePlayer(), null, -1);
 				}
 			});
 			contentPanel.add(button);
@@ -82,7 +83,7 @@ public class JCardsArea extends JPanel {
 			for(ProductType type : ProductType.values()){
 				int bought = gameState.getPlayer(id).getBoughtProducts()[type.ordinal()];
 				if(bought > 0){
-					JProductSquare square = new JProductSquare(game, type, bought, null);
+					JProductSquare square = new JProductSquare(game, type, bought, null, creator);
 					square.setMinimumSize(new Dimension(30, 30));
 					square.setPreferredSize(new Dimension(30, 30));
 					contentPanel.add(square);
@@ -92,7 +93,8 @@ public class JCardsArea extends JPanel {
 			button.addActionListener(new ActionListener(){
 
 				public void actionPerformed(ActionEvent e) {
-						game.productSelected(game.getGameState().getActivePlayer(), null, null);
+					game.productSelected(game.getGameState().getActivePlayer(), null, null);
+					creator.productSelected(game.getGameState().getActivePlayer(), null, null);
 				}
 			});
 			contentPanel.add(button);

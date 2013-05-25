@@ -32,7 +32,7 @@ public class JPawn extends JComponent implements MouseListener {
 	private ProductType destination;
 	private double pawnHeight;
 	private boolean mouseOver;
-	private LocalGameActionCreator localGameActionCreator;
+	private LocalGameActionCreator creator;
 	private static double STROKE = 0.04;
 	private static double LEG_HEIGHT = 1. / 3;
 	private static double LEG_WIDTH = 1. / 6;
@@ -90,7 +90,7 @@ public class JPawn extends JComponent implements MouseListener {
 		this.playerId = playerId;
 		this.position = place;
 		this.pawnHeight = pawnHeight;
-		this.localGameActionCreator = localGameActionCreator;
+		this.creator = localGameActionCreator;
 		generateShape();
 		mouseOver = false;
 		enableInputMethods(true);
@@ -150,6 +150,7 @@ public class JPawn extends JComponent implements MouseListener {
 
 	public void mouseClicked(MouseEvent e) {
 		game.pawnSelected(game.getGameState().getActivePlayer(), destination, position);
+		creator.pawnSelected(game.getGameState().getActivePlayer(), destination, position);
 	}
 
 	public void mouseEntered(MouseEvent e) {

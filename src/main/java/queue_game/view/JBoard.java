@@ -136,7 +136,7 @@ public class JBoard extends JPanel implements ComponentListener{
 	
 	private double tileWidth;
 	private double tileHeight;
-	private LocalGameActionCreator localGameInputAdapter;
+	private LocalGameActionCreator creator;
 	
 	@Override
 	public Dimension getPreferredSize(){
@@ -159,7 +159,7 @@ public class JBoard extends JPanel implements ComponentListener{
 		super();
 		setOpaque(true);
 		this.gameState = gameState;
-		this.localGameInputAdapter = adapter;
+		this.creator = adapter;
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		layeredPane = new JLayeredPane();
         //layeredPane.setPreferredSize(new Dimension(300, 310));
@@ -239,7 +239,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			boolean newOne = false;
 			if(queue == null){
 				newOne = true;
-				queue = new JQueue(product, localGameInputAdapter);
+				queue = new JQueue(product, creator);
 				queue.setGame(game);
 			}
 
@@ -256,7 +256,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			boolean newOne = false;
 			if(store == null){
 				newOne = true;
-				store = new JStore(game, gameState, product, localGameInputAdapter);
+				store = new JStore(game, gameState, product, creator);
 			}
 			store.setBounds((int)(3 * tileWidth * ind), (int)(0), (int) (2.75 * tileWidth), (int)(4 * tileHeight));
 			if(newOne){
@@ -271,7 +271,7 @@ public class JBoard extends JPanel implements ComponentListener{
 		JQueue queue = queues.get(5);
 		boolean newOne = false;
 		if(queue == null){
-			queue= new JQueue(null, localGameInputAdapter);
+			queue= new JQueue(null, creator);
 			newOne = true;
 			queue.setGame(game);
 		}
@@ -296,7 +296,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			if (skip > tileHeight * 0.75)
 				skip = tileHeight * 0.75;
 			while(isize > psize){
-				JPawn pawn = new JPawn(game, ProductType.values()[i], ints.get(psize), 0, tileHeight * 2, localGameInputAdapter);
+				JPawn pawn = new JPawn(game, ProductType.values()[i], ints.get(psize), 0, tileHeight * 2, creator);
 				pawn.setBounds((int)(x),(int)(y + psize * skip),(int)(tileHeight),(int)(2 * tileHeight));
 				pawnList.add(pawn);
 				layeredPane.add(pawn, new Integer(PAWN_LAYER0 + psize++));
@@ -333,7 +333,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			if (skip > tileWidth * 0.55)
 				skip = tileWidth * 0.55;
 			while(isize > psize){
-				JPawn pawn = new JPawn(game, null, ints.get(psize), 0, tileHeight * 2, localGameInputAdapter);
+				JPawn pawn = new JPawn(game, null, ints.get(psize), 0, tileHeight * 2, creator);
 				pawn.setBounds((int)(x + psize * skip),(int)(y),(int)(tileHeight),(int)(2 * tileHeight));
 				pawnList.add(pawn);
 				layeredPane.add(pawn, new Integer(PAWN_LAYER0 + psize++));
@@ -373,7 +373,7 @@ public class JBoard extends JPanel implements ComponentListener{
 				list.remove(lsize);
 			}
 			while(count > lsize){
-				JProductSquare square = new JProductSquare(game, ProductType.values()[0], 0, ProductType.values()[i]);
+				JProductSquare square = new JProductSquare(game, ProductType.values()[0], 0, ProductType.values()[i], creator);
 				square.setBounds((int)(tileWidth * (3 * ind + 0.5) + (2 - lsize % 3) * side), (int)(tileHeight + side * (lsize / 3)), (int)side, (int)side);
 				lsize++;
 				list.add(square);
@@ -412,7 +412,7 @@ public class JBoard extends JPanel implements ComponentListener{
 			list.remove(lsize);
 		}
 		while(count > lsize){
-			JProductSquare square = new JProductSquare(game, null, 0, null);
+			JProductSquare square = new JProductSquare(game, null, 0, null, creator);
 			square.setBounds((int)(3 * tileWidth * ind + lsize++ * side), (int)(tileHeight), (int)side, (int)side);
 			list.add(square);
 			layeredPane.add(square, PRODUCT_LAYER);
