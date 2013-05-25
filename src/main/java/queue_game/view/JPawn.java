@@ -33,6 +33,7 @@ public class JPawn extends JComponent implements MouseListener {
 	private double pawnHeight;
 	private boolean mouseOver;
 	private LocalGameActionCreator creator;
+	private boolean isTrader;
 	private static double STROKE = 0.04;
 	private static double LEG_HEIGHT = 1. / 3;
 	private static double LEG_WIDTH = 1. / 6;
@@ -84,17 +85,19 @@ public class JPawn extends JComponent implements MouseListener {
 	}
 
 	public JPawn(Game game, ProductType product, int playerId, int place,
-			double pawnHeight, LocalGameActionCreator localGameActionCreator) {
+			double pawnHeight, LocalGameActionCreator localGameActionCreator, boolean isTrader) {
 		this.destination = product;
 		this.game = game;
 		this.playerId = playerId;
 		this.position = place;
 		this.pawnHeight = pawnHeight;
 		this.creator = localGameActionCreator;
+		this.isTrader = isTrader;
 		generateShape();
 		mouseOver = false;
 		enableInputMethods(true);
-		addMouseListener(this);
+		if(!isTrader)
+			addMouseListener(this);
 	}
 /*
 	@Override
@@ -136,8 +139,11 @@ public class JPawn extends JComponent implements MouseListener {
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		Color c = Color.black;
-		if(playerId >= 0)
+		if(isTrader)
+			c = new Color(0xFFFF80);
+		else if(playerId >= 0)
 			c = GameState.playerColors[playerId];
+		
 		if(mouseOver)
 			c = lighter(c);
 		g2d.setColor(c);

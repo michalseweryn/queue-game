@@ -404,7 +404,7 @@ public class GameState {
 			throws IllegalArgumentException {
 
 		int player = getActivePlayer();
-		if(getOutDoorMarket().getNumberOf(soldProduct) == 0)			
+		if(getOutDoorMarket().getNumberOf(soldProduct) == 0)
 			return false;
 		//throw new IllegalArgumentException("Not enough products in market");
 		try{

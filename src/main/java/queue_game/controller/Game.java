@@ -316,7 +316,6 @@ public class Game implements Runnable {
 				if (cardsOnHand.isEmpty()) {
 					finished[player] = true;
 					success = true;
-					System.out.println("plusplus");
 					nFinished++;
 					if (nFinished == nPlayers)
 						break outer;
@@ -399,6 +398,7 @@ public class Game implements Runnable {
 				}
 				offeredProducts.add(product);
 				if(soldProduct.ordinal() != gameState.getDayNumber() % 5){//NIE PEWNE!!
+					System.out.println("DROGO\n");
 					messageForPlayer("Wybierz produkt który chcesz wymienić lub spasuj");
 					product = requestProduct().product;
 					if(product == null){
