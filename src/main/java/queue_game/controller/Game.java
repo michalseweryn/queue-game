@@ -724,19 +724,11 @@ public class Game implements Runnable {
 
 	/**
 	 * @return true if game is over and false otherwise.
+	 * returns true if and only if some player has all of required products
+	 * or there is no product that can be delivered
 	 */
 	private boolean gameOver() {
 		boolean finished;
-		finished=true;
-		for (int productsLeft: gameState.getNumberOfProductsLeft()){
-			if(productsLeft!=0){
-				finished=false;
-				break;
-			}
-		}
-		if(finished){
-			return true;
-		}
 		for(Player pl: gameState.getPlayersList()){
 			int nProductTypes=ProductType.values().length;
 			finished=true;
@@ -751,6 +743,16 @@ public class Game implements Runnable {
 			if(finished){
 				return true;
 			}
+		}
+		finished=true;
+		for (int productsLeft: gameState.getNumberOfProductsLeft()){
+			if(productsLeft!=0){
+				finished=false;
+				break;
+			}
+		}
+		if(finished){
+			return true;
 		}
 		return false;
 	}
