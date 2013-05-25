@@ -21,7 +21,6 @@ public class StandardDeckOfQueuingCards{
 	 */
 	
 	public StandardDeckOfQueuingCards() {
-		System.out.println("a");
 		reset();
 	}
 	
@@ -68,7 +67,6 @@ public class StandardDeckOfQueuingCards{
 	}
 	public void reset(){
 		deck = new LinkedList<QueuingCard>();
-		System.out.println(deck);
 		fill();
 		shuffle();
 	}
