@@ -7,13 +7,11 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
 import queue_game.controller.Game;
 import queue_game.creator.LocalGameActionCreator;
-import queue_game.model.StandardDeckOfQueuingCards;
 import queue_game.model.GameState;
 import queue_game.model.Player;
 import queue_game.model.QueuingCard;
