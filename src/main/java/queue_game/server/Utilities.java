@@ -1,26 +1,46 @@
 package queue_game.server;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
 public class Utilities {
 	public static <T extends Enum<T>> T readEnum(Reader in, Class<T> enumType) throws IOException {
-		return T.valueOf(enumType, readRawString(in));
+		while(true) {
+			try {
+				return T.valueOf(enumType, readRawString(in));
+			} catch(IllegalArgumentException e) {
+			}
+		}
 	}
 
-	public static int readInt(Reader in) throws NumberFormatException, IOException {
-		return Integer.valueOf(readRawString(in));
+	public static int readInt(Reader in) throws IOException {
+		while(true) {
+			try {
+				return Integer.valueOf(readRawString(in));
+			} catch(NumberFormatException e) {
+			}
+		}
 	}
 
 	public static String readRawString(Reader in) throws IOException {
+		int i;
 		char c;
 		do {
-			c = (char) in.read();
+			i = in.read();
+			if(i == -1) {
+				throw new EOFException("Unexpected end of stream");
+			}
+			c = (char) i;
 		} while(Character.isWhitespace(c));
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder().append(c);
 		while(true) {
-			c = (char) in.read();
+			i = in.read();
+			c = (char) i;
+			if(i == -1) {
+				throw new EOFException("Unexpected end of stream");
+			}
 			if(Character.isWhitespace(c)) {
 				break;
 			}
@@ -40,7 +60,11 @@ public class Utilities {
 		int length = readInt(in);
 		StringBuilder sb = new StringBuilder(length);
 		while(length-- > 0) {
-			sb.append((char) in.read());
+			int i = in.read();
+			if(i == -1) {
+				throw new EOFException("Unexpected end of stream");
+			}
+			sb.append((char) i);
 		}
 		return sb.toString();
 	}

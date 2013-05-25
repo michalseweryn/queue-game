@@ -21,8 +21,22 @@ public class PlayerConnection implements Runnable {
 
 	public void run() {
 		try {
-			Utilities.expectString(in, "name");
+			Utilities.expectString(in, "NAME");
 			name = Utilities.readRawString(in);
+			while(true) {
+				Table.writeList(out);
+				Utilities.expectString(in, "JOIN");
+				int tableId = Utilities.readInt(in);
+				if(tableId < 0 || tableId >= Table.getTables().size()
+						|| !Table.getTables().get(tableId).join(this)) {
+					Utilities.writeRawString(out, "NOPE");
+					Utilities.finishWriting(out);
+					continue;
+				}
+				Utilities.writeRawString(out, "JOINED");
+				Utilities.finishWriting(out);
+				break;
+			}
 		} catch (IOException e) {
 			System.out.println("Nieudane połączenie");
 			e.printStackTrace();
