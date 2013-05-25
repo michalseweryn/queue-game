@@ -859,7 +859,7 @@ public class Game implements Runnable {
 	private void prepareToQueueJumping() {
 		int nPlayers=gameState.getNumberOfPlayers();
 		for (int i=0; i<nPlayers; i++) {
-			gameState.getPlayersList().get(i).setCardsOnHand(
+			gameState.getPlayersList().get(i).addCardsToHand(
 					decks.getCardsToFillTheHandOfPlayer(i));
 		}
 	}
@@ -922,7 +922,7 @@ public class Game implements Runnable {
 		int nPlayers=gameState.getNumberOfPlayers();
 		decks.resetAllDecks();
 		for (int i=0; i<nPlayers; i++) {
-			gameState.getPlayersList().get(i).setCardsOnHand(
+			gameState.getPlayersList().get(i).addCardsToHand(
 					decks.getCardsToFillTheHandOfPlayer(i));
 		}
 	}
@@ -934,7 +934,7 @@ public class Game implements Runnable {
 		decks.resetAllDecks();
 		for (int i=0; i<nPlayers; i++) {
 			gameState.getPlayer(i).setCardsOnHand(new ArrayList<QueuingCard>());
-			gameState.getPlayersList().get(i).setCardsOnHand(
+			gameState.getPlayersList().get(i).addCardsToHand(
 					decks.getCardsToFillTheHandOfPlayer(i));
 		}
 	}

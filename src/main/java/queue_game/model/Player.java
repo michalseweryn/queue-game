@@ -62,7 +62,9 @@ public class Player {
 	public List<QueuingCard> getCardsOnHand(){
 		return cardsOnHand;
 	}
-	
+	public void addCardsToHand(List<QueuingCard> newCards){
+		cardsOnHand.addAll(newCards);
+	}	
 	public void addPawn(){
 		numberOfPawns++;
 	}

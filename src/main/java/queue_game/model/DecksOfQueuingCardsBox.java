@@ -20,8 +20,10 @@ public class DecksOfQueuingCardsBox implements DecksOfQueuingCardsBoxInterface {
 		int amount = 3 - gameState.getPlayer(playerNr).getCardsOnHand().size();
 		List<QueuingCard> res = new LinkedList<QueuingCard>();
 		try {
-			while(amount-- > 0)
+			while(amount > 0){
 				res.add(decks[playerNr].remove());
+				amount--;
+			}
 		}
 		catch (NoSuchElementException e){
 			//nothing
