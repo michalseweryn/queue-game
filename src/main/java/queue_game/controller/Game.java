@@ -726,7 +726,33 @@ public class Game implements Runnable {
 	 * @return true if game is over and false otherwise.
 	 */
 	private boolean gameOver() {
-		return gameState.getDayNumber() > 5;
+		boolean finished;
+		finished=true;
+		for (int productsLeft: gameState.getNumberOfProductsLeft()){
+			if(productsLeft!=0){
+				finished=false;
+				break;
+			}
+		}
+		if(finished){
+			return true;
+		}
+		for(Player pl: gameState.getPlayersList()){
+			int nProductTypes=ProductType.values().length;
+			finished=true;
+			int boughtProducts[]=pl.getBoughtProducts();
+			List<Integer> shoppingList=pl.getShoppingList();
+			for (int i=0; i<nProductTypes; i++){
+				if(boughtProducts[i]<shoppingList.get(i)){
+					finished=false;
+					break;
+				}
+			}
+			if(finished){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

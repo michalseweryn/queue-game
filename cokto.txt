@@ -48,6 +48,10 @@ Szymon
 Karty dostawy + testy:
 Krzysztof
 
+Usuwanie Pionków w PCT,
+tooltipy do kart
+Piotr
+
 Testy do GameState (II iteracja):
 Krzysztof , Szymon
 
