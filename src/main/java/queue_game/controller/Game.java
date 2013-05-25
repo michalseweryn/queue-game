@@ -731,9 +731,9 @@ public class Game implements Runnable {
 		boolean finished;
 		for(Player pl: gameState.getPlayersList()){
 			int nProductTypes=ProductType.values().length;
-			finished=true;
 			int boughtProducts[]=pl.getBoughtProducts();
 			List<Integer> shoppingList=pl.getShoppingList();
+			finished=true;
 			for (int i=0; i<nProductTypes; i++){
 				if(boughtProducts[i]<shoppingList.get(i)){
 					finished=false;
