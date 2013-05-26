@@ -52,8 +52,111 @@ public class GameAction {
 	 * @throws EOFException when the stream ends unexpectedly
 	 */
 	public static GameAction read(Reader in) throws IOException {
-		//temporarily disabled
-		return new GameAction();
+		GameAction action = new GameAction();
+		action.type = Utilities.readEnum(in, GameActionType.class);
+		switch(action.type) {
+		case START_GAME:
+		case ERROR:
+			action.info = new Object[0];
+			break;
+		case DRAW_CARD:
+			action.info = new Object[2];
+			action.info[0] = Utilities.readInt(in); //ktory gracz
+			action.info[1] = Utilities.readEnum(in, QueuingCard.class); //ktora karta
+			break;
+		case PAWN_PLACED:
+			action.info = new Object[2];
+			action.info[0] = Utilities.readInt(in); //ktory gracz
+			action.info[1] = Utilities.readInt(in); //ktora kolejka
+			break;
+		case PRODUCT_DELIVERED:
+		case PRODUCT_BOUGHT:
+			action.info = new Object[2];
+			action.info[0] = Utilities.readInt(in); //ktory sklep
+			action.info[1] = Utilities.readEnum(in, ProductType.class); //ktory produkt
+			break;
+		case CARD_PLAYED:
+			int player = Utilities.readInt(in); //ktory gracz
+			QueuingCard card = Utilities.readEnum(in, QueuingCard.class); //ktora karta
+			switch(card) {
+			case DELIVERY_ERROR:
+				action.info = new Object[5];
+				action.info[2] = Utilities.readEnum(in, ProductType.class); //ktory sklep
+				action.info[3] = Utilities.readEnum(in, ProductType.class); //sklep docelowy
+				action.info[4] = Utilities.readEnum(in, ProductType.class); //typ produktu
+				break;
+			case NOT_YOUR_PLACE:
+			case CRITICIZING_AUTHORITIES:
+				action.info = new Object[4];
+				action.info[2] = Utilities.readEnum(in, ProductType.class); //ktory sklep
+				action.info[3] = Utilities.readInt(in); //ktory pionek
+				break;
+			case LUCKY_STRIKE:
+				action.info = new Object[5];
+				action.info[2] = Utilities.readEnum(in, ProductType.class); //ktory sklep
+				action.info[3] = Utilities.readInt(in); //ktory pionek
+				action.info[4] = Utilities.readEnum(in, ProductType.class); //sklep docelowy
+				break;
+			case TIPPING_FRIEND:
+				action.info = new Object[2];
+				break;
+			case CLOSED_FOR_STOCKTAKING:
+			case MOTHER_WITH_CHILD:
+			case UNDER_THE_COUNTER_GOODS:
+			case INCREASED_DELIVERY:
+			case COMMUNITY_LIST:
+				action.info = new Object[3];
+				action.info[2] = Utilities.readEnum(in, ProductType.class); //ktory sklep
+				break;
+			default:
+				throw new RuntimeException("Unimplemented card");
+			}
+			action.info[0] = player;
+			action.info[1] = card;
+			break;
+		case CARDS_PEEKED:
+			action.info = new Object[2];
+			ProductType product = Utilities.readEnum(in, ProductType.class);
+			int amount = Utilities.readInt(in);
+			action.info[0] = new DeliveryCard(product, amount);
+			product = Utilities.readEnum(in, ProductType.class);
+			amount = Utilities.readInt(in);
+			action.info[1] = new DeliveryCard(product, amount); //2 karty dostawy
+			//nie ma numeru gracza bo ta akcja zawsze trafia tylko do gracza ktory podejrzal karty
+			break;
+		case PAWN_REMOVED:
+			action.info = new Object[3];
+			action.info[0] = Utilities.readInt(in); //ktory gracz
+			action.info[0] = Utilities.readInt(in); //ktora kolejka
+			action.info[0] = Utilities.readInt(in); //ktory pionek
+			break;
+		case PRODUCT_EXCHANGED_ONE:
+			action.info = new Object[3];
+			action.info[0] = Utilities.readInt(in); //ktory gracz
+			action.info[1] = Utilities.readEnum(in, ProductType.class); //ktory produkt dostal
+			action.info[2] = Utilities.readEnum(in, ProductType.class); //ktory produkt oddal
+			break;
+		case PRODUCT_EXCHANGED_TWO:
+			action.info = new Object[4];
+			action.info[0] = Utilities.readInt(in); //ktory gracz
+			action.info[1] = Utilities.readEnum(in, ProductType.class); //ktory produkt dostal
+			action.info[2] = Utilities.readEnum(in, ProductType.class);
+			action.info[3] = Utilities.readEnum(in, ProductType.class); //ktore 2 produkty oddal
+			break;
+		case CHAT:
+			action.info = new Object[1];
+			action.info[0] = Utilities.readInt(in); //ktory gracz
+			action.info[1] = Utilities.readString(in); //wiadomosc
+			break;
+		case CARD_PLAYED_PASSED:
+		case PAWN_REMOVED_PASSED:
+		case PRODUCT_EXCHANGED_PASSED:
+			action.info = new Object[1];
+			action.info[0] = Utilities.readInt(in); //ktory gracz
+		default:
+			throw new RuntimeException("Action unimplemented");
+		}
+		return action;
 	}
 
 	@Override

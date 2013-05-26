@@ -16,4 +16,9 @@ public class DeliveryCard {
 	public int getAmount() {
 		return amount;
 	}
+
+	@Override
+	public String toString() {
+		return productType.toString() + ' ' + Integer.toString(amount);
+	}
 }
