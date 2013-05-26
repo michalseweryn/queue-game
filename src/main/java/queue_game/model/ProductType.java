@@ -8,5 +8,9 @@ package queue_game.model;
  */
 
 public enum ProductType {
-	RTV_AGD, FOOD, CLOTHES, KIOSK, FURNITURE
+	RTV_AGD("RTV-AGD"), FOOD("SPOŻYWCZY"), CLOTHES("ODZIEŻ"), KIOSK("KIOSK"), FURNITURE("MEBLE");
+	public final String namePL; 
+	ProductType(String namePL){
+		this.namePL = namePL;
+	}
 }

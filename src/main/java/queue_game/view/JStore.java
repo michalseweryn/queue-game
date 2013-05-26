@@ -2,6 +2,7 @@ package queue_game.view;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -48,9 +49,13 @@ public class JStore extends JComponent implements MouseListener{
 		Rectangle2D.Double wall = new Rectangle2D.Double(d, d + height / 4, width, 3 * height / 4);
 		Rectangle2D.Double roof = new Rectangle2D.Double(d, d, width, height / 4);
 		g2d.setColor(GameState.productColors[product.ordinal()]);
+		g2d.setFont(new Font("Arial Black", Font.BOLD, (int) (height/5)));
+		g2d.drawString(product.namePL, (float)d, (float)(d + height / 4));
 		fillAndDraw(g2d, wall);
-		g2d.setColor(Color.gray);
+		g2d.setColor(Color.darkGray);
 		fillAndDraw(g2d, roof);
+		g2d.setColor(GameState.productColors[product.ordinal()]);
+		g2d.drawString(product.namePL, (float)d, (float)(d + height / 4));
 		if(gameState.getStore(product).isClosed()){
 			g2d.setColor(Color.red);
 			g2d.setStroke(new BasicStroke((float)(height * 0.1)));
@@ -84,9 +89,6 @@ public class JStore extends JComponent implements MouseListener{
 	
 	public void mouseReleased(MouseEvent arg0) {
 		
-		if(game != null && mouseFlag){
-			game.queueSelected(gameState.getActivePlayer(), product);
-		}
 		if(mouseFlag)
 			localGameActionCreator.queueSelected(game.getGameState().getActivePlayer(), product);
 		mouseFlag = false;

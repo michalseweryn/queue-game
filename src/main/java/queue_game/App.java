@@ -12,7 +12,6 @@ import queue_game.controller.Game;
 import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.DecksOfQueuingCardsBox;
 import queue_game.model.GameState;
-import queue_game.model.StandardDeckOfQueuingCards;
 import queue_game.view.JGameArea;
 import queue_game.view.JPlayerList;
 

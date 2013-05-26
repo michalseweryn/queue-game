@@ -120,7 +120,6 @@ public class JQueuingCard extends JPanel implements MouseListener {
 	
 
 	public void mouseClicked(MouseEvent e) {
-		game.queuingCardSelected(player.getID(), card);
 		creator.queuingCardSelected(player.getID(), card);
 		
 	}

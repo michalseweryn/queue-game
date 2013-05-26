@@ -71,7 +71,6 @@ public class JProductSquare extends JComponent implements MouseListener{
 		
 	}
 	public void mouseClicked(MouseEvent arg0) {
-		game.productSelected(game.getGameState().getActivePlayer(), product, store);
 		creator.productSelected(game.getGameState().getActivePlayer(), product, store);
 		
 	}

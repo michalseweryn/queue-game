@@ -155,7 +155,6 @@ public class JPawn extends JComponent implements MouseListener {
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		game.pawnSelected(game.getGameState().getActivePlayer(), destination, position);
 		creator.pawnSelected(game.getGameState().getActivePlayer(), destination, position);
 	}
 

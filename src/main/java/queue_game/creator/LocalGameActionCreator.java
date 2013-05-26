@@ -28,12 +28,12 @@ public class LocalGameActionCreator implements ActionCreator {
 	private QueuingCard selectedQueuingCard = null;
 	private List<View> views = new ArrayList<View>();
 	private static final String SELECT_QUEUE = "Wybierz kolejkę do której chcesz dostawić pionek";
-	private static final String SELECT_CARD = "Wybierz kartę przepychanek, lub spasuj";
+	private static final String SELECT_CARD = "Wybierz kartę przepychanek lub spasuj";
 	private static final String SELECT_PAWN_TO_REMOVE = "Wybierz pionek do usuniecia";
 	private static final String OFFER_1_OF_1 = "Wybierz jeden ze swoich produktów";
 	private static final String OFFER_1_OF_2 = "Wybierz pierwszy ze swoich produktów";
 	private static final String OFFER_2_OF_2 = "Wybierz drugi ze swoich produktów";
-	private static final String SELECT_FROM_MARKET = "Wybierz produkt z bazaru";
+	private static final String SELECT_FROM_MARKET = "Wybierz produkt z bazaru lub spasuj";
 	private static final String SELECT_STORE_INCREASED = "Wybierz sklep w którym ma być zwiększona dostawa";
 	private static final String SELECT_PRODUCT_UNDER = "Wybierz towar, który chciałbyś dostać spod lady";
 	private static final String SELECT_PAWN_TO_MOVE="Wybierz pionek który ma być przesunięty";
@@ -182,14 +182,13 @@ public class LocalGameActionCreator implements ActionCreator {
 	private GameAction getExchangingAction() throws InterruptedException {
 		ProductParameters productToBuy = requestProduct(SELECT_FROM_MARKET);
 		if (productToBuy.product == null)
-			return new GameAction(GameActionType.PRODUCT_EXCHANGED_PASSED);
+			return new GameAction(GameActionType.PRODUCT_EXCHANGED_PASSED, gameState.getActivePlayer());
 		if (gameState.getCheapProduct() == productToBuy.product) {
 			ProductParameters offeredProduct1 = requestProduct(OFFER_1_OF_1);
 			if (offeredProduct1.product == null)
 				return new GameAction(GameActionType.PRODUCT_EXCHANGED_PASSED);
 			return new GameAction(GameActionType.PRODUCT_EXCHANGED_ONE,
-					productToBuy.product, offeredProduct1.product);
-
+					gameState.getActivePlayer(), productToBuy.product, offeredProduct1.product);
 		}
 		ProductParameters offeredProduct1 = requestProduct(OFFER_1_OF_2);
 		if (offeredProduct1.product == null)
@@ -198,7 +197,7 @@ public class LocalGameActionCreator implements ActionCreator {
 		if (offeredProduct2.product == null)
 			return new GameAction(GameActionType.PRODUCT_EXCHANGED_PASSED);
 		return new GameAction(GameActionType.PRODUCT_EXCHANGED_TWO,
-				productToBuy.product, offeredProduct1.product,
+				gameState.getActivePlayer(), productToBuy.product, offeredProduct1.product,
 				offeredProduct2.product);
 	}
 

@@ -47,8 +47,6 @@ public class JQueue extends JComponent implements MouseListener{
 	public void mousePressed(MouseEvent arg0) {mouseFlag = true;}
 	
 	public void mouseReleased(MouseEvent arg0) {
-		if(mouseFlag  && game != null)
-			game.queueSelected(game.getGameState().getActivePlayer(), product);//KLIK
 		if(mouseFlag)
 			localGameInputAdapter.queueSelected(game.getGameState().getActivePlayer(), product);
 	}

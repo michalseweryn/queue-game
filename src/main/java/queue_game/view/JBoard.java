@@ -68,7 +68,7 @@ public class JBoard extends JPanel implements ComponentListener {
 			"               ", "K  K  K  K  K  ", "O  O  O  O  O  ",
 			"L  L  L  L  L  ", "E  E  E  E  E  ", "J  J  J  J  J  ",
 			"K  K  K  K  K  ", "A  A  A  A  A  ", "               ",
-			"     WYMIANA   ", "               ", };
+			"     WYMIANA   ", "BAZAR          ", };
 	private BoardDrawer boardDrawer = null;
 
 	private class BoardDrawer extends JComponent {
@@ -276,7 +276,6 @@ public class JBoard extends JPanel implements ComponentListener {
 			if (newOne) {
 				stores.set(ind, store);
 				layeredPane.add(store, STORE_LAYER);
-				store.repaint();
 			}
 			ind++;
 		}
@@ -326,15 +325,11 @@ public class JBoard extends JPanel implements ComponentListener {
 				if (resetBounds)
 					pawn.setBounds((int) (x), (int) (y + psize * skip),
 							(int) (tileHeight), (int) (2 * tileHeight));
-				boolean changed = false;
 				if (pawn.getPlayerId() != ints.get(j)) {
 					pawn.setPlayerId(ints.get(j));
-					changed = true;
 				}
 				pawn.setPosition(j);
 				pawn.setPlayerId(ints.get(j));
-				if (changed)
-					pawn.repaint();
 				pawn.setLocation((int) x, (int) (y + j * skip));
 			}
 
@@ -343,7 +338,7 @@ public class JBoard extends JPanel implements ComponentListener {
 			trader = new JPawn(game, null, 0, 0, tileHeight * 2, null, true);
 			trader.setBounds((int) (0.25 * tileWidth + (gameState.getDayNumber() % 5) * tileWidth), (int)(10.5 * tileHeight), (int)(tileWidth / 2), (int)(tileHeight * 2));
 			layeredPane.add(trader, new Integer(PAWN_LAYER0 + 30));
-			trader.repaint();
+			//trader.repaint();
 		}
 		trader.setBounds((int) (0.25 * tileWidth + (gameState.getDayNumber() % 5) * tileWidth), (int)(10.5 * tileHeight), (int)(tileWidth / 2), (int)(tileHeight * 2));
 		trader.setLocation((int) (0.25 * tileWidth + (gameState.getDayNumber() % 5) * tileWidth), (int)(10.5 * tileHeight));
@@ -375,21 +370,16 @@ public class JBoard extends JPanel implements ComponentListener {
 			if (resetBounds)
 				pawn.setBounds((int) (x + psize * skip), (int) (y),
 						(int) (tileHeight), (int) (2 * tileHeight));
-			boolean changed = false;
 			if (pawn.getPlayerId() != ints.get(j)) {
 				pawn.setPlayerId(ints.get(j));
-				changed = true;
 			}
 			pawn.setPosition(j);
 			pawn.setPlayerId(ints.get(j));
-			if (changed)
-				pawn.repaint();
 			pawn.setLocation((int) (x + j * skip), (int) y);
 		}
 
 		ind = 0;
 		for (int i = 0; i < 5; i++) {
-			boolean rep = false;
 			ArrayList<JProductSquare> list = products.get(i);
 			int count = 0;
 			double side = (1.5 * tileHeight);
@@ -398,8 +388,6 @@ public class JBoard extends JPanel implements ComponentListener {
 				if (store.getNumberOf(type) > 0)
 					count++;
 			int lsize = list.size();
-			if (count != lsize)
-				rep = true;
 			while (count < lsize) {
 				layeredPane.remove(list.get(--lsize));
 				list.remove(lsize);
@@ -426,21 +414,15 @@ public class JBoard extends JPanel implements ComponentListener {
 						(int) (tileWidth * (3 * ind + 0.5) + (2 - j % 3) * side),
 						(int) (tileHeight + side * (j / 3)), (int) side,
 						(int) side);
-				if (square
-						.setAmount(store.getNumberOf(ProductType.values()[pr])))
-					rep = true;
-				if (square.setType(ProductType.values()[pr]))
-					rep = true;
-				square.repaint();
+				square.setAmount(store.getNumberOf(ProductType.values()[pr]));
+					
+				square.setType(ProductType.values()[pr]);
 				square.setLocation(
 						(int) (tileWidth * (3 * ind + 0.5) + (2 - j % 3) * side),
 						(int) (tileHeight + side * (j / 3)));
 			}
-			if (rep)
-				stores.get(i).repaint();
 			ind++;
 		}
-		boolean rep = false;
 		ArrayList<JProductSquare> list = outdoorProducts;
 		int count = 0;
 		double side = (1.5 * tileHeight);
@@ -450,8 +432,6 @@ public class JBoard extends JPanel implements ComponentListener {
 				count++;
 			}
 		int lsize = list.size();
-		if (count != lsize)
-			rep = true;
 		while (count < lsize) {
 			layeredPane.remove(list.get(--lsize));
 			list.remove(lsize);
@@ -471,15 +451,12 @@ public class JBoard extends JPanel implements ComponentListener {
 			JProductSquare square = list.get(j);
 			square.setBounds((int) (3 * tileWidth * ind + j * side),
 					(int) (tileHeight), (int) side, (int) side);
-			if (square.setAmount(store.getNumberOf(ProductType.values()[pr])))
-				rep = true;
-			if (square.setType(ProductType.values()[pr]))
-				rep = true;
-			square.repaint();
+			square.setAmount(store.getNumberOf(ProductType.values()[pr]));
+			square.setType(ProductType.values()[pr]);
 			square.setLocation((int) (0.125 * tileWidth + pr * tileWidth),
 					(int) (12 * tileHeight));
 		}
-		repaint();
+		layeredPane.repaint();
 
 	}
 

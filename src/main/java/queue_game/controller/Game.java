@@ -20,7 +20,6 @@ import queue_game.model.Player;
 import queue_game.model.ProductType;
 import queue_game.model.QueuingCard;
 import queue_game.model.StandardDeckOfDeliveryCards;
-import queue_game.model.StandardDeckOfQueuingCards;
 import queue_game.model.Store;
 import queue_game.view.View;
 
@@ -34,32 +33,11 @@ public class Game implements Runnable {
 	private GameState gameState;
 	private int nPlayers;
 	private List<View> views = new LinkedList<View>();
-	private Class<?> expectedType = null;
-	private PawnParameters selectedPawn = null;
-	private ProductParameters selectedProduct = null;
-	private ProductType selectedQueue = null;
 	private Thread gameThread = null;
-	private QueuingCard selectedQueuingCard = null;
 	private StandardDeckOfDeliveryCards deckOfDeliveryCards = new StandardDeckOfDeliveryCards();
 	private DecksOfQueuingCardsBox decks;
 	private ActionCreator actionGiver;
-	
 
-	private class PawnParameters {
-		int position;
-		ProductType destination;
-	}
-
-	private class ProductParameters {
-		ProductType product;
-		ProductType store;
-
-		public ProductParameters(ProductType product, ProductType store) {
-			this.product = product;
-			this.store = store;
-		}
-
-	}
 
 	public Game(GameState gameState, ActionCreator giver) {
 		this.actionGiver = giver;
@@ -108,7 +86,7 @@ public class Game implements Runnable {
 	 * 
 	 */
 	public void PreparingToGamePhase() throws InterruptedException {
-		List<String> names= generateNames();
+		List<String> names = generateNames();
 		ArrayList<List<Integer>> lists = generateShoppingLists();
 		gameState.initGame(lists.subList(0, nPlayers));
 		resetQueuingCards();
@@ -118,20 +96,21 @@ public class Game implements Runnable {
 			newAction(GameActionType.PAWN_PLACED, 0, pt.ordinal());
 		}
 	}
-	private List<String> generateNames(){
-		ArrayList<String> names= new ArrayList<String>();
-		for(int i = 0; i < nPlayers; i++)
+
+	private List<String> generateNames() {
+		ArrayList<String> names = new ArrayList<String>();
+		for (int i = 0; i < nPlayers; i++)
 			names.add("Gracz " + (i + 1));
 		return names;
 	}
-	
-	private ArrayList<List<Integer>> generateShoppingLists(){
+
+	private ArrayList<List<Integer>> generateShoppingLists() {
 		ArrayList<List<Integer>> lists = new ArrayList<List<Integer>>();
-		lists.add(Arrays.asList( 4, 0, 2, 1, 3 )); 
-		lists.add(Arrays.asList( 3, 4, 1, 0, 2 ));
-		lists.add(Arrays.asList( 2, 3, 0, 4, 1 ));
-		lists.add(Arrays.asList( 1, 2, 4, 3, 0 )); 
-		lists.add(Arrays.asList( 0, 1, 3, 2, 4 ));
+		lists.add(Arrays.asList(4, 0, 2, 1, 3));
+		lists.add(Arrays.asList(3, 4, 1, 0, 2));
+		lists.add(Arrays.asList(2, 3, 0, 4, 1));
+		lists.add(Arrays.asList(1, 2, 4, 3, 0));
+		lists.add(Arrays.asList(0, 1, 3, 2, 4));
 		return lists;
 	}
 
@@ -151,12 +130,15 @@ public class Game implements Runnable {
 				if (gameState.getNumberOfPawns(player) > 0) {
 					gameState.setActivePlayer(player);
 					GameAction action;
-					do{
+					do {
 						action = actionGiver.getAction();
 						Object[] info = action.getInfo();
 						GameActionType type = action.getType();
-					} while(action.getType() != GameActionType.PAWN_PLACED || action.getInfo().length != 2 || 
-							!(action.getInfo()[0] instanceof Integer) || !(action.getInfo()[1] instanceof ProductType || action.getInfo()[1] == null));
+					} while (action.getType() != GameActionType.PAWN_PLACED
+							|| action.getInfo().length != 2
+							|| !(action.getInfo()[0] instanceof Integer)
+							|| !(action.getInfo()[1] instanceof ProductType || action
+									.getInfo()[1] == null));
 					update(action);
 					ProductType queue = (ProductType) action.getInfo()[1];
 					timeSinceLastPawnLocation = 0;
@@ -168,15 +150,15 @@ public class Game implements Runnable {
 			}
 		}
 	}
-	//This one will be moved to updater.
-	public void update(GameAction action){
-		if(action.getType() == GameActionType.PAWN_PLACED){
+
+	// This one will be moved to updater.
+	public void update(GameAction action) {
+		if (action.getType() == GameActionType.PAWN_PLACED) {
 			int player = (Integer) action.getInfo()[0];
 			ProductType queue = (ProductType) action.getInfo()[1];
 			gameState.putPlayerPawn(player, queue);
-			if(queue == null)
-				newAction(GameActionType.PAWN_PLACED, player + 1,
-						-1);
+			if (queue == null)
+				newAction(GameActionType.PAWN_PLACED, player + 1, -1);
 			else
 				newAction(GameActionType.PAWN_PLACED, player + 1,
 						queue.ordinal());
@@ -184,24 +166,24 @@ public class Game implements Runnable {
 	}
 
 	/**
-	 * Second Phase of Day. Delivers 3
-	 * products to stores according to delivery cards and decreases number of products.
+	 * Second Phase of Day. Delivers 3 products to stores according to delivery
+	 * cards and decreases number of products.
 	 * 
 	 * @author krzysiek & Helena
 	 */
 	public void deliveryPhase() {
-		Collection<DeliveryCard> tempDCList = deckOfDeliveryCards.removeThreeCards();
+		Collection<DeliveryCard> tempDCList = deckOfDeliveryCards
+				.removeThreeCards();
 		ProductType type;
-		for (DeliveryCard dC : tempDCList){
+		for (DeliveryCard dC : tempDCList) {
 			type = dC.getProductType();
-			int numberOfProductsLeft =
-					gameState.getNumberOfProductsLeft(type.ordinal());
-			if(numberOfProductsLeft !=0 )
-			{
+			int numberOfProductsLeft = gameState.getNumberOfProductsLeft(type
+					.ordinal());
+			if (numberOfProductsLeft != 0) {
 				int amount = Math.min(dC.getAmount(), numberOfProductsLeft);
 				gameState.transferProductToStore(type, amount);
-				newAction(GameActionType.PRODUCT_DELIVERED,
-							type.ordinal(), amount);
+				newAction(GameActionType.PRODUCT_DELIVERED, type.ordinal(),
+						amount);
 			}
 		}
 		gameState.setCurrentDeliveryList(tempDCList);
@@ -213,20 +195,19 @@ public class Game implements Runnable {
 	 * 
 	 */
 
-
 	private void PCTPhase() throws InterruptedException {
 		gameState.setCurrentGamePhase(GamePhase.PCT);
-		if(gameState.getDayNumber()%5==4)
+		if (gameState.getDayNumber() % 5 == 4)
 			SaturdayPhase();
 		prepareToQueueJumping();
 		gameState.openStores();
 		pawnsTaking();
 	}
-	
+
 	/**
 	 * Doesn't work yet!
 	 */
-	private void SaturdayPhase(){
+	private void SaturdayPhase() {
 		deckOfDeliveryCards.fill();
 		resetQueuingCardsOnSaturday();
 	}
@@ -250,15 +231,14 @@ public class Game implements Runnable {
 			List<QueuingCard> cardsOnHand = gameState.getPlayersList()
 					.get(player).getCardsOnHand();
 			boolean success = false;
-				messageForPlayer("Wybierz kartę przepychanek, lub spasuj.");
+			messageForPlayer("Wybierz kartę przepychanek, lub spasuj.");
 			do {
 				GameAction action = actionGiver.getAction();
 				if (action.getType() == GameActionType.CARD_PLAYED_PASSED) {
 					finished[player] = true;
 					success = true;
 					nFinished++;
-					if (nFinished == nPlayers){
-						System.out.println(nPlayers);
+					if (nFinished == nPlayers) {
 						break outer;
 					}
 				} else {
@@ -310,7 +290,6 @@ public class Game implements Runnable {
 						break;
 					}
 				}
-				System.out.println(cardsOnHand);
 				if (action.getType() == GameActionType.CARD_PLAYED && success)
 					cardsOnHand.remove((QueuingCard) action.getInfo()[1]);
 				if (cardsOnHand.isEmpty()) {
@@ -334,108 +313,120 @@ public class Game implements Runnable {
 	 * @author Jan
 	 */
 	public void openingStoresPhase() {
-		for(Store store : gameState.getStores()){
-			if(store.isClosed())
+		for (Store store : gameState.getStores()) {
+			if (store.isClosed())
 				continue;
 			int queueLength = store.getQueue().size();
-			while(queueLength-- > 0){
-				for(ProductType product: ProductType.values()){
-					if(store.getNumberOf(product) > 0 && !store.isClosed()){
+			while (queueLength-- > 0) {
+				for (ProductType product : ProductType.values()) {
+					if (store.getNumberOf(product) > 0 && !store.isClosed()) {
 						gameState.sell(store.productType, product);
 						// no full information anyway.
 						// newAction(GameActionType.PRODUCT_BOUGHT,
-						//		gameState.sell(type) + 1, type.ordinal());
+						// gameState.sell(type) + 1, type.ordinal());
 						break;
 					}
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Fifth Phase of Day. Players can exchange products on market.
 	 * 
 	 * @author Jan
 	 */
 	public void exchangingPhase() throws InterruptedException {
+
 		gameState.setCurrentGamePhase(GamePhase.EXCHANGING);
 		Store market = gameState.getOutDoorMarket();
 		LinkedList<Integer> queue = market.getQueue();
-		ProductType soldProduct;
-		LinkedList<ProductType> offeredProducts = new LinkedList<ProductType>();
-		int player,pawn,queueIterator = 0;
-		ProductType product;
 		boolean wasTrade = false;
-		while(queueIterator < queue.size()){	
-				offeredProducts.clear();
-				pawn = queue.get(queueIterator++);
-				
-				player = gameState.getActivePlayer();
-				while(player != pawn)
-					player = (player + 1) % gameState.getNumberOfPlayers();
-				gameState.setActivePlayer(player);		
-				
-				messageForPlayer("Wybierz towar który chcesz kupić lub spasuj");
-				soldProduct = requestProduct().product;
-				if(soldProduct == null){
-					messageForPlayer("Gracz spasował");
-					newAction(GameActionType.PRODUCT_EXCHANGED_PASSED,player);
-					if(wasTrade)
-						queue.remove(queueIterator - 1);
-					wasTrade = false;
-					continue;
-				}
-				
-				messageForPlayer("Wybierz produkt który chcesz wymienić lub spasuj");
-				product = requestProduct().product;
-				if(product == null){
-					messageForPlayer("Gracz spasował");
-					newAction(GameActionType.PRODUCT_EXCHANGED_PASSED,player);
-					if(wasTrade)
-						queue.remove(queueIterator - 1);
-					wasTrade = false;
-					continue;
-				}
-				offeredProducts.add(product);
-				if(soldProduct.ordinal() != gameState.getDayNumber() % 5){//NIE PEWNE!!
-					System.out.println("DROGO\n");
-					messageForPlayer("Wybierz produkt który chcesz wymienić lub spasuj");
-					product = requestProduct().product;
-					if(product == null){
-						messageForPlayer("Gracz spasował");
-						newAction(GameActionType.PRODUCT_EXCHANGED_PASSED,player);
-						if(wasTrade)
-							queue.remove(queueIterator - 1);
-						continue;
-					}
-					offeredProducts.add(product);
-				}
-				if(gameState.trade(soldProduct,offeredProducts)){					
+		int index = 0;
+		for (int pawn : queue) {
+			index++;
+			gameState.setActivePlayer(pawn);
+			GameAction action;
+			do {
+				do {
+					action = actionGiver.getAction();
+				} while (!succesfulTransaction(action));
+				if (action.getType() == GameActionType.PRODUCT_EXCHANGED_ONE) {
+					ProductType sold = (ProductType) action.getInfo()[1];
+					ProductType offered = (ProductType) action.getInfo()[2];
+					gameState.trade(sold, Arrays.asList(offered));
 					wasTrade = true;
-					if(offeredProducts.size() > 1)
-						newAction(GameActionType.PRODUCT_EXCHANGED_TWO,player,soldProduct.ordinal(),
-								offeredProducts.get(0).ordinal(), offeredProducts.get(1).ordinal());
-					else
-						newAction(GameActionType.PRODUCT_EXCHANGED_ONE,player,soldProduct.ordinal(),
-								offeredProducts.getFirst().ordinal());
-						
-					messageForPlayer("Transakcja udana.");
-					--queueIterator;
-				}else{
-					messageForPlayer("Transakcja nie udana.");
-					wasTrade = false;
-					--queueIterator;
+
 				}
-			}
+				if (action.getType() == GameActionType.PRODUCT_EXCHANGED_TWO) {
+					ProductType sold = (ProductType) action.getInfo()[1];
+					ProductType offered1 = (ProductType) action.getInfo()[2];
+					ProductType offered2 = (ProductType) action.getInfo()[3];
+					gameState.trade(sold, Arrays.asList(offered1, offered2));
+					wasTrade = true;
+				}
+				if (action.getType() == GameActionType.PRODUCT_EXCHANGED_PASSED) {
+					if (wasTrade) {
+						queue.remove(index - 1);
+						return;
+					}
+					continue;
+				}
+			} while (action.getType() != GameActionType.PRODUCT_EXCHANGED_PASSED);
+		}
 	}
-	
-	
+
 	/**
-	 * @param action 
+	 * @param action
+	 * @return
+	 */
+	private boolean succesfulTransaction(GameAction action) {
+		GameActionType type = action.getType();
+		int player = (Integer) action.getInfo()[0];
+		if (type == GameActionType.PRODUCT_EXCHANGED_PASSED)
+			return true;
+		if (type == GameActionType.PRODUCT_EXCHANGED_ONE) {
+			ProductType sold = (ProductType) action.getInfo()[1];
+			ProductType offered = (ProductType) action.getInfo()[2];
+			if (sold != gameState.getCheapProduct())
+				;
+			if (gameState.getOutDoorMarket().getNumberOf(sold) == 0)
+				return false;
+			if (gameState.getPlayer(player).getBoughtProducts()[offered
+					.ordinal()] == 0)
+				return false;
+			return true;
+		}
+		if (type == GameActionType.PRODUCT_EXCHANGED_TWO) {
+			ProductType sold = (ProductType) action.getInfo()[1];
+			ProductType offered1 = (ProductType) action.getInfo()[2];
+			ProductType offered2 = (ProductType) action.getInfo()[3];
+			if (sold != gameState.getCheapProduct())
+				;
+			if (gameState.getOutDoorMarket().getNumberOf(sold) == 0)
+				return false;
+			if (offered1 == offered2
+					&& gameState.getPlayer(player).getBoughtProducts()[offered1
+							.ordinal()] < 2)
+				return false;
+			if (offered1 != offered2
+					&& (gameState.getPlayer(player).getBoughtProducts()[offered1
+							.ordinal()] == 0 || gameState.getPlayer(player)
+							.getBoughtProducts()[offered1.ordinal()] == 0))
+				return false;
+			return true;
+
+		}
+		return false;
+	}
+
+	/**
+	 * @param action
 	 * @return
 	 * @throws InterruptedException
 	 */
-	private boolean increasedDelivery(GameAction action) throws InterruptedException {
+	private boolean increasedDelivery(GameAction action)
+			throws InterruptedException {
 		ProductType type = (ProductType) action.getInfo()[2];
 		if (type == null) {
 			messageForPlayer("BŁĄD. Nie można zwiększyć dostawy w bazarze.");
@@ -459,29 +450,33 @@ public class Game implements Runnable {
 	}
 
 	/**
-	 * @param action 
+	 * @param action
 	 * @return
 	 */
 	private boolean tippingFriend(GameAction action) {
-		List<DeliveryCard> deliveryCards=deckOfDeliveryCards.peekTwoCards();
+		List<DeliveryCard> deliveryCards = deckOfDeliveryCards.peekTwoCards();
 		System.out.println("Oto 2 karty dostawy:");
-		System.out.println("Pierwsza : sklep - "+deliveryCards.get(0).getProductType()+" ilość - "+deliveryCards.get(0).getAmount());
-		System.out.println("Druga : sklep - "+deliveryCards.get(1).getProductType()+" ilość - "+deliveryCards.get(1).getAmount());
+		System.out.println("Pierwsza : sklep - "
+				+ deliveryCards.get(0).getProductType() + " ilość - "
+				+ deliveryCards.get(0).getAmount());
+		System.out.println("Druga : sklep - "
+				+ deliveryCards.get(1).getProductType() + " ilość - "
+				+ deliveryCards.get(1).getAmount());
 		return true;
 	}
 
 	/**
-	 * @param action 
+	 * @param action
 	 * @return
 	 * @throws InterruptedException
 	 */
-	private boolean underTheCounterGoods(GameAction action) throws InterruptedException {
+	private boolean underTheCounterGoods(GameAction action)
+			throws InterruptedException {
 		ProductType type = (ProductType) action.getInfo()[2];
 		ProductType store0 = (ProductType) action.getInfo()[3];
-		System.out.println(store0 + " " + type);
 		messageForPlayer("Wybierz towar, który chciałbyś dostać spod lady");
 		if (store0 == null) {
-			
+
 			messageForPlayer("BŁĄD. Nie można wziąć towaru spod lady z bazaru.");
 			return false;
 		}
@@ -506,19 +501,19 @@ public class Game implements Runnable {
 	}
 
 	/**
-	 * @param action 
+	 * @param action
 	 * @return
 	 */
-	private boolean motherWithChild(GameAction action) throws InterruptedException{
+	private boolean motherWithChild(GameAction action)
+			throws InterruptedException {
 		ProductType destination = (ProductType) action.getInfo()[2];
 		int position = (Integer) action.getInfo()[3];
-		int p = gameState.getStore(destination).getQueue()
-				.get(position);
-		if(p!=gameState.getActivePlayer()){
+		int p = gameState.getStore(destination).getQueue().get(position);
+		if (p != gameState.getActivePlayer()) {
 			messageForPlayer("BŁAD. To nie twój pionek.");
 			return false;
 		}
-		if(position==0){
+		if (position == 0) {
 			messageForPlayer("BŁAD. Już jestes pierwszy w tej kolejce.");
 			return false;
 		}
@@ -529,16 +524,15 @@ public class Game implements Runnable {
 	}
 
 	/**
-	 * @param action 
+	 * @param action
 	 * @return
 	 */
-	private boolean luckyStrike(GameAction action) throws InterruptedException{
+	private boolean luckyStrike(GameAction action) throws InterruptedException {
 		ProductType destination = (ProductType) action.getInfo()[2];
 		int position = (Integer) action.getInfo()[3];
-		ProductType newdest  = (ProductType) action.getInfo()[4];
-		int p = gameState.getStore(destination).getQueue()
-				.get(position);
-		if(p!=gameState.getActivePlayer()){
+		ProductType newdest = (ProductType) action.getInfo()[4];
+		int p = gameState.getStore(destination).getQueue().get(position);
+		if (p != gameState.getActivePlayer()) {
 			messageForPlayer("BŁAD.To nie twój pionek.");
 			return false;
 		}
@@ -553,19 +547,18 @@ public class Game implements Runnable {
 	}
 
 	/**
-	 * @param action 
+	 * @param action
 	 * @return
 	 */
-	private boolean notYourPlace(GameAction action) throws InterruptedException{
+	private boolean notYourPlace(GameAction action) throws InterruptedException {
 		ProductType destination = (ProductType) action.getInfo()[2];
 		int position = (Integer) action.getInfo()[3];
-		int p = gameState.getStore(destination).getQueue()
-				.get(position);
-		if(p!=gameState.getActivePlayer())
+		int p = gameState.getStore(destination).getQueue().get(position);
+		if (p != gameState.getActivePlayer())
 			return false;
-		if(position==0)
+		if (position == 0)
 			return false;
-		gameState.movePawn(destination, position, destination, position-1);
+		gameState.movePawn(destination, position, destination, position - 1);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.NOT_YOUR_PLACE.ordinal());
 		return true;
@@ -576,7 +569,8 @@ public class Game implements Runnable {
 	 * @throws InterruptedException
 	 * 
 	 */
-	private boolean deliveryError(GameAction action) throws InterruptedException {
+	private boolean deliveryError(GameAction action)
+			throws InterruptedException {
 		ProductType type = (ProductType) action.getInfo()[2];
 		ProductType store1 = (ProductType) action.getInfo()[3];
 		ProductType store2 = (ProductType) action.getInfo()[4];
@@ -597,37 +591,41 @@ public class Game implements Runnable {
 	}
 
 	/**
-	 * @param action 
+	 * @param action
 	 * @return
 	 * 
 	 */
-	private boolean criticizingAuthorities(GameAction action) throws InterruptedException {
+	private boolean criticizingAuthorities(GameAction action)
+			throws InterruptedException {
 		ProductType destination = (ProductType) action.getInfo()[2];
 		Integer position = (Integer) action.getInfo()[3];
-		if(position==gameState.getStore(destination).getQueue().size()-1 || position==gameState.getStore(destination).getQueue().size()-2){
+		if (position == gameState.getStore(destination).getQueue().size() - 1
+				|| position == gameState.getStore(destination).getQueue()
+						.size() - 2) {
 			messageForPlayer("BŁAD. On już jest na końcu kolejki.");
 			return false;
 		}
-		gameState.movePawn(destination, position, destination, position+2);
+		gameState.movePawn(destination, position, destination, position + 2);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.CRITICIZING_AUTHORITIES.ordinal());
 		return true;
 	}
 
 	/**
-	 * @param action 
+	 * @param action
 	 * @return
 	 * @throws InterruptedException
 	 * 
 	 */
-	private boolean communityList(GameAction action) throws InterruptedException {
+	private boolean communityList(GameAction action)
+			throws InterruptedException {
 		messageForPlayer("Wybierz kolejke która ma zostać odwrócona");
 		ProductType queue = (ProductType) action.getInfo()[2];
-		if (queue == null){
+		if (queue == null) {
 			messageForPlayer("BŁAD. Nie możesz odwrócić kolejki na bazarze.");
 			return false;
 		}
-		if(gameState.getStore(queue).getQueue().size()==1){
+		if (gameState.getStore(queue).getQueue().size() == 1) {
 			messageForPlayer("BŁAD. Tu jest tylko jeden samotny spekulant.");
 			return false;
 		}
@@ -638,13 +636,14 @@ public class Game implements Runnable {
 	}
 
 	/**
-	 * @param action 
+	 * @param action
 	 * @return
 	 * 
 	 */
-	private boolean closedForStocktaking(GameAction action) throws InterruptedException {
+	private boolean closedForStocktaking(GameAction action)
+			throws InterruptedException {
 		ProductType queue = (ProductType) action.getInfo()[2];
-		if(gameState.getStore(queue).isClosed()){
+		if (gameState.getStore(queue).isClosed()) {
 			messageForPlayer("BŁAD.Ten sklep jest już zamnknięty.");
 			return false;
 		}
@@ -654,176 +653,42 @@ public class Game implements Runnable {
 		return true;
 
 	}
-
 	/**
-	 * Waits for selection of queue by active player and returns selected queue.
-	 * 
-	 * @return destination of selected queue.
-	 * @throws InterruptedException
-	 */
-	private synchronized PawnParameters requestPawn()
-			throws InterruptedException {
-		expectedType = PawnParameters.class;
-		updateViews();
-		while (selectedPawn == null)
-			wait();
-		expectedType = null;
-		PawnParameters pawn = selectedPawn;
-		selectedPawn = null;
-		return pawn;
-
-	}
-
-	/**
-	 * Waits for selection of queue by active player and returns selected queue.
-	 * 
-	 * @return destination of selected queue.
-	 * @throws InterruptedException
-	 */
-	private synchronized ProductType requestQueue() throws InterruptedException {
-		expectedType = ProductType.class;
-		updateViews();
-		while (expectedType != null)
-			wait();
-		return selectedQueue;
-
-	}
-
-	/**
-	 * Waits for selection of queue by active player and returns selected queue.
-	 * 
-	 * @return destination of selected queue.
-	 * @throws InterruptedException
-	 */
-	public synchronized ProductParameters requestProduct()
-			throws InterruptedException {
-		expectedType = ProductParameters.class;
-		updateViews();
-		while (expectedType != null) {
-			wait();
-		}
-
-		return selectedProduct;
-	}
-
-	/**
-	 * Waits for selection of queue by active player and returns selected queue.
-	 * 
-	 * @return destination of selected queue.
-	 * @throws InterruptedException
-	 */
-	public synchronized QueuingCard requestQueuingCard()
-			throws InterruptedException {
-		expectedType = QueuingCard.class;
-		updateViews();
-		while (expectedType != null)
-			wait();
-		return selectedQueuingCard;
-	}
-
-	/**
-	 * @return true if game is over and false otherwise.
-	 * returns true if and only if some player has all of required products
-	 * or there is no product that can be delivered
+	 * @return true if game is over and false otherwise. returns true if and
+	 *         only if some player has all of required products or there is no
+	 *         product that can be delivered
 	 */
 	private boolean gameOver() {
 		boolean finished;
-		for(Player pl: gameState.getPlayersList()){
-			int nProductTypes=ProductType.values().length;
-			int boughtProducts[]=pl.getBoughtProducts();
-			List<Integer> shoppingList=pl.getShoppingList();
-			finished=true;
-			for (int i=0; i<nProductTypes; i++){
-				if(boughtProducts[i]<shoppingList.get(i)){
-					finished=false;
+		for (Player pl : gameState.getPlayersList()) {
+			int nProductTypes = ProductType.values().length;
+			int boughtProducts[] = pl.getBoughtProducts();
+			List<Integer> shoppingList = pl.getShoppingList();
+			finished = true;
+			for (int i = 0; i < nProductTypes; i++) {
+				if (boughtProducts[i] < shoppingList.get(i)) {
+					finished = false;
 					break;
 				}
 			}
-			if(finished){
+			if (finished) {
 				return true;
 			}
 		}
-		finished=true;
-		for (int productsLeft: gameState.getNumberOfProductsLeft()){
-			if(productsLeft!=0){
-				finished=false;
+		finished = true;
+		for (int productsLeft : gameState.getNumberOfProductsLeft()) {
+			if (productsLeft != 0) {
+				finished = false;
 				break;
 			}
 		}
-		if(finished){
+		if (finished) {
 			return true;
 		}
 		return false;
 	}
 
-	/**
-	 * Method for handling players' queue selections (e.g. on queuing up)
-	 * 
-	 * @param playerNo
-	 *            ID of player selecting a product
-	 * @param product
-	 *            queue destination type or null, when destination is outdoor
-	 *            market.
-	 */
-	public synchronized void queueSelected(int playerNo, ProductType destination) {
-		if (playerNo != gameState.getActivePlayer())
-			return;
-
-		if (expectedType != ProductType.class)
-			return;
-
-		selectedQueue = destination;
-		expectedType = null;
-		notifyAll();
-	}
-
-	public synchronized void queuingCardSelected(int playerNo, QueuingCard card) {
-		if (playerNo != gameState.getActivePlayer())
-			return;
-		if (expectedType != QueuingCard.class)
-			return;
-		selectedQueuingCard = card;
-		expectedType = null;
-		notifyAll();
-	}
-
-	/**
-	 * @param activePlayer
-	 * @param destination
-	 * @param position
-	 */
-	public synchronized void pawnSelected(int player, ProductType destination, int position) {
-		if (player != gameState.getActivePlayer())
-			return;
-		if (expectedType != PawnParameters.class) 
-			return;
-			PawnParameters p = new PawnParameters();
-			p.destination = destination;
-			p.position = position;
-			selectedPawn = p;
-			expectedType = null;
-			notifyAll();
-		//System.out.println("pionek " + player + " " + destination + " "+ position);
-
-	}
-
-	/**
-	 * @param activePlayer
-	 * @param product
-	 * @param store
-	 */
-	public synchronized void productSelected(int activePlayer,
-			ProductType product, ProductType store) {
-		if (activePlayer != gameState.getActivePlayer())
-			return;
-		if (expectedType != ProductParameters.class)
-			return;
-		selectedProduct = new ProductParameters(product, store);
-		expectedType = null;
-		notifyAll();
-
-	}
-
+	
 	/**
 	 * Sets object to be informed about changes in model;
 	 */
@@ -857,51 +722,49 @@ public class Game implements Runnable {
 	 * prepares cards to play
 	 */
 	private void prepareToQueueJumping() {
-		int nPlayers=gameState.getNumberOfPlayers();
-		for (int i=0; i<nPlayers; i++) {
-			gameState.getPlayersList().get(i).addCardsToHand(
-					decks.getCardsToFillTheHandOfPlayer(i));
+		int nPlayers = gameState.getNumberOfPlayers();
+		for (int i = 0; i < nPlayers; i++) {
+			gameState.getPlayersList().get(i)
+					.addCardsToHand(decks.getCardsToFillTheHandOfPlayer(i));
 		}
 	}
+
 	/**
 	 * 
 	 */
-	private void pawnsTaking() throws InterruptedException{
-		int nPlayers=gameState.getNumberOfPlayers();
-		int opening=gameState.getGameOpeningMarker();
-		int player=opening;
-		do{
+	private void pawnsTaking() throws InterruptedException {
+		int nPlayers = gameState.getNumberOfPlayers();
+		int opening = gameState.getGameOpeningMarker();
+		int player = opening;
+		do {
 			gameState.setActivePlayer(player);
-			Player temp=gameState.getPlayersList().get(player);
+			Player temp = gameState.getPlayersList().get(player);
 			outer: while (temp.getNumberOfPawns() < 5) {
-				messageForPlayer("Wybierz pionek, który chcesz usunąć");
-				PawnParameters selectedPawn = requestPawn();
-				if (selectedPawn.position == -1) {
+				GameAction action = actionGiver.getAction();
+				if (action.getType() == GameActionType.PAWN_REMOVED_PASSED)
 					break;
-				} else if (selectedPawn.destination == null) {
-				} else {
-					if (gameState.getStore(selectedPawn.destination).getQueue()
-							.get(selectedPawn.position).equals(player)) {
-						gameState
-								.removePlayerPawn(selectedPawn.position,
-										selectedPawn.destination);
-					} else {
-						continue outer;
-					}
-				}
-
+				ProductType destination = (ProductType) action.getInfo()[1];
+				int position = (Integer) action.getInfo()[2];
+				if (gameState.getStore(destination).getQueue()
+						.get(position).equals(player)) {
+					gameState.removePlayerPawn(position,
+							destination);
+				} else 
+					continue outer;
 			}
-			player=(player+1)%nPlayers;
-			
-		}while(player!=opening);
+			player = (player + 1) % nPlayers;
+
+		} while (player != opening);
 	}
 
 	/**
 	 * Adds a GameAction to the list and writes it to a socket when network
 	 * playing
 	 * 
-	 * @param type type of action
-	 * @param info additional action info
+	 * @param type
+	 *            type of action
+	 * @param info
+	 *            additional action info
 	 */
 	private void newAction(GameActionType type, Object... info) {
 		GameAction action = new GameAction(type, info);
@@ -912,43 +775,45 @@ public class Game implements Runnable {
 		System.out.println(s);
 		gameState.setMessage(s);
 	}
-	
+
 	/**
 	 * 
 	 * Reset cards of all players.
 	 * 
 	 */
 	public synchronized void resetQueuingCards() {
-		int nPlayers=gameState.getNumberOfPlayers();
+		int nPlayers = gameState.getNumberOfPlayers();
 		decks.resetAllDecks();
-		for (int i=0; i<nPlayers; i++) {
-			gameState.getPlayersList().get(i).addCardsToHand(
-					decks.getCardsToFillTheHandOfPlayer(i));
+		for (int i = 0; i < nPlayers; i++) {
+			gameState.getPlayersList().get(i)
+					.addCardsToHand(decks.getCardsToFillTheHandOfPlayer(i));
 		}
 	}
+
 	/**
 	 * Fills the deck with new cards at the end of the week
 	 */
 	public synchronized void resetQueuingCardsOnSaturday() {
-		int nPlayers=gameState.getNumberOfPlayers();
+		int nPlayers = gameState.getNumberOfPlayers();
 		decks.resetAllDecks();
-		for (int i=0; i<nPlayers; i++) {
+		for (int i = 0; i < nPlayers; i++) {
 			gameState.getPlayer(i).setCardsOnHand(new ArrayList<QueuingCard>());
-			gameState.getPlayersList().get(i).addCardsToHand(
-					decks.getCardsToFillTheHandOfPlayer(i));
+			gameState.getPlayersList().get(i)
+					.addCardsToHand(decks.getCardsToFillTheHandOfPlayer(i));
 		}
 	}
-	
-	/*public synchronized StandardDeckOfQueuingCards getDeck(int playerNr) {
-		return decks.getDeck();
-	}*/
+
+	/*
+	 * public synchronized StandardDeckOfQueuingCards getDeck(int playerNr) {
+	 * return decks.getDeck(); }
+	 */
 
 	/**
 	 * @param adapter
 	 */
 	public void setActionGiver(ActionCreator giver) {
 		this.actionGiver = giver;
-		
+
 	}
 
 }

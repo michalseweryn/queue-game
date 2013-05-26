@@ -17,7 +17,7 @@ public class GameTest extends TestCase {
 		}
 		private void selectQueue(int player, ProductType type){
 			assertEquals(game.getGameState().getCurrentGamePhase(), GamePhase.QUEUING_UP);
-			game.queueSelected(player, type);
+			//game.queueSelected(player, type);
 		}
 		public void update() {
 			switch(updatesCounter){

@@ -56,7 +56,6 @@ public class JCardsArea extends JPanel {
 			button.addActionListener(new ActionListener(){
 
 				public void actionPerformed(ActionEvent e) {
-					game.queuingCardSelected(gameState.getActivePlayer(), null);
 					creator.queuingCardSelected(gameState.getActivePlayer(), null);
 				}
 			});
@@ -67,7 +66,6 @@ public class JCardsArea extends JPanel {
 			button.addActionListener(new ActionListener(){
 
 				public void actionPerformed(ActionEvent e) {
-					game.pawnSelected(game.getGameState().getActivePlayer(), null, -1);
 					creator.pawnSelected(game.getGameState().getActivePlayer(), null, -1);
 				}
 			});
@@ -93,7 +91,6 @@ public class JCardsArea extends JPanel {
 			button.addActionListener(new ActionListener(){
 
 				public void actionPerformed(ActionEvent e) {
-					game.productSelected(game.getGameState().getActivePlayer(), null, null);
 					creator.productSelected(game.getGameState().getActivePlayer(), null, null);
 				}
 			});
