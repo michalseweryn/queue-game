@@ -535,6 +535,10 @@ public class Game implements Runnable {
 			messageForPlayer("BŁAD. Już jestes pierwszy w tej kolejce.");
 			return false;
 		}
+		if(destination==null){
+			messageForPlayer("BŁAD. Nie możesz sie przesunąć w kolejce do bazaru.");
+			return false;
+		}
 		gameState.movePawn(destination, position, destination, 0);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.MOTHER_WITH_CHILD.ordinal());
@@ -554,8 +558,12 @@ public class Game implements Runnable {
 			messageForPlayer("BŁAD.To nie twój pionek.");
 			return false;
 		}
+		if (destination == null) {
+			messageForPlayer("BŁĄD. Nie można przenieść pionka z kolejki w bazarze.");
+			return false;
+		}
 		if (newdest == null) {
-			messageForPlayer("BŁĄD. Nie można przenieśc do kolejki w bazarze.");
+			messageForPlayer("BŁĄD. Nie można przenieść pionka do kolejki w bazarze.");
 			return false;
 		}
 		if(destination==newdest){
@@ -580,6 +588,10 @@ public class Game implements Runnable {
 			return false;
 		if (position == 0)
 			return false;
+		if (destination == null) {
+			messageForPlayer("BŁĄD. Nie możesz się przesunąć w kolejce do bazaru.");
+			return false;
+		}
 		gameState.movePawn(destination, position, destination, position - 1);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.NOT_YOUR_PLACE.ordinal());
@@ -639,6 +651,10 @@ public class Game implements Runnable {
 			messageForPlayer("BŁAD. On już jest na końcu kolejki.");
 			return false;
 		}
+		if (destination == null) {
+			messageForPlayer("BŁĄD. Nie możesz przesunąć pionka w kolejce do bazaru.");
+			return false;
+		}
 		gameState.movePawn(destination, position, destination, position + 2);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.CRITICIZING_AUTHORITIES.ordinal());
@@ -679,6 +695,10 @@ public class Game implements Runnable {
 		ProductType queue = (ProductType) action.getInfo()[2];
 		if (gameState.getStore(queue).isClosed()) {
 			messageForPlayer("BŁAD.Ten sklep jest już zamnknięty.");
+			return false;
+		}
+		if (queue == null) {
+			messageForPlayer("BŁAD. Nie możesz zamknąć bazaru.");
 			return false;
 		}
 		gameState.close(queue);
