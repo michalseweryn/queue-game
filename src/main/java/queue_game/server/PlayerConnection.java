@@ -9,6 +9,7 @@ import java.io.Writer;
 import java.net.Socket;
 
 import queue_game.model.GameAction;
+import queue_game.model.GameActionType;
 
 public class PlayerConnection implements Runnable {
 	private Socket connection;
@@ -16,6 +17,7 @@ public class PlayerConnection implements Runnable {
 	private Writer out;
 	private String name;
 	private Table table;
+	private int myId = -1;
 	private boolean ended = false;
 
 	public PlayerConnection(Socket connection) throws IOException {
@@ -32,6 +34,10 @@ public class PlayerConnection implements Runnable {
 		ended = true;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public void run() {
 		try {
 			Utilities.expectString(in, "NAME");
@@ -41,19 +47,17 @@ public class PlayerConnection implements Runnable {
 				Utilities.expectString(in, "JOIN");
 				int tableId = Utilities.readInt(in);
 				if(tableId < 0 || tableId >= Table.getTables().size()
-						|| !Table.getTables().get(tableId).join(this)) {
-					Utilities.writeRawString(out, "NOPE");
+						|| (myId = Table.getTables().get(tableId).join(this)) == -1) {
+					Utilities.writeObject(out, GameActionType.ERROR);
 					Utilities.finishWriting(out);
 					continue;
 				}
 				table = Table.getTables().get(tableId);
-				Utilities.writeRawString(out, "JOINED");
-				Utilities.finishWriting(out);
 				break;
 			}
 			while(!ended) {
 				GameAction action = GameAction.read(in);
-				table.handleAction(action);
+				table.handleAction(action, myId);
 			}
 		} catch (IOException e) {
 			System.out.println("Nieudane połączenie");

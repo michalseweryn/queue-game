@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import queue_game.model.GameAction;
+import queue_game.model.GameActionType;
 
 public class Table implements Runnable {
 	private static List<Table> tables = new ArrayList<Table>();
@@ -14,6 +15,7 @@ public class Table implements Runnable {
 	private final int playerLimit;
 	private List<PlayerConnection> players = new LinkedList<PlayerConnection>();
 	private List<GameAction> actions = new LinkedList<GameAction>();
+	private List<Integer> sources = new LinkedList<Integer>();
 
 	public Table(int id, int playerLimit) {
 		this.id = id;
@@ -43,24 +45,34 @@ public class Table implements Runnable {
 		Utilities.finishWriting(out);
 	}
 
-	public boolean join (PlayerConnection player) {
+	public int join (PlayerConnection player) {
 		synchronized(players) {
 			if(players.size() >= playerLimit)
-				return false;
+				return -1;
 			players.add(player);
-			return true;
+			GameAction action = new GameAction(GameActionType.JOIN, players.size() - 1, player.getName());
+			for(PlayerConnection p: players) {
+				try {
+					p.sendAction(action);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			return players.size() - 1;
 		}
 	}
 
-	public void handleAction(GameAction action) {
+	public void handleAction(GameAction action, int source) {
 		synchronized(actions) {
 			actions.add(action);
+			sources.add(source);
 			actions.notifyAll();
 		}
 	}
 
 	public void run() {
 		GameAction action;
+		int source;
 		while(true) {
 			synchronized(actions) {
 				while(actions.isEmpty()) {
@@ -76,6 +88,7 @@ public class Table implements Runnable {
 					}
 				}
 				action = actions.remove(0);
+				source = sources.remove(0);
 			}
 			//w tym miejscu obsluz akcje
 			action = null;

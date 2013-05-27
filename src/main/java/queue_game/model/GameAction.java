@@ -55,6 +55,10 @@ public class GameAction {
 		GameAction action = new GameAction();
 		action.type = Utilities.readEnum(in, GameActionType.class);
 		switch(action.type) {
+		case JOIN:
+			action.info = new Object[2];
+			action.info[0] = Utilities.readInt(in); //numer gracza
+			action.info[1] = Utilities.readString(in); //imie gracza
 		case START_GAME:
 		case ERROR:
 			action.info = new Object[0];
