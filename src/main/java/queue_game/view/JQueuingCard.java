@@ -86,7 +86,7 @@ public class JQueuingCard extends JPanel implements MouseListener {
 			g2d.setColor(Color.BLACK);
 			g2d.setFont(g.getFont().deriveFont(10f));
 			//g2d.drawString(card.toStringPL, size.width / 5, size.height / 2);
-			g2d.setFont(new Font("Arial Black", Font.BOLD, (int) (size.height/12)));
+			g2d.setFont(new Font("Arial Black", Font.BOLD, (int) (size.height/11)));
 			drawString(g2d,card.toStringPL, size.width/20, size.height/6);
 		}
 		
