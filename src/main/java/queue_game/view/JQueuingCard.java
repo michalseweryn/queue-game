@@ -66,20 +66,18 @@ public class JQueuingCard extends JPanel implements MouseListener {
 		Dimension arcs = new Dimension(35,35); 
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		//RoundRectangle2D rect = new Rectangle(0, 0, size.width - 1, size.height - 1);
-		g2d.setStroke(new BasicStroke(4f));
-		
+		//g2d.setStroke(new BasicStroke(size.height/50));
 		int indexInColorArray = player.getID();
 		if (indexInColorArray >= GameState.playerColors.length)
 			throw new ArrayIndexOutOfBoundsException("players' list is "
 					+ "longer than colors' number");
 		g2d.setColor(GameState.playerColors[indexInColorArray]);
-		g2d.fillRoundRect(0, 0, size.width, size.height, arcs.width, arcs.height);
-		g2d.setColor(getBackground());
-		g2d.drawRoundRect(0, 0, size.width, size.height, arcs.width, arcs.height);
 		
-		RoundRectangle2D.Double roof = new RoundRectangle2D.Double(0.1, 0.1, size.width-0.1, size.height-0.1,arcs.width,arcs.height);
-		g2d.setColor(Color.darkGray);
-		g2d.draw(roof);
+		g2d.fillRoundRect(1, 1, size.width - 4, size.height - 4, arcs.width, arcs.height);
+		g2d.setColor(Color.black);
+		g2d.drawRoundRect(0, 0, size.width-3, size.height-3, arcs.width, arcs.height);		
+		//g2d.setColor(Color.black);
+		//g2d.drawRoundRect(0, 0, size.width, size.height,arcs.width,arcs.height);
 		if (card != null) {
 			g2d.setColor(Color.BLACK);
 			//g2d.setFont(g.getFont().deriveFont(10f));
