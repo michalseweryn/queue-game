@@ -1,5 +1,6 @@
 package queue_game.server;
 
+import java.awt.Desktop.Action;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -7,16 +8,28 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.Socket;
 
+import queue_game.model.GameAction;
+
 public class PlayerConnection implements Runnable {
 	private Socket connection;
 	private Reader in;
 	private Writer out;
 	private String name;
+	private Table table;
+	private boolean ended = false;
 
 	public PlayerConnection(Socket connection) throws IOException {
 		this.connection = connection;
 		this.in = new InputStreamReader(connection.getInputStream());
 		this.out = new OutputStreamWriter(connection.getOutputStream());
+	}
+
+	public void sendAction(GameAction action) throws IOException {
+		action.write(out);
+	}
+
+	public void end() {
+		ended = true;
 	}
 
 	public void run() {
@@ -33,9 +46,14 @@ public class PlayerConnection implements Runnable {
 					Utilities.finishWriting(out);
 					continue;
 				}
+				table = Table.getTables().get(tableId);
 				Utilities.writeRawString(out, "JOINED");
 				Utilities.finishWriting(out);
 				break;
+			}
+			while(!ended) {
+				GameAction action = GameAction.read(in);
+				table.handleAction(action);
 			}
 		} catch (IOException e) {
 			System.out.println("Nieudane połączenie");

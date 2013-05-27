@@ -7,7 +7,9 @@ public class ServerApp {
 	public static void main(String[] args) {
 		final int tableCount = 1;
 		for(int i = 0; i < tableCount; ++i) {
-			new Table(i, 5);
+			Thread tableThread = new Thread(new Table(i, 5));
+			tableThread.setDaemon(true);
+			tableThread.start();
 		}
 		try {
 			ServerSocket listener = new ServerSocket(17373);

@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Table {
+import queue_game.model.GameAction;
+
+public class Table implements Runnable {
 	private static List<Table> tables = new ArrayList<Table>();
 	private final int id;
 	private final int playerLimit;
 	private List<PlayerConnection> players = new LinkedList<PlayerConnection>();
+	private List<GameAction> actions = new LinkedList<GameAction>();
 
 	public Table(int id, int playerLimit) {
 		this.id = id;
@@ -40,10 +43,42 @@ public class Table {
 		Utilities.finishWriting(out);
 	}
 
-	public synchronized boolean join (PlayerConnection player) {
-		if(players.size() >= playerLimit)
-			return false;
-		players.add(player);
-		return true;
+	public boolean join (PlayerConnection player) {
+		synchronized(players) {
+			if(players.size() >= playerLimit)
+				return false;
+			players.add(player);
+			return true;
+		}
+	}
+
+	public void handleAction(GameAction action) {
+		synchronized(actions) {
+			actions.add(action);
+			actions.notifyAll();
+		}
+	}
+
+	public void run() {
+		GameAction action;
+		while(true) {
+			synchronized(actions) {
+				while(actions.isEmpty()) {
+					try {
+						actions.wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+						tables.remove(this);
+						for(PlayerConnection p: players) {
+							p.end();
+						}
+						return;
+					}
+				}
+				action = actions.remove(0);
+			}
+			//w tym miejscu obsluz akcje
+			action = null;
+		}
 	}
 }
