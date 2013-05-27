@@ -1,23 +1,18 @@
 package queue_game.view;
 
-import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.TextArea;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
 
 import queue_game.controller.Game;
 import queue_game.creator.LocalGameActionCreator;
@@ -71,6 +66,8 @@ public class JQueuingCard extends JPanel implements MouseListener {
 		Dimension arcs = new Dimension(35,35); 
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		//RoundRectangle2D rect = new Rectangle(0, 0, size.width - 1, size.height - 1);
+		g2d.setStroke(new BasicStroke(4f));
+		
 		int indexInColorArray = player.getID();
 		if (indexInColorArray >= GameState.playerColors.length)
 			throw new ArrayIndexOutOfBoundsException("players' list is "
@@ -79,12 +76,13 @@ public class JQueuingCard extends JPanel implements MouseListener {
 		g2d.fillRoundRect(0, 0, size.width, size.height, arcs.width, arcs.height);
 		g2d.setColor(getBackground());
 		g2d.drawRoundRect(0, 0, size.width, size.height, arcs.width, arcs.height);
-		//g2d.setStroke(new BasicStroke(3f));
-		//g2d.setComposite(AlphaComposite.Clear);
 		
+		RoundRectangle2D.Double roof = new RoundRectangle2D.Double(0.1, 0.1, size.width-0.1, size.height-0.1,arcs.width,arcs.height);
+		g2d.setColor(Color.darkGray);
+		g2d.draw(roof);
 		if (card != null) {
 			g2d.setColor(Color.BLACK);
-			g2d.setFont(g.getFont().deriveFont(10f));
+			//g2d.setFont(g.getFont().deriveFont(10f));
 			//g2d.drawString(card.toStringPL, size.width / 5, size.height / 2);
 			g2d.setFont(new Font("Arial Black", Font.BOLD, (int) (size.height/11)));
 			drawString(g2d,card.toStringPL, size.width/20, size.height/6);
