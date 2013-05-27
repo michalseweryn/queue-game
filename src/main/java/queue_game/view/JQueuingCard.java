@@ -1,14 +1,23 @@
 package queue_game.view;
 
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.TextArea;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
 import queue_game.controller.Game;
 import queue_game.creator.LocalGameActionCreator;
@@ -59,23 +68,36 @@ public class JQueuingCard extends JPanel implements MouseListener {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		Dimension size = getSize();
-		Rectangle rect = new Rectangle(0, 0, size.width - 1, size.height - 1);
+		Dimension arcs = new Dimension(35,35); 
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		//RoundRectangle2D rect = new Rectangle(0, 0, size.width - 1, size.height - 1);
 		int indexInColorArray = player.getID();
 		if (indexInColorArray >= GameState.playerColors.length)
 			throw new ArrayIndexOutOfBoundsException("players' list is "
 					+ "longer than colors' number");
 		g2d.setColor(GameState.playerColors[indexInColorArray]);
-		g2d.fillRect(0, 0, size.width, size.height);
-		g2d.setColor(Color.BLACK);
-		g2d.draw(rect);
-
+		g2d.fillRoundRect(0, 0, size.width, size.height, arcs.width, arcs.height);
+		g2d.setColor(getBackground());
+		g2d.drawRoundRect(0, 0, size.width, size.height, arcs.width, arcs.height);
+		//g2d.setStroke(new BasicStroke(3f));
+		//g2d.setComposite(AlphaComposite.Clear);
+		
 		if (card != null) {
-			g.setFont(g.getFont().deriveFont(10f));
-			g.drawString(card.toString(), size.width / 5, size.height / 2);
+			g2d.setColor(Color.BLACK);
+			g2d.setFont(g.getFont().deriveFont(10f));
+			//g2d.drawString(card.toStringPL, size.width / 5, size.height / 2);
+			g2d.setFont(new Font("Arial Black", Font.BOLD, (int) (size.height/12)));
+			drawString(g2d,card.toStringPL, size.width/20, size.height/6);
 		}
+		
+		//g2d.dispose();
 	}
 	
-
+	private void drawString(Graphics g, String text, int x, int y) {
+        for (String line : text.split("\n"))
+            g.drawString(line, x, y += g.getFontMetrics().getHeight());
+    }
+	
 	private void addToolTip(){
 		switch(card){
 		case CLOSED_FOR_STOCKTAKING:
