@@ -645,10 +645,13 @@ public class Game implements Runnable {
 			throws InterruptedException {
 		ProductType destination = (ProductType) action.getInfo()[2];
 		Integer position = (Integer) action.getInfo()[3];
-		if (position == gameState.getStore(destination).getQueue().size() - 1
-				|| position == gameState.getStore(destination).getQueue()
-						.size() - 2) {
-			messageForPlayer("BŁAD. On już jest na końcu kolejki.");
+		if (position == gameState.getStore(destination).getQueue().size() - 1) {
+			messageForPlayer("BŁAD. Ten pionek już jest na końcu kolejki.");
+			return false;
+		}
+		if (position == gameState.getStore(destination).getQueue()
+				.size() - 2){
+			messageForPlayer("BŁAD. Ten pionek jest przedostatni, nie moze sie cofnać o dwa miejsca.");
 			return false;
 		}
 		if (destination == null) {
