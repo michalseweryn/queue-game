@@ -582,15 +582,27 @@ public class Game implements Runnable {
 		ProductType type = (ProductType) action.getInfo()[2];
 		ProductType store1 = (ProductType) action.getInfo()[3];
 		ProductType store2 = (ProductType) action.getInfo()[4];
-		if (store1 == null)
+		if (store1 == null){
+			messageForPlayer("BŁĄD. Nie można przenieść produktu z bazaru");
 			return false;
+		}
 		Store store = gameState.getStore(store1);
-		if (store.getNumberOf(type) <= 0)
+		if (store.getNumberOf(type) <= 0){
+			messageForPlayer("BŁĄD. Nie ma produktów w tym sklepie.");
 			return false;
-		if (store.isClosed())
+		}
+		if (store.isClosed()){
+			messageForPlayer("BŁĄD. Produkt brany z zamkniętego sklepu.");
 			return false;
-		if (store2 == null)
+		}
+		if (store2 == null){
+			messageForPlayer("BŁĄÐ. Nie można przenieść produktu na bazar");
 			return false;
+		}
+		if(gameState.getStore(store2).isClosed()){
+			messageForPlayer("BŁĄÐ. Sklep zamknięty");
+			return false;
+		}
 		gameState.transferToAnotherStore(store1, store2, type);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.DELIVERY_ERROR.ordinal(),
