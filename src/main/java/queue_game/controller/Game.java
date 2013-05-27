@@ -458,6 +458,10 @@ public class Game implements Runnable {
 	 * @return
 	 */
 	private boolean tippingFriend(GameAction action) {
+		if(gameState.getDayNumber()%5==4){
+			messageForPlayer("BŁĄÐ. W piątek nie można podejrzeć dostawy.");
+			return false;
+		}
 		List<DeliveryCard> deliveryCards = deckOfDeliveryCards.peekTwoCards();
 		System.out.println("Oto 2 karty dostawy:");
 		System.out.println("Pierwsza : sklep - "
