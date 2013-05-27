@@ -442,6 +442,10 @@ public class Game implements Runnable {
 			messageForPlayer("BŁĄD. Ten sklep jest zamknięty.");
 			return false;
 		}
+		if(gameState.getNumberOfProductsLeft()[type.ordinal()]==0){
+			messageForPlayer("BŁĄÐ. Brakuje poduktu, którego dostawe zwiększono.");
+			return false;
+		}
 		gameState.transferProductToStore(type, 1);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.INCREASED_DELIVERY.ordinal(),
