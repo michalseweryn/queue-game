@@ -231,75 +231,85 @@ public class Game implements Runnable {
 			List<QueuingCard> cardsOnHand = gameState.getPlayersList()
 					.get(player).getCardsOnHand();
 			boolean success = false;
-			messageForPlayer("Wybierz kartę przepychanek, lub spasuj.");
-			do {
-				GameAction action = actionGiver.getAction();
-				if (action.getType() == GameActionType.CARD_PLAYED_PASSED) {
-					finished[player] = true;
-					success = true;
-					nFinished++;
-					if (nFinished == nPlayers) {
-						break outer;
-					}
-				} else {
-					card = (QueuingCard) action.getInfo()[1];
-					if (!cardsOnHand.contains(card)) {
-						messageForPlayer("Nie posiadasz  tej karty.");
-						continue;
-					}
-					switch (card) {
-					case DELIVERY_ERROR:
-						if (deliveryError(action))
-							success = true;
-						break;
-					case NOT_YOUR_PLACE:
-						if (notYourPlace(action))
-							success = true;
-						break;
-					case LUCKY_STRIKE:
-						if (luckyStrike(action))
-							success = true;
-						break;
-					case MOTHER_WITH_CHILD:
-						if (motherWithChild(action))
-							success = true;
-						break;
-					case UNDER_THE_COUNTER_GOODS:
-						if (underTheCounterGoods(action))
-							success = true;
-						break;
-					case TIPPING_FRIEND:
-						if (tippingFriend(action))
-							success = true;
-						break;
-					case CRITICIZING_AUTHORITIES:
-						if (criticizingAuthorities(action))
-							success = true;
-						break;
-					case INCREASED_DELIVERY:
-						if (increasedDelivery(action))
-							success = true;
-						break;
-					case CLOSED_FOR_STOCKTAKING:
-						if (closedForStocktaking(action))
-							success = true;
-						break;
-					case COMMUNITY_LIST:
-						if (communityList(action))
-							success = true;
-						break;
-					}
+			if(cardsOnHand.isEmpty()){
+				finished[player]=true;
+				nFinished++;
+				if(nFinished==nPlayers){
+					break outer;
 				}
-				if (action.getType() == GameActionType.CARD_PLAYED && success)
-					cardsOnHand.remove((QueuingCard) action.getInfo()[1]);
-				if (cardsOnHand.isEmpty()) {
-					finished[player] = true;
-					success = true;
-					nFinished++;
-					if (nFinished == nPlayers)
-						break outer;
-				}
-			} while (!success);
+			}
+			else {
+				messageForPlayer("Wybierz kartę przepychanek, lub spasuj.");
+				do {
+					GameAction action = actionGiver.getAction();
+					if (action.getType() == GameActionType.CARD_PLAYED_PASSED) {
+						finished[player] = true;
+						success = true;
+						nFinished++;
+						if (nFinished == nPlayers) {
+							break outer;
+						}
+					} else {
+						card = (QueuingCard) action.getInfo()[1];
+						if (!cardsOnHand.contains(card)) {
+							messageForPlayer("Nie posiadasz  tej karty.");
+							continue;
+						}
+						switch (card) {
+						case DELIVERY_ERROR:
+							if (deliveryError(action))
+								success = true;
+							break;
+						case NOT_YOUR_PLACE:
+							if (notYourPlace(action))
+								success = true;
+							break;
+						case LUCKY_STRIKE:
+							if (luckyStrike(action))
+								success = true;
+							break;
+						case MOTHER_WITH_CHILD:
+							if (motherWithChild(action))
+								success = true;
+							break;
+						case UNDER_THE_COUNTER_GOODS:
+							if (underTheCounterGoods(action))
+								success = true;
+							break;
+						case TIPPING_FRIEND:
+							if (tippingFriend(action))
+								success = true;
+							break;
+						case CRITICIZING_AUTHORITIES:
+							if (criticizingAuthorities(action))
+								success = true;
+							break;
+						case INCREASED_DELIVERY:
+							if (increasedDelivery(action))
+								success = true;
+							break;
+						case CLOSED_FOR_STOCKTAKING:
+							if (closedForStocktaking(action))
+								success = true;
+							break;
+						case COMMUNITY_LIST:
+							if (communityList(action))
+								success = true;
+							break;
+						}
+					}
+					if (action.getType() == GameActionType.CARD_PLAYED
+							&& success)
+						cardsOnHand.remove((QueuingCard) action.getInfo()[1]);
+					if (cardsOnHand.isEmpty()) {
+						finished[player] = true;
+						success = true;
+						nFinished++;
+						if (nFinished == nPlayers)
+							break outer;
+					}
+				} while (!success);
+			}
 			do
 				player = (player + 1) % nPlayers;
 			while (finished[player]);
@@ -546,6 +556,10 @@ public class Game implements Runnable {
 		}
 		if (newdest == null) {
 			messageForPlayer("BŁĄD. Nie można przenieśc do kolejki w bazarze.");
+			return false;
+		}
+		if(destination==newdest){
+			messageForPlayer("BŁĄD. Nie można przenieśc pionka do tego samego sklepu");
 			return false;
 		}
 		gameState.movePawn(destination, position, newdest, 1);
