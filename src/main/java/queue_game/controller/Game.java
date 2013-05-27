@@ -548,6 +548,10 @@ public class Game implements Runnable {
 			messageForPlayer("BŁĄD. Nie można przenieśc do kolejki w bazarze.");
 			return false;
 		}
+		if(destination==newdest){
+			messageForPlayer("BŁĄD. Nie można przenieśc pionka do tego samego sklepu");
+			return false;
+		}
 		gameState.movePawn(destination, position, newdest, 1);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.LUCKY_STRIKE.ordinal());
