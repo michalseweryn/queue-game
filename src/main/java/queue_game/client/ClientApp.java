@@ -244,6 +244,8 @@ public class ClientApp implements ActionCreator, DecksOfQueuingCardsBoxInterface
 		
 	}
 	public void update(GameAction action) {
+		playerList.update();
+		gameArea.update();
 		System.out.println("UPDATE: " + action);
 		if(action.getType() == GameActionType.ERROR)
 			throw new RuntimeException("Sending ERROR");

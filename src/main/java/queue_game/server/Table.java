@@ -223,7 +223,7 @@ public class Table implements Runnable, ActionCreator, Updater {
 				return;
 			}
 			if (action.getType() == GameActionType.DRAW_CARD) {
-				players.get(gameState.getActivePlayer()).sendAction(action);
+				players.get((Integer) action.getInfo()[0]).sendAction(action);
 				return;
 			}
 			if(action.getType() == GameActionType.CARDS_PEEKED){
