@@ -60,8 +60,11 @@ public class GameAction {
 			action.info[0] = Utilities.readInt(in); //numer gracza
 			action.info[1] = Utilities.readString(in); //imie gracza
 		case START_GAME:
-		case ERROR:
 			action.info = new Object[0];
+			break;
+		case ERROR:
+			action.info = new Object[1];
+			action.info[0] = Utilities.readInt(in); //numer gracza
 			break;
 		case DRAW_CARD:
 			action.info = new Object[2];
@@ -71,7 +74,7 @@ public class GameAction {
 		case PAWN_PLACED:
 			action.info = new Object[2];
 			action.info[0] = Utilities.readInt(in); //ktory gracz
-			action.info[1] = Utilities.readInt(in); //ktora kolejka
+			action.info[1] = Utilities.readEnum(in, ProductType.class); //ktora kolejka
 			break;
 		case PRODUCT_DELIVERED:
 		case PRODUCT_BOUGHT:
@@ -131,8 +134,8 @@ public class GameAction {
 		case PAWN_REMOVED:
 			action.info = new Object[3];
 			action.info[0] = Utilities.readInt(in); //ktory gracz
-			action.info[0] = Utilities.readInt(in); //ktora kolejka
-			action.info[0] = Utilities.readInt(in); //ktory pionek
+			action.info[1] = Utilities.readInt(in); //ktora kolejka
+			action.info[2] = Utilities.readInt(in); //ktory pionek
 			break;
 		case PRODUCT_EXCHANGED_ONE:
 			action.info = new Object[3];
@@ -148,7 +151,7 @@ public class GameAction {
 			action.info[3] = Utilities.readEnum(in, ProductType.class); //ktore 2 produkty oddal
 			break;
 		case CHAT:
-			action.info = new Object[1];
+			action.info = new Object[2];
 			action.info[0] = Utilities.readInt(in); //ktory gracz
 			action.info[1] = Utilities.readString(in); //wiadomosc
 			break;

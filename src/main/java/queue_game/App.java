@@ -42,16 +42,10 @@ public class App {
 				createAndShowGUI();
 			}
 		});
-        game = new Game(gameState, creator);
+        game = new Game(gameState, creator, null);
         game.addView(gameArea);
         game.addView(playerList);
         gameArea.setGame(game);
-        /*try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
         queuingCardsDecks = new DecksOfQueuingCardsBox(gameState); 
         game.startGame(5, queuingCardsDecks);
 	}

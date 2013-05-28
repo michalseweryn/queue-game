@@ -9,7 +9,10 @@ public class Utilities {
 	public static <T extends Enum<T>> T readEnum(Reader in, Class<T> enumType) throws IOException {
 		while(true) {
 			try {
-				return T.valueOf(enumType, readRawString(in));
+				String name = readRawString(in);
+				if(name.equals("null"))
+					return null;
+				return T.valueOf(enumType, name);
 			} catch(IllegalArgumentException e) {
 			}
 		}
@@ -70,7 +73,10 @@ public class Utilities {
 	}
 
 	public static void writeObject(Writer out, Object o) throws IOException {
-		out.write(o.toString());
+		if(o == null)
+			out.write("null");
+		else
+			out.write(o.toString());
 		out.write(' ');
 	}
 	

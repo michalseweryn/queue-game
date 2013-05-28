@@ -21,6 +21,7 @@ public class TestApp {
 			Writer out = new OutputStreamWriter(connection.getOutputStream());
 			Reader sysIn = new InputStreamReader(System.in);
 			Thread reader = new Thread(new Runnable() {
+				boolean firstChar = true;
 				public void run() {
 					try {
 						while(true) {
@@ -28,8 +29,15 @@ public class TestApp {
 							if(i == -1)
 								break;
 							char c = (char) i;
+							if(firstChar){
+								System.out.print(">");
+								firstChar = false;
+							}
 							System.out.print(c);
+							if(i == '\n')
+								firstChar = true;
 						}
+						
 					} catch(IOException e) {
 						e.printStackTrace();
 					}

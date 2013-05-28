@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import queue_game.ActionCreator;
+import queue_game.Updater;
 import queue_game.model.DecksOfQueuingCardsBox;
 import queue_game.model.DeliveryCard;
 import queue_game.model.GameAction;
@@ -21,6 +22,7 @@ import queue_game.model.ProductType;
 import queue_game.model.QueuingCard;
 import queue_game.model.StandardDeckOfDeliveryCards;
 import queue_game.model.Store;
+import queue_game.server.Table;
 import queue_game.view.View;
 
 /**
@@ -37,11 +39,13 @@ public class Game implements Runnable {
 	private StandardDeckOfDeliveryCards deckOfDeliveryCards = new StandardDeckOfDeliveryCards();
 	private DecksOfQueuingCardsBox decks;
 	private ActionCreator actionGiver;
+	private Updater updater;
 
 
-	public Game(GameState gameState, ActionCreator giver) {
+	public Game(GameState gameState, ActionCreator giver, Updater updater) {
 		this.actionGiver = giver;
 		this.gameState = gameState;
+		this.updater = updater;
 	}
 
 	/**
@@ -59,12 +63,15 @@ public class Game implements Runnable {
 	 */
 	public void run() {
 		try {
+			System.out.println("ZACZYNAMY");
 			PreparingToGamePhase();
 			for (int day = 0; !gameOver(); day++) {
 				gameState.setDayNumber(day);
 				if (day != 0) {
+					System.out.println("PIONKI");
 					queuingUpPhase();
 				}
+				System.out.println("dostawa");
 				deliveryPhase();
 				queueJumpingPhase();
 				openingStoresPhase();
@@ -131,16 +138,23 @@ public class Game implements Runnable {
 					gameState.setActivePlayer(player);
 					GameAction action;
 					do {
+						System.out.println("dawaj akcję");
 						action = actionGiver.getAction();
 						Object[] info = action.getInfo();
 						GameActionType type = action.getType();
-					} while (action.getType() != GameActionType.PAWN_PLACED
-							|| action.getInfo().length != 2
-							|| !(action.getInfo()[0] instanceof Integer)
-							|| !(action.getInfo()[1] instanceof ProductType || action
-									.getInfo()[1] == null));
-					update(action);
+						if(action.getType() != GameActionType.PAWN_PLACED || 
+						   (Integer)action.getInfo()[0] != player)
+							update(new GameAction(GameActionType.ERROR, player));
+						else break;
+					} while (true);
 					ProductType queue = (ProductType) action.getInfo()[1];
+					gameState.putPlayerPawn(player, queue);
+					if (queue == null)
+						newAction(GameActionType.PAWN_PLACED, player + 1, -1);
+					else
+						newAction(GameActionType.PAWN_PLACED, player + 1,
+								queue.ordinal());
+					update(action);
 					timeSinceLastPawnLocation = 0;
 				} else {
 					timeSinceLastPawnLocation++;
@@ -150,19 +164,9 @@ public class Game implements Runnable {
 			}
 		}
 	}
-
-	// This one will be moved to updater.
 	public void update(GameAction action) {
-		if (action.getType() == GameActionType.PAWN_PLACED) {
-			int player = (Integer) action.getInfo()[0];
-			ProductType queue = (ProductType) action.getInfo()[1];
-			gameState.putPlayerPawn(player, queue);
-			if (queue == null)
-				newAction(GameActionType.PAWN_PLACED, player + 1, -1);
-			else
-				newAction(GameActionType.PAWN_PLACED, player + 1,
-						queue.ordinal());
-		}
+		if (updater != null)
+			updater.update(action);
 	}
 
 	/**
@@ -299,8 +303,10 @@ public class Game implements Runnable {
 						}
 					}
 					if (action.getType() == GameActionType.CARD_PLAYED
-							&& success)
+							&& success){
 						cardsOnHand.remove((QueuingCard) action.getInfo()[1]);
+						update(action);
+					}
 					if (cardsOnHand.isEmpty()) {
 						finished[player] = true;
 						success = true;
@@ -382,6 +388,7 @@ public class Game implements Runnable {
 					}
 					continue;
 				}
+				update(action);
 			} while (action.getType() != GameActionType.PRODUCT_EXCHANGED_PASSED);
 		}
 	}
@@ -798,16 +805,18 @@ public class Game implements Runnable {
 			Player temp = gameState.getPlayersList().get(player);
 			outer: while (temp.getNumberOfPawns() < 5) {
 				GameAction action = actionGiver.getAction();
-				if (action.getType() == GameActionType.PAWN_REMOVED_PASSED)
+				if (action.getType() == GameActionType.PAWN_REMOVED_PASSED){
+					update(action);
 					break;
+				}
 				ProductType destination = (ProductType) action.getInfo()[1];
 				int position = (Integer) action.getInfo()[2];
 				if (gameState.getStore(destination).getQueue()
 						.get(position).equals(player)) {
 					gameState.removePlayerPawn(position,
 							destination);
-				} else 
-					continue outer;
+					update(action);
+				}
 			}
 			player = (player + 1) % nPlayers;
 

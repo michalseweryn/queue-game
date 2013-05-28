@@ -3,23 +3,45 @@ package queue_game.server;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
+import queue_game.ActionCreator;
+import queue_game.Updater;
+import queue_game.controller.Game;
+import queue_game.creator.LocalGameActionCreator;
+import queue_game.model.DecksOfQueuingCardsBox;
 import queue_game.model.GameAction;
 import queue_game.model.GameActionType;
+import queue_game.model.GameState;
+import queue_game.view.JGameArea;
+import queue_game.view.JPlayerList;
 
-public class Table implements Runnable {
+public class Table implements Runnable, ActionCreator, Updater {
+	
 	private static List<Table> tables = new ArrayList<Table>();
 	private final int id;
 	private final int playerLimit;
 	private List<PlayerConnection> players = new LinkedList<PlayerConnection>();
 	private List<GameAction> actions = new LinkedList<GameAction>();
 	private List<Integer> sources = new LinkedList<Integer>();
+	private boolean isReady[];
+	private GameAction recentAction[];//problems with concurrency 
+	private boolean gameOnRun = false;
+	
+	// Game Logic stuff
+	GameState gameState;
+	Game game;
+	DecksOfQueuingCardsBox queuingCardsDecks;
 
 	public Table(int id, int playerLimit) {
 		this.id = id;
 		this.playerLimit = playerLimit;
+		recentAction =  new GameAction[playerLimit];
+		isReady = new boolean[playerLimit];
 		tables.add(this);
 	}
 
@@ -89,9 +111,93 @@ public class Table implements Runnable {
 				}
 				action = actions.remove(0);
 				source = sources.remove(0);
+				if(action.getType() == GameActionType.CHAT) 
+					if((Integer)action.getInfo()[0] != source)
+						continue;
+					else
+						chatMessage(action);
+				if(gameOnRun)
+					gameHandleAction(action, source);
+				else
+					if(action.getType() == GameActionType.START_GAME){
+						isReady[source] = true;
+						boolean allReady = true;
+						for(int i = 0; i < players.size(); i++)
+							if(!isReady[i])
+								allReady = false;
+						if(allReady)
+							startGame();
+					}
+					
 			}
-			//w tym miejscu obsluz akcje
+			
 			action = null;
 		}
+	}
+	private synchronized void gameHandleAction(GameAction action, int source) {
+		if(gameState.getActivePlayer() != source)
+			try {
+				System.out.println(gameState.getActivePlayer());
+				players.get(source).sendAction(new GameAction(GameActionType.ERROR));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		System.out.println("akcja" + action + " od " + source);
+		System.out.println(gameState.getActivePlayer());
+		recentAction[source] = action;
+		notifyAll();
+		
+	}
+
+	private List<String> generateNamesList(){
+		LinkedList<String> names = new LinkedList<String>();
+		for(PlayerConnection player : players)
+			names.add(player.getName());
+		return names;
+	}
+	
+	private void startGame() {
+		List<String> names = generateNamesList();
+		gameState = new GameState(names);
+        game = new Game(gameState, this, this);
+        queuingCardsDecks = new DecksOfQueuingCardsBox(gameState); 
+        gameOnRun = true;
+        game.startGame(names.size(), queuingCardsDecks);
+	}
+
+	private void chatMessage(GameAction action){
+		if(action.getType() != GameActionType.CHAT)
+			throw new IllegalArgumentException("Not a chat action");
+		for(PlayerConnection player : players)
+			try {
+				player.sendAction(action);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	}
+
+	/* (non-Javadoc)
+	 * @see queue_game.ActionCreator#getAction()
+	 */
+	public synchronized GameAction getAction() throws InterruptedException {
+		int activePlayer = gameState.getActivePlayer();
+		while(recentAction[activePlayer] == null)
+			wait();
+		GameAction action = recentAction[activePlayer];
+		recentAction[activePlayer] = null;
+		return action;
+	}
+
+	/* (non-Javadoc)
+	 * @see queue_game.Updater#update(queue_game.model.GameAction)
+	 */
+	public void update(GameAction action) {
+		for(PlayerConnection player : players)
+			try {
+				player.sendAction(action);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 }
