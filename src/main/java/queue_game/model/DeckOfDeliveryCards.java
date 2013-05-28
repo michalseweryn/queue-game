@@ -13,5 +13,6 @@ import java.util.Collection;
 public interface DeckOfDeliveryCards {
 	Collection<DeliveryCard> removeThreeCards();
 	Collection<DeliveryCard> peekTwoCards();
+	void fill();
 	
 }

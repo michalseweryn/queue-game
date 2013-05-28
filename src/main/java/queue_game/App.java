@@ -12,6 +12,7 @@ import queue_game.controller.Game;
 import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.DecksOfQueuingCardsBox;
 import queue_game.model.GameState;
+import queue_game.model.StandardDeckOfDeliveryCards;
 import queue_game.view.JGameArea;
 import queue_game.view.JPlayerList;
 
@@ -47,7 +48,7 @@ public class App {
         game.addView(playerList);
         gameArea.setGame(game);
         queuingCardsDecks = new DecksOfQueuingCardsBox(gameState); 
-        game.startGame(5, queuingCardsDecks);
+        game.startGame(5, new StandardDeckOfDeliveryCards(),queuingCardsDecks);
 	}
 	private void createAndShowGUI(){
 		JFrame frame = new JFrame("FIAO");

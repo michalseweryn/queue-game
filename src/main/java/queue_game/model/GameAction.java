@@ -80,10 +80,16 @@ public class GameAction {
 			action.info[1] = Utilities.readEnum(in, ProductType.class); //ktora kolejka
 			break;
 		case PRODUCT_DELIVERED:
-		case PRODUCT_BOUGHT:
-			action.info = new Object[2];
-			action.info[0] = Utilities.readInt(in); //ktory sklep
-			action.info[1] = Utilities.readEnum(in, ProductType.class); //ktory produkt
+			action.info = new Object[3];
+			ProductType product = Utilities.readEnum(in, ProductType.class); //ktory sklep
+			int amount = Utilities.readInt(in); //ilosc
+			action.info[0] = new DeliveryCard(product, amount);
+			product = Utilities.readEnum(in, ProductType.class);
+			amount = Utilities.readInt(in);
+			action.info[1] = new DeliveryCard(product, amount);
+			product = Utilities.readEnum(in, ProductType.class);
+			amount = Utilities.readInt(in);
+			action.info[2] = new DeliveryCard(product, amount); //i tak 3 razy
 			break;
 		case CARD_PLAYED:
 			int player = Utilities.readInt(in); //ktory gracz
@@ -129,13 +135,18 @@ public class GameAction {
 			break;
 		case CARDS_PEEKED:
 			action.info = new Object[2];
-			ProductType product = Utilities.readEnum(in, ProductType.class);
-			int amount = Utilities.readInt(in);
+			product = Utilities.readEnum(in, ProductType.class);
+			amount = Utilities.readInt(in);
 			action.info[0] = new DeliveryCard(product, amount);
 			product = Utilities.readEnum(in, ProductType.class);
 			amount = Utilities.readInt(in);
 			action.info[1] = new DeliveryCard(product, amount); //2 karty dostawy
 			//nie ma numeru gracza bo ta akcja zawsze trafia tylko do gracza ktory podejrzal karty
+			break;
+		case PRODUCT_BOUGHT:
+			action.info = new Object[2];
+			action.info[0] = Utilities.readInt(in); //ktory sklep
+			action.info[1] = Utilities.readEnum(in, ProductType.class); //ktory produkt
 			break;
 		case PAWN_REMOVED:
 			action.info = new Object[3];

@@ -17,6 +17,7 @@ import queue_game.model.DecksOfQueuingCardsBox;
 import queue_game.model.GameAction;
 import queue_game.model.GameActionType;
 import queue_game.model.GameState;
+import queue_game.model.StandardDeckOfDeliveryCards;
 import queue_game.view.JGameArea;
 import queue_game.view.JPlayerList;
 
@@ -183,7 +184,7 @@ public class Table implements Runnable, ActionCreator, Updater {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		game.startGame(names.size(), queuingCardsDecks);
+		game.startGame(names.size(), new StandardDeckOfDeliveryCards(), queuingCardsDecks);
 	}
 
 	private void chatMessage(GameAction action) {

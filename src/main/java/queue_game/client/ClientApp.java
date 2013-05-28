@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -23,7 +24,9 @@ import queue_game.ActionCreator;
 import queue_game.Updater;
 import queue_game.controller.Game;
 import queue_game.creator.LocalGameActionCreator;
+import queue_game.model.DeckOfDeliveryCards;
 import queue_game.model.DecksOfQueuingCardsBoxInterface;
+import queue_game.model.DeliveryCard;
 import queue_game.model.GameAction;
 import queue_game.model.GameActionType;
 import queue_game.model.GameState;
@@ -37,7 +40,7 @@ import queue_game.view.JPlayerList;
  * Main window of game.
  * 
  */
-public class ClientApp implements ActionCreator, DecksOfQueuingCardsBoxInterface, Updater{
+public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQueuingCardsBoxInterface, Updater{
 	private JGameArea gameArea;
 	private JClientPlayerList playerList;
 	private GameState gameState;
@@ -149,7 +152,7 @@ public class ClientApp implements ActionCreator, DecksOfQueuingCardsBoxInterface
 		game.addView(playerList);
 		gameArea.setGame(game);
 		updatePlayers();
-		game.startGame(nPlayers, this);
+		game.startGame(nPlayers, this, this);
 	}
 
 	private void addPlayer(int id, String name){
@@ -253,6 +256,8 @@ public class ClientApp implements ActionCreator, DecksOfQueuingCardsBoxInterface
 			return;
 		if(action.getType() == GameActionType.CARDS_PEEKED)
 			return;
+		if(action.getType() == GameActionType.PRODUCT_DELIVERED)
+			return;
 		if((Integer)action.getInfo()[0] != playerId)
 			return;
 		try {
@@ -260,5 +265,35 @@ public class ClientApp implements ActionCreator, DecksOfQueuingCardsBoxInterface
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Collection<DeliveryCard> removeThreeCards() {
+		GameAction action = null;
+		try {
+			action = getAction();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		List<DeliveryCard> result = new LinkedList<DeliveryCard>();
+		result.add((DeliveryCard) action.getInfo()[0]);
+		result.add((DeliveryCard) action.getInfo()[1]);
+		result.add((DeliveryCard) action.getInfo()[2]);
+		return result;
+	}
+
+	public Collection<DeliveryCard> peekTwoCards() {
+		GameAction action = null;
+		try {
+			action = getAction();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		List<DeliveryCard> result = new LinkedList<DeliveryCard>();
+		result.add((DeliveryCard) action.getInfo()[0]);
+		result.add((DeliveryCard) action.getInfo()[1]);
+		return result;
+	}
+
+	public void fill() {
 	}
 }

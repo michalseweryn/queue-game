@@ -11,6 +11,7 @@ import java.util.List;
 
 import queue_game.ActionCreator;
 import queue_game.Updater;
+import queue_game.model.DeckOfDeliveryCards;
 import queue_game.model.DecksOfQueuingCardsBox;
 import queue_game.model.DecksOfQueuingCardsBoxInterface;
 import queue_game.model.DeliveryCard;
@@ -37,7 +38,7 @@ public class Game implements Runnable {
 	private int nPlayers;
 	private List<View> views = new LinkedList<View>();
 	private Thread gameThread = null;
-	private StandardDeckOfDeliveryCards deckOfDeliveryCards = new StandardDeckOfDeliveryCards();
+	private DeckOfDeliveryCards deckOfDeliveryCards;
 	private DecksOfQueuingCardsBoxInterface decks;
 	private ActionCreator actionGiver;
 	private Updater updater;
@@ -52,8 +53,9 @@ public class Game implements Runnable {
 	/**
 	 * Creates new thread for the game.
 	 */
-	public void startGame(int nPlayers, DecksOfQueuingCardsBoxInterface decks) {
+	public void startGame(int nPlayers, DeckOfDeliveryCards deckOfDeliveryCards, DecksOfQueuingCardsBoxInterface decks) {
 		this.nPlayers = nPlayers;
+		this.deckOfDeliveryCards = deckOfDeliveryCards;
 		this.decks = decks;
 		gameThread = new Thread(this);
 		gameThread.start();
@@ -185,10 +187,11 @@ public class Game implements Runnable {
 			if (numberOfProductsLeft != 0) {
 				int amount = Math.min(dC.getAmount(), numberOfProductsLeft);
 				gameState.transferProductToStore(type, amount);
-				newAction(GameActionType.PRODUCT_DELIVERED, type.ordinal(),
-						amount);
 			}
 		}
+		Object[] deliveries = tempDCList.toArray();
+		newAction(GameActionType.PRODUCT_DELIVERED, deliveries);
+		update(new GameAction(GameActionType.PRODUCT_DELIVERED, deliveries));
 		gameState.setCurrentDeliveryList(tempDCList);
 	}
 
@@ -486,14 +489,13 @@ public class Game implements Runnable {
 			messageForPlayer("BŁĄÐ. W piątek nie można podejrzeć dostawy.");
 			return false;
 		}
-		List<DeliveryCard> deliveryCards = deckOfDeliveryCards.peekTwoCards();
+		Collection<DeliveryCard> deliveryCards = deckOfDeliveryCards.peekTwoCards();
 		System.out.println("Oto 2 karty dostawy:");
-		System.out.println("Pierwsza : sklep - "
-				+ deliveryCards.get(0).getProductType() + " ilość - "
-				+ deliveryCards.get(0).getAmount());
-		System.out.println("Druga : sklep - "
-				+ deliveryCards.get(1).getProductType() + " ilość - "
-				+ deliveryCards.get(1).getAmount());
+		for(DeliveryCard card: deliveryCards) {
+		System.out.println("Sklep - "
+				+ card.getProductType() + " ilość - "
+				+ card.getAmount());
+		}
 		return true;
 	}
 
