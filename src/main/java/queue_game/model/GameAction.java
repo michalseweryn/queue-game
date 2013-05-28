@@ -31,8 +31,10 @@ public class GameAction {
 	 * @throws IOException when something goes wrong
 	 */
 	public void write(Writer out) throws IOException {
+		System.out.println(this);
 		Utilities.writeObject(out, type);
 		for(Object o: info) {
+			System.out.println("piszemy " + o);
 			if(o instanceof String) {
 				Utilities.writeString(out, (String) o);
 			} else {
