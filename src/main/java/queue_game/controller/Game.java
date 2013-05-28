@@ -63,15 +63,12 @@ public class Game implements Runnable {
 	 */
 	public void run() {
 		try {
-			System.out.println("ZACZYNAMY");
 			PreparingToGamePhase();
 			for (int day = 0; !gameOver(); day++) {
 				gameState.setDayNumber(day);
 				if (day != 0) {
-					System.out.println("PIONKI");
 					queuingUpPhase();
 				}
-				System.out.println("dostawa");
 				deliveryPhase();
 				queueJumpingPhase();
 				openingStoresPhase();
@@ -138,7 +135,6 @@ public class Game implements Runnable {
 					gameState.setActivePlayer(player);
 					GameAction action;
 					do {
-						System.out.println("dawaj akcję");
 						action = actionGiver.getAction();
 						Object[] info = action.getInfo();
 						GameActionType type = action.getType();
@@ -851,8 +847,11 @@ public class Game implements Runnable {
 		int nPlayers = gameState.getNumberOfPlayers();
 		decks.resetAllDecks();
 		for (int i = 0; i < nPlayers; i++) {
+			List<QueuingCard> cards = decks.getCardsToFillTheHandOfPlayer(i);
+			for(QueuingCard card : cards)
+				update(new GameAction(GameActionType.DRAW_CARD, i, card));
 			gameState.getPlayersList().get(i)
-					.addCardsToHand(decks.getCardsToFillTheHandOfPlayer(i));
+					.addCardsToHand(cards);
 		}
 	}
 

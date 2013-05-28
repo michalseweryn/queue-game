@@ -27,6 +27,7 @@ public class PlayerConnection implements Runnable {
 	}
 
 	public void sendAction(GameAction action) throws IOException {
+		System.out.println("send " + action);
 		action.write(out);
 	}
 

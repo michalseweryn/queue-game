@@ -92,6 +92,7 @@ public class GameAction {
 				action.info[3] = Utilities.readEnum(in, ProductType.class); //sklep docelowy
 				action.info[4] = Utilities.readEnum(in, ProductType.class); //typ produktu
 				break;
+			case MOTHER_WITH_CHILD:
 			case NOT_YOUR_PLACE:
 			case CRITICIZING_AUTHORITIES:
 				action.info = new Object[4];
@@ -108,13 +109,15 @@ public class GameAction {
 				action.info = new Object[2];
 				break;
 			case CLOSED_FOR_STOCKTAKING:
-			case MOTHER_WITH_CHILD:
-			case UNDER_THE_COUNTER_GOODS:
 			case INCREASED_DELIVERY:
 			case COMMUNITY_LIST:
 				action.info = new Object[3];
 				action.info[2] = Utilities.readEnum(in, ProductType.class); //ktory sklep
 				break;
+			case UNDER_THE_COUNTER_GOODS:
+				action.info = new Object[4];
+				action.info[2] = Utilities.readEnum(in, ProductType.class); // ktory produkt
+				action.info[3] = Utilities.readEnum(in, ProductType.class); // ktory sklep
 			default:
 				throw new RuntimeException("Unimplemented card");
 			}

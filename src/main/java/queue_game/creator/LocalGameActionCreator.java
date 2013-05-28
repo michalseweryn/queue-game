@@ -111,7 +111,7 @@ public class LocalGameActionCreator implements ActionCreator {
 				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
 						QueuingCard.NOT_YOUR_PLACE,pawn1.destination,pawn1.position);
 			case LUCKY_STRIKE:
-				PawnParameters pawn  = requestPawn(SELECT_PAWN_TO_MOVE);
+				PawnParameters pawn = requestPawn(SELECT_PAWN_TO_MOVE);
 				ProductType type = requestQueue(SELECT_QUEUE);
 				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
 						QueuingCard.LUCKY_STRIKE,pawn.destination,pawn.position,type);
@@ -128,7 +128,7 @@ public class LocalGameActionCreator implements ActionCreator {
 						QueuingCard.TIPPING_FRIEND);
 			case CRITICIZING_AUTHORITIES:
 				PawnParameters pawn4 = requestPawn(SELECT_PAWN_TO_MOVE);
-				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
+				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
 						QueuingCard.CRITICIZING_AUTHORITIES,pawn4.destination,pawn4.position);
 			case INCREASED_DELIVERY:
 				ProductType type1 = requestQueue(SELECT_STORE_INCREASED);
