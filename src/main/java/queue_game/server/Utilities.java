@@ -86,9 +86,7 @@ public class Utilities {
 	}
 
 	public static void writeString(Writer out, String e) throws IOException {
-		
-		out.write(((Integer)e.length()).toString());
-		out.write(' ');
+		writeObject(out, e.length());
 		writeRawString(out, e);
 	}
 	

@@ -61,6 +61,7 @@ public class GameAction {
 			action.info = new Object[2];
 			action.info[0] = Utilities.readInt(in); //numer gracza
 			action.info[1] = Utilities.readString(in); //imie gracza
+			break;
 		case START_GAME:
 			action.info = new Object[0];
 			break;

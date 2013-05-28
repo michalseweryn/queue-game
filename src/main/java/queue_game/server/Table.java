@@ -91,6 +91,14 @@ public class Table implements Runnable, ActionCreator, Updater {
 			return players.size() - 1;
 		}
 	}
+	
+	public void unjoin(PlayerConnection player) {
+		synchronized(players) {
+			if(players.remove(player)) {
+				//TODO jesli gra sie zaczela to nalezy ja zakonczyc bo stracilismy polaczenie z graczem
+			}
+		}
+	}
 
 	public void handleAction(GameAction action, int source) {
 		synchronized (actions) {
@@ -119,25 +127,23 @@ public class Table implements Runnable, ActionCreator, Updater {
 				}
 				action = actions.remove(0);
 				source = sources.remove(0);
-				if (action.getType() == GameActionType.CHAT)
-					if ((Integer) action.getInfo()[0] != source)
-						continue;
-					else
-						chatMessage(action);
-				if (gameOnRun)
-					gameHandleAction(action, source);
-				else if (action.getType() == GameActionType.START_GAME) {
-					isReady[source] = true;
-					boolean allReady = true;
-					for (int i = 0; i < players.size(); i++)
-						if (!isReady[i])
-							allReady = false;
-					if (allReady)
-						startGame();
-				}
-
 			}
-
+			if (action.getType() == GameActionType.CHAT)
+				if ((Integer) action.getInfo()[0] != source)
+					continue;
+				else
+					chatMessage(action);
+			if (gameOnRun)
+				gameHandleAction(action, source);
+			else if (action.getType() == GameActionType.START_GAME) {
+				isReady[source] = true;
+				boolean allReady = true;
+				for (int i = 0; i < players.size(); i++)
+					if (!isReady[i])
+						allReady = false;
+				if (allReady)
+					startGame();
+			}
 			action = null;
 		}
 	}
