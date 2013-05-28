@@ -96,7 +96,7 @@ public class JPlayerInfo extends JPanel {
 		pawnsLeftLabel.setText("Dostępne pionki: " +player.getNumberOfPawns());
 		for(int i = 0; i < 5; i++)
 			products.get(i).setText("" + player.getBoughtProducts()[i]
-					+ "/" + player.getShoppingList().get(i));
+					+ "/" + (player.getShoppingList()==null?"?":player.getShoppingList().get(i)));
 	}
 
 }

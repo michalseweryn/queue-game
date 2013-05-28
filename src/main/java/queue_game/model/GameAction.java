@@ -166,8 +166,9 @@ public class GameAction {
 		case PRODUCT_EXCHANGED_PASSED:
 			action.info = new Object[1];
 			action.info[0] = Utilities.readInt(in); //ktory gracz
+			break;
 		default:
-			throw new RuntimeException("Action unimplemented");
+			throw new RuntimeException("Action unimplemented: " + action);
 		}
 		return action;
 	}

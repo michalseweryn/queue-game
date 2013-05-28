@@ -105,7 +105,7 @@ public class GameState {
 	 * @param names 
 	 * 
 	 */
-	private synchronized void resetPlayers(List<String> names) {
+	public synchronized void resetPlayers(List<String> names) {
 		players.clear();
 		int initialNumberOfPawns = 5;
 		int ind = 0;

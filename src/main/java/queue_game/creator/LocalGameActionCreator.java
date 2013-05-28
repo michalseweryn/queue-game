@@ -69,6 +69,7 @@ public class LocalGameActionCreator implements ActionCreator {
 	}
 
 	public GameAction getAction() throws InterruptedException {
+		System.out.println(gameState);
 		switch (gameState.getCurrentGamePhase()) {
 		case DELIVERY:
 			throw new IllegalStateException("No actions for delivery.");

@@ -12,6 +12,7 @@ import java.util.List;
 import queue_game.ActionCreator;
 import queue_game.Updater;
 import queue_game.model.DecksOfQueuingCardsBox;
+import queue_game.model.DecksOfQueuingCardsBoxInterface;
 import queue_game.model.DeliveryCard;
 import queue_game.model.GameAction;
 import queue_game.model.GameActionType;
@@ -37,7 +38,7 @@ public class Game implements Runnable {
 	private List<View> views = new LinkedList<View>();
 	private Thread gameThread = null;
 	private StandardDeckOfDeliveryCards deckOfDeliveryCards = new StandardDeckOfDeliveryCards();
-	private DecksOfQueuingCardsBox decks;
+	private DecksOfQueuingCardsBoxInterface decks;
 	private ActionCreator actionGiver;
 	private Updater updater;
 
@@ -51,7 +52,7 @@ public class Game implements Runnable {
 	/**
 	 * Creates new thread for the game.
 	 */
-	public void startGame(int nPlayers, DecksOfQueuingCardsBox decks) {
+	public void startGame(int nPlayers, DecksOfQueuingCardsBoxInterface decks) {
 		this.nPlayers = nPlayers;
 		this.decks = decks;
 		gameThread = new Thread(this);
@@ -125,6 +126,7 @@ public class Game implements Runnable {
 	 * @throws InterruptedException
 	 */
 	private void queuingUpPhase() throws InterruptedException {
+		System.out.println("damn!");
 		gameState.setCurrentGamePhase(GamePhase.QUEUING_UP);
 		int timeSinceLastPawnLocation = 0;
 		outer: while (true) {
@@ -135,6 +137,7 @@ public class Game implements Runnable {
 					gameState.setActivePlayer(player);
 					GameAction action;
 					do {
+						System.out.println("tutaj " + gameState.getCurrentGamePhase());
 						action = actionGiver.getAction();
 						Object[] info = action.getInfo();
 						GameActionType type = action.getType();
@@ -246,10 +249,12 @@ public class Game implements Runnable {
 						finished[player] = true;
 						success = true;
 						nFinished++;
+						update(action);
 						if (nFinished == nPlayers) {
 							break outer;
 						}
 					} else {
+						System.out.println(action);
 						card = (QueuingCard) action.getInfo()[1];
 						if (!cardsOnHand.contains(card)) {
 							messageForPlayer("Nie posiadasz  tej karty.");
@@ -361,14 +366,15 @@ public class Game implements Runnable {
 			GameAction action;
 			do {
 				do {
+					System.out.println("Akcji!");
 					action = actionGiver.getAction();
+					System.out.println("MOŻe " + action);
 				} while (!succesfulTransaction(action));
 				if (action.getType() == GameActionType.PRODUCT_EXCHANGED_ONE) {
 					ProductType sold = (ProductType) action.getInfo()[1];
 					ProductType offered = (ProductType) action.getInfo()[2];
 					gameState.trade(sold, Arrays.asList(offered));
 					wasTrade = true;
-
 				}
 				if (action.getType() == GameActionType.PRODUCT_EXCHANGED_TWO) {
 					ProductType sold = (ProductType) action.getInfo()[1];
@@ -378,12 +384,17 @@ public class Game implements Runnable {
 					wasTrade = true;
 				}
 				if (action.getType() == GameActionType.PRODUCT_EXCHANGED_PASSED) {
+					System.out.println("pas");
 					if (wasTrade) {
+						System.out.println("było");
 						queue.remove(index - 1);
+						update(action);
 						return;
 					}
+					System.out.println("niebylo");
 					continue;
 				}
+				System.out.println("tu?");
 				update(action);
 			} while (action.getType() != GameActionType.PRODUCT_EXCHANGED_PASSED);
 		}
@@ -848,10 +859,10 @@ public class Game implements Runnable {
 		decks.resetAllDecks();
 		for (int i = 0; i < nPlayers; i++) {
 			List<QueuingCard> cards = decks.getCardsToFillTheHandOfPlayer(i);
-			for(QueuingCard card : cards)
-				update(new GameAction(GameActionType.DRAW_CARD, i, card));
 			gameState.getPlayersList().get(i)
 					.addCardsToHand(cards);
+			for(QueuingCard card : cards)
+				update(new GameAction(GameActionType.DRAW_CARD, i, card));
 		}
 	}
 

@@ -219,18 +219,22 @@ public class Table implements Runnable, ActionCreator, Updater {
 	public void update(GameAction action) {
 		try {
 			if (action.getType() == GameActionType.ERROR) {
-				players.get((Integer) action.getInfo()[0]).sendAction(action);
+				players.get(gameState.getActivePlayer()).sendAction(action);
 				return;
 			}
 			if (action.getType() == GameActionType.DRAW_CARD) {
-				players.get((Integer) action.getInfo()[0]).sendAction(action);
+				players.get(gameState.getActivePlayer()).sendAction(action);
 				return;
 			}
-
-			for (PlayerConnection player : players)
-				player.sendAction(action);
+			if(action.getType() == GameActionType.CARDS_PEEKED){
+				players.get(gameState.getActivePlayer()).sendAction(action);
+			}
+			int ind = 0;
+			for (PlayerConnection player : players){
+				if(ind++ != gameState.getActivePlayer())
+					player.sendAction(action);
+			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

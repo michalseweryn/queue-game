@@ -90,7 +90,11 @@ public class JStore extends JComponent implements MouseListener{
 	public void mouseReleased(MouseEvent arg0) {
 		
 		if(mouseFlag)
-			localGameActionCreator.queueSelected(game.getGameState().getActivePlayer(), product);
+			localGameActionCreator.
+			queueSelected(
+					gameState.
+					getActivePlayer(), 
+					product);
 		mouseFlag = false;
 	}
 	
