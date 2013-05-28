@@ -17,7 +17,7 @@ public class ServerApp {
 				try {
 					Thread playerThread = new Thread(new PlayerConnection(listener.accept()));
 					playerThread.setDaemon(true);
-					playerThread.run();
+					playerThread.start();
 				} catch(IOException e) {
 					System.out.println("Nieudane połączenie");
 					e.printStackTrace();
