@@ -3,6 +3,7 @@ package queue_game.model;
 import java.util.List;
 
 public interface DecksOfQueuingCardsBoxInterface {
+	public boolean isEmpty(int player);
 	public List<QueuingCard> getCardsToFillTheHandOfPlayer(int playerNr);
 	public boolean hasCard(int playerNr, QueuingCard card);
 	public QueuingCard remove(int player);

@@ -127,6 +127,7 @@ public class GameAction {
 				action.info = new Object[4];
 				action.info[2] = Utilities.readEnum(in, ProductType.class); // ktory produkt
 				action.info[3] = Utilities.readEnum(in, ProductType.class); // ktory sklep
+				break;
 			default:
 				throw new RuntimeException("Unimplemented card");
 			}
@@ -151,7 +152,7 @@ public class GameAction {
 		case PAWN_REMOVED:
 			action.info = new Object[3];
 			action.info[0] = Utilities.readInt(in); //ktory gracz
-			action.info[1] = Utilities.readInt(in); //ktora kolejka
+			action.info[1] = Utilities.readEnum(in, ProductType.class); //ktora kolejka
 			action.info[2] = Utilities.readInt(in); //ktory pionek
 			break;
 		case PRODUCT_EXCHANGED_ONE:

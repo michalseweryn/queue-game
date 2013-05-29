@@ -183,6 +183,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 	}
 
 	public GameAction getAction() throws InterruptedException {
+		gameArea.update();
 		if(gameState.getActivePlayer() == playerId)
 			return localCreator.getAction();
 		try {
@@ -214,9 +215,12 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 	}
 
 	public boolean hasCard(int playerNr, QueuingCard card) {
-		if(playerNr == playerId)
+		if(playerNr == playerId){
+			System.out.println("nasz gracz " + playerId);
 			return gameState.getPlayer(playerId).getCardsOnHand().contains(card);
-		return false;
+		}
+		System.out.println("nie nasz - ma");
+		return true;
 	}
 
 	public QueuingCard remove(int player) {
@@ -295,5 +299,12 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 	}
 
 	public void fill() {
+	}
+
+	/* (non-Javadoc)
+	 * @see queue_game.model.DecksOfQueuingCardsBoxInterface#isEmpty(int)
+	 */
+	public boolean isEmpty(int player) {
+		throw new RuntimeException("unimplemented method");
 	}
 }

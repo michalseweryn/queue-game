@@ -46,6 +46,7 @@ public class JCardsArea extends JPanel {
 		//for(int i = 0; i < 3; i++)
 		//	cards[i] = gameState.getDeck(gameState.getActivePlayer());
 		//for(int i = 0; i < 3; i++){
+		if(gameState.getActivePlayer() >=0){
 		messageLabel = new JLabel(gameState.getPlayersList().get(gameState.getActivePlayer()).getName() +": " + gameState.getMessage());
 		add(messageLabel, BorderLayout.PAGE_START);
 		JPanel contentPanel = new JPanel();
@@ -100,7 +101,7 @@ public class JCardsArea extends JPanel {
 			
 		}
 		add(contentPanel, BorderLayout.CENTER);
-		
+		}
 	}
 	public void setGame(Game game){
 		this.game = game;

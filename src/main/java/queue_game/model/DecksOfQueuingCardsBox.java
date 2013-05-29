@@ -32,7 +32,7 @@ public class DecksOfQueuingCardsBox implements DecksOfQueuingCardsBoxInterface {
 	}
 	
 	public boolean hasCard(int playerNr, QueuingCard card){
-		return decks[playerNr].hasCard(card);
+		return gameState.getPlayer(playerNr).getCardsOnHand().contains(card);
 	}
 	
 	public QueuingCard remove(int player){
@@ -42,6 +42,15 @@ public class DecksOfQueuingCardsBox implements DecksOfQueuingCardsBoxInterface {
 	public void resetAllDecks(){
 		for (int i=0; i<gameState.getNumberOfPlayers(); i++)
 			decks[i].reset();
+	}
+
+
+	/* (non-Javadoc)
+	 * @see queue_game.model.DecksOfQueuingCardsBoxInterface#isEmpty()
+	 */
+	public boolean isEmpty(int player) {
+		System.out.println(gameState.getPlayer(player).getCardsOnHand());
+		return gameState.getPlayer(player).getCardsOnHand().size() == 0;
 	}
 	
 }

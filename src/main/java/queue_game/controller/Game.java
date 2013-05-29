@@ -141,8 +141,6 @@ public class Game implements Runnable {
 					do {
 						System.out.println("tutaj " + gameState.getCurrentGamePhase());
 						action = actionGiver.getAction();
-						Object[] info = action.getInfo();
-						GameActionType type = action.getType();
 						if(action.getType() != GameActionType.PAWN_PLACED || 
 						   (Integer)action.getInfo()[0] != player)
 							update(new GameAction(GameActionType.ERROR, player));
@@ -238,15 +236,15 @@ public class Game implements Runnable {
 			gameState.setActivePlayer(player);
 			List<QueuingCard> cardsOnHand = gameState.getPlayersList()
 					.get(player).getCardsOnHand();
-			boolean success = false;
-			if(cardsOnHand.isEmpty()){
+			boolean success = false;/*
+			if(decks.isEmpty(player)){
 				finished[player]=true;
 				nFinished++;
 				if(nFinished==nPlayers){
 					break outer;
 				}
 			}
-			else {
+			else */{
 				messageForPlayer("Wybierz kartę przepychanek, lub spasuj.");
 				do {
 					GameAction action = actionGiver.getAction();
@@ -261,7 +259,7 @@ public class Game implements Runnable {
 					} else {
 						System.out.println(action);
 						card = (QueuingCard) action.getInfo()[1];
-						if (!cardsOnHand.contains(card)) {
+						if (!decks.hasCard(player, card)) {
 							messageForPlayer("Nie posiadasz  tej karty.");
 							continue;
 						}
@@ -312,14 +310,14 @@ public class Game implements Runnable {
 							&& success){
 						cardsOnHand.remove((QueuingCard) action.getInfo()[1]);
 						update(action);
-					}
+					}/*
 					if (cardsOnHand.isEmpty()) {
 						finished[player] = true;
 						success = true;
 						nFinished++;
 						if (nFinished == nPlayers)
 							break outer;
-					}
+					}*/
 				} while (!success);
 			}
 			do
@@ -367,6 +365,7 @@ public class Game implements Runnable {
 		boolean wasTrade = false;
 		int index = 0;
 		for (int pawn : queue) {
+			System.out.println("pion" + pawn);
 			index++;
 			gameState.setActivePlayer(pawn);
 			GameAction action;
@@ -397,12 +396,14 @@ public class Game implements Runnable {
 						update(action);
 						return;
 					}
+					update(action);
 					System.out.println("niebylo");
-					continue;
+					break;
 				}
 				System.out.println("tu?");
 				update(action);
 			} while (action.getType() != GameActionType.PRODUCT_EXCHANGED_PASSED);
+			
 		}
 	}
 
@@ -492,13 +493,13 @@ public class Game implements Runnable {
 			messageForPlayer("BŁĄÐ. W piątek nie można podejrzeć dostawy.");
 			return false;
 		}
-		Collection<DeliveryCard> deliveryCards = deckOfDeliveryCards.peekTwoCards();
+		/*Collection<DeliveryCard> deliveryCards = deckOfDeliveryCards.peekTwoCards();
 		System.out.println("Oto 2 karty dostawy:");
 		for(DeliveryCard card: deliveryCards) {
 		System.out.println("Sklep - "
 				+ card.getProductType() + " ilość - "
 				+ card.getAmount());
-		}
+		}*/
 		return true;
 	}
 
@@ -798,11 +799,7 @@ public class Game implements Runnable {
 	 * prepares cards to play
 	 */
 	private void prepareToQueueJumping() {
-		int nPlayers = gameState.getNumberOfPlayers();
-		for (int i = 0; i < nPlayers; i++) {
-			gameState.getPlayersList().get(i)
-					.addCardsToHand(decks.getCardsToFillTheHandOfPlayer(i));
-		}
+		addCardsToHands();
 	}
 
 	/**
@@ -815,7 +812,7 @@ public class Game implements Runnable {
 		do {
 			gameState.setActivePlayer(player);
 			Player temp = gameState.getPlayersList().get(player);
-			outer: while (temp.getNumberOfPawns() < 5) {
+			while (temp.getNumberOfPawns() < 5) {
 				GameAction action = actionGiver.getAction();
 				if (action.getType() == GameActionType.PAWN_REMOVED_PASSED){
 					update(action);
@@ -860,8 +857,11 @@ public class Game implements Runnable {
 	 * 
 	 */
 	public synchronized void resetQueuingCards() {
-		int nPlayers = gameState.getNumberOfPlayers();
 		decks.resetAllDecks();
+		addCardsToHands();
+	}
+	private void addCardsToHands(){
+		int nPlayers = gameState.getNumberOfPlayers();
 		for (int i = 0; i < nPlayers; i++) {
 			List<QueuingCard> cards = decks.getCardsToFillTheHandOfPlayer(i);
 			gameState.getPlayersList().get(i)
@@ -869,6 +869,7 @@ public class Game implements Runnable {
 			for(QueuingCard card : cards)
 				update(new GameAction(GameActionType.DRAW_CARD, i, card));
 		}
+		
 	}
 
 	/**
