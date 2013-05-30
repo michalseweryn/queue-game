@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -34,7 +33,6 @@ import queue_game.model.QueuingCard;
 import queue_game.server.PlayerConnection;
 import queue_game.server.Utilities;
 import queue_game.view.JGameArea;
-import queue_game.view.JPlayerList;
 
 /**
  * Main window of game.
@@ -73,7 +71,6 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		name = Arrays.asList("Adam", "Bob", "Carl", "Dan", "Eve").get(
 				r.nextInt(5))
 				+ r.nextInt(100);
-		System.out.println( "Wylosowane imię " + name);
 		try {
 			Utilities.writeObject(out, "NAME " + name + " ");
 			Utilities.finishWriting(out);
@@ -216,10 +213,8 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 
 	public boolean hasCard(int playerNr, QueuingCard card) {
 		if(playerNr == playerId){
-			System.out.println("nasz gracz " + playerId);
 			return gameState.getPlayer(playerId).getCardsOnHand().contains(card);
 		}
-		System.out.println("nie nasz - ma");
 		return true;
 	}
 

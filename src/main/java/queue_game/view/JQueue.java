@@ -3,7 +3,6 @@
  */
 package queue_game.view;
 
-import java.awt.Dimension;
 import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -12,7 +11,6 @@ import javax.swing.JComponent;
 
 import queue_game.controller.Game;
 import queue_game.creator.LocalGameActionCreator;
-import queue_game.model.GameState;
 import queue_game.model.ProductType;
 
 /**

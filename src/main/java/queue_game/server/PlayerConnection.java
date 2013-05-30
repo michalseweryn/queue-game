@@ -1,6 +1,5 @@
 package queue_game.server;
 
-import java.awt.Desktop.Action;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -27,7 +26,6 @@ public class PlayerConnection implements Runnable {
 	}
 
 	public void sendAction(GameAction action) throws IOException {
-		System.out.println("send " + action);
 		action.write(out);
 	}
 

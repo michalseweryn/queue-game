@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -50,7 +49,6 @@ public class JCardsArea extends JPanel {
 		messageLabel = new JLabel(gameState.getPlayersList().get(gameState.getActivePlayer()).getName() +": " + gameState.getMessage());
 		add(messageLabel, BorderLayout.PAGE_START);
 		JPanel contentPanel = new JPanel();
-		List<QueuingCard> cards = gameState.getPlayersList().get((gameState.getActivePlayer())).getCardsOnHand();
 		Player player = gameState.getPlayersList().get((gameState.getActivePlayer()));
 		if(gameState.getCurrentGamePhase() == GamePhase.JUMPING){
 			JButton button = new JButton("PASS");
@@ -106,9 +104,10 @@ public class JCardsArea extends JPanel {
 	public void setGame(Game game){
 		this.game = game;
 	}
-	private void addExchangeComponents(){
+	/*private void addExchangeComponents(){
 		
 	}
+	*/
 	/*
 	@Override
 	public Dimension getMinimumSize(){

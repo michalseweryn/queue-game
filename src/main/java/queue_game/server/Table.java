@@ -3,23 +3,17 @@ package queue_game.server;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.swing.SwingUtilities;
 
 import queue_game.ActionCreator;
 import queue_game.Updater;
 import queue_game.controller.Game;
-import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.DecksOfQueuingCardsBox;
 import queue_game.model.GameAction;
 import queue_game.model.GameActionType;
 import queue_game.model.GameState;
 import queue_game.model.StandardDeckOfDeliveryCards;
-import queue_game.view.JGameArea;
-import queue_game.view.JPlayerList;
 
 public class Table implements Runnable, ActionCreator, Updater {
 
@@ -152,14 +146,12 @@ public class Table implements Runnable, ActionCreator, Updater {
 	private synchronized void gameHandleAction(GameAction action, int source) {
 		if (gameState.getActivePlayer() != source)
 			try {
-				System.out.println(gameState.getActivePlayer());
+				System.out.println("MOIM ZDANIEM ZLE: TABLE\n" + gameState.getActivePlayer());
 				players.get(source).sendAction(
 						new GameAction(GameActionType.ERROR));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		System.out.println("akcja" + action + " od " + source);
-		System.out.println(gameState.getActivePlayer());
 		recentAction[source] = action;
 		notifyAll();
 

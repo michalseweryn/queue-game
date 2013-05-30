@@ -10,7 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import queue_game.controller.Game;
 import queue_game.model.GameAction;
 import queue_game.model.GameState;
 import queue_game.model.Player;

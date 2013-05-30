@@ -3,7 +3,6 @@ package queue_game.model;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 //import java.util.Arrays;
 
 /**

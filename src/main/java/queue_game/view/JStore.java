@@ -24,7 +24,6 @@ public class JStore extends JComponent implements MouseListener{
 	private double STROKE = 0.02;
 	boolean mouseFlag = false;
 	private GameState gameState;
-	private Game game = null;
 	private LocalGameActionCreator localGameActionCreator;
     private void fillAndDraw(Graphics2D g, Shape shape) {
     	g.fill(shape);
@@ -72,7 +71,6 @@ public class JStore extends JComponent implements MouseListener{
 	}
 	
 	public JStore(Game game, GameState gameState, ProductType product, LocalGameActionCreator localGameActionCreator){
-		this.game = game;
 		this.gameState = gameState;
 		this.product = product;
 		this.localGameActionCreator = localGameActionCreator;

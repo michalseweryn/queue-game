@@ -1,6 +1,5 @@
 package queue_game.view;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -9,8 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.JPanel;
 
@@ -29,14 +26,12 @@ public class JQueuingCard extends JPanel implements MouseListener {
 	private static final long serialVersionUID = 6947197330462260996L;
 	private QueuingCard card;
 	private Player player;
-	private Game game;
 	private LocalGameActionCreator creator;
 
 	public JQueuingCard(Player player, QueuingCard card, Game game, LocalGameActionCreator creator) {
 		this.creator = creator;
 		this.card = card;
 		this.player = player;
-		this.game = game;
 		addMouseListener(this);
 		addToolTip();
 	}

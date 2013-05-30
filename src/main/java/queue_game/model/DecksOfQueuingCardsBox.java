@@ -49,7 +49,6 @@ public class DecksOfQueuingCardsBox implements DecksOfQueuingCardsBoxInterface {
 	 * @see queue_game.model.DecksOfQueuingCardsBoxInterface#isEmpty()
 	 */
 	public boolean isEmpty(int player) {
-		System.out.println(gameState.getPlayer(player).getCardsOnHand());
 		return gameState.getPlayer(player).getCardsOnHand().size() == 0;
 	}
 	

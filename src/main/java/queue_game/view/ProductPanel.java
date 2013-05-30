@@ -9,7 +9,6 @@ import java.awt.Rectangle;
 
 import javax.swing.JComponent;
 
-import queue_game.controller.Game;
 import queue_game.model.GameState;
 
 /**

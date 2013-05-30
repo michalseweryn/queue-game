@@ -25,7 +25,6 @@ public class JGameArea extends JPanel implements View{
 	private JBoard board;
 	private JCardsArea cardsArea;
 
-	private Game game;
 	public JGameArea(GameState gameState, LocalGameActionCreator creator){
 		super();
 		this.productPanel = new ProductPanel(gameState);

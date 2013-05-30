@@ -12,8 +12,6 @@ import queue_game.model.GameActionType;
 import queue_game.model.GameState;
 import queue_game.model.ProductType;
 import queue_game.model.QueuingCard;
-import queue_game.model.Store;
-import queue_game.view.JPlayerList;
 import queue_game.view.View;
 
 /**
@@ -69,7 +67,6 @@ public class LocalGameActionCreator implements ActionCreator {
 	}
 
 	public GameAction getAction() throws InterruptedException {
-		System.out.println(gameState);
 		switch (gameState.getCurrentGamePhase()) {
 		case DELIVERY:
 			throw new IllegalStateException("No actions for delivery.");
@@ -96,7 +93,7 @@ public class LocalGameActionCreator implements ActionCreator {
 	 */
 	private GameAction getJumpingAction() throws InterruptedException {
 		QueuingCard card = requestQueuingCard(SELECT_CARD);
-		System.out.println(card);
+		//System.out.println(card);
 		if (card == null) {
 			return new GameAction(GameActionType.CARD_PLAYED_PASSED,
 					gameState.getActivePlayer());
