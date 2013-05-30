@@ -401,9 +401,9 @@ public class Game implements Runnable {
 	 */
 	private boolean succesfulTransaction(GameAction action) {
 		GameActionType type = action.getType();
-		int player = (Integer) action.getInfo()[0];
 		if (type == GameActionType.PRODUCT_EXCHANGED_PASSED)
 			return true;
+		int player = (Integer) action.getInfo()[0];
 		if (type == GameActionType.PRODUCT_EXCHANGED_ONE) {
 			ProductType sold = (ProductType) action.getInfo()[1];
 			ProductType offered = (ProductType) action.getInfo()[2];

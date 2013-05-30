@@ -184,16 +184,16 @@ public class LocalGameActionCreator implements ActionCreator {
 		if (gameState.getCheapProduct() == productToBuy.product) {
 			ProductParameters offeredProduct1 = requestProduct(OFFER_1_OF_1);
 			if (offeredProduct1.product == null)
-				return new GameAction(GameActionType.PRODUCT_EXCHANGED_PASSED);
+				return new GameAction(GameActionType.PRODUCT_EXCHANGED_PASSED, gameState.getActivePlayer());
 			return new GameAction(GameActionType.PRODUCT_EXCHANGED_ONE,
 					gameState.getActivePlayer(), productToBuy.product, offeredProduct1.product);
 		}
 		ProductParameters offeredProduct1 = requestProduct(OFFER_1_OF_2);
 		if (offeredProduct1.product == null)
-			return new GameAction(GameActionType.PRODUCT_EXCHANGED_PASSED);
+			return new GameAction(GameActionType.PRODUCT_EXCHANGED_PASSED, gameState.getActivePlayer());
 		ProductParameters offeredProduct2 = requestProduct(OFFER_2_OF_2);
 		if (offeredProduct2.product == null)
-			return new GameAction(GameActionType.PRODUCT_EXCHANGED_PASSED);
+			return new GameAction(GameActionType.PRODUCT_EXCHANGED_PASSED, gameState.getActivePlayer());
 		return new GameAction(GameActionType.PRODUCT_EXCHANGED_TWO,
 				gameState.getActivePlayer(), productToBuy.product, offeredProduct1.product,
 				offeredProduct2.product);
