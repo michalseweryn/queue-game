@@ -126,9 +126,9 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		System.out.println(action);
 		if(action.getType() == GameActionType.JOIN){
 			nPlayers++;
-			playerId = (Integer)action.getInfo()[0];
+			int id = (Integer)action.getInfo()[0];
 			String name = (String)action.getInfo()[1];
-			addPlayer(playerId, name);
+			addPlayer(id, name);
 		}
 		if(action.getType() == GameActionType.START_GAME){
 			startGame();

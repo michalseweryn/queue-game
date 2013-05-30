@@ -28,7 +28,7 @@ public class JCardsArea extends JPanel {
 	private Game game;
 	private JLabel messageLabel;
 	private LocalGameActionCreator creator;
-	private int playerId;
+	private int playerId; //-1 while hot-seat game
 	
 	public JCardsArea(GameState gameState, LocalGameActionCreator creator){
 		super();
@@ -44,15 +44,11 @@ public class JCardsArea extends JPanel {
 	}
 	
 	private void addCards(){
-		//for(int i = 0; i < 3; i++)
-		//	cards[i] = gameState.getDeck(gameState.getActivePlayer());
-		//for(int i = 0; i < 3; i++){
 		if(gameState.getActivePlayer() >=0){
 		Player activePlayer = gameState.getPlayersList().get(gameState.getActivePlayer());
-		//System.out.println(activePlayer.getID() + "==?" + playerId);
-		//if(activePlayer.getID() == playerId)
+		if(playerId == -1 || activePlayer.getID() == playerId)
 			messageLabel = new JLabel(activePlayer.getName() +": " + gameState.getMessage());
-		//else messageLabel = new JLabel("Ruch gracza " + activePlayer.getName());
+		else messageLabel = new JLabel("Ruch gracza " + activePlayer.getName());
 		add(messageLabel, BorderLayout.PAGE_START);
 		JPanel contentPanel = new JPanel();
 		Player player = gameState.getPlayersList().get((gameState.getActivePlayer()));
@@ -83,26 +79,25 @@ public class JCardsArea extends JPanel {
 		}
 		if(gameState.getCurrentGamePhase() == GamePhase.EXCHANGING){
 			int id = gameState.getActivePlayer();
-			for(ProductType type : ProductType.values()){
-				int bought = gameState.getPlayer(id).getBoughtProducts()[type.ordinal()];
-				if(bought > 0){
-					JProductSquare square = new JProductSquare(game, type, bought, null, creator);
-					square.setMinimumSize(new Dimension(30, 30));
-					square.setPreferredSize(new Dimension(30, 30));
-					contentPanel.add(square);
+			if(playerId == -1 || id==playerId){
+				for(ProductType type : ProductType.values()){
+					int bought = gameState.getPlayer(id).getBoughtProducts()[type.ordinal()];
+					if(bought > 0){
+						JProductSquare square = new JProductSquare(game, type, bought, null, creator);
+						square.setMinimumSize(new Dimension(30, 30));
+						square.setPreferredSize(new Dimension(30, 30));
+						contentPanel.add(square);
+					}
 				}
-			}
-			JButton button = new JButton("PASS");
-			button.addActionListener(new ActionListener(){
-
-				public void actionPerformed(ActionEvent e) {
-					creator.productSelected(game.getGameState().getActivePlayer(), null, null);
-				}
-			});
-			contentPanel.add(button);
-
-			
-			
+				JButton button = new JButton("PASS");
+				button.addActionListener(new ActionListener(){
+	
+					public void actionPerformed(ActionEvent e) {
+						creator.productSelected(game.getGameState().getActivePlayer(), null, null);
+					}
+				});
+				contentPanel.add(button);
+			}	
 		}
 		add(contentPanel, BorderLayout.CENTER);
 		}

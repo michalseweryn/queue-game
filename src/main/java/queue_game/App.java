@@ -35,6 +35,7 @@ public class App {
         
 		playerList = new JPlayerList(gameState);
         gameArea = new JGameArea(gameState, creator);
+        gameArea.setPlayerId(-1);
         creator.addView(playerList);
         creator.addView(gameArea);
         
