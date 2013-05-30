@@ -631,6 +631,10 @@ public class Game implements Runnable {
 			messageForPlayer("BŁĄÐ. Nie można przenieść produktu na bazar");
 			return false;
 		}
+		if(store1 == store2){
+			messageForPlayer("BŁĄÐ. Wybrałeś dwa razy ten sam sklep");
+			return false;
+		}
 		if(gameState.getStore(store2).isClosed()){
 			messageForPlayer("BŁĄÐ. Sklep zamknięty");
 			return false;
