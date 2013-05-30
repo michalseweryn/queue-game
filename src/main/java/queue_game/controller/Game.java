@@ -401,14 +401,13 @@ public class Game implements Runnable {
 	 */
 	private boolean succesfulTransaction(GameAction action) {
 		GameActionType type = action.getType();
-		int player = (Integer) action.getInfo()[0];
 		if (type == GameActionType.PRODUCT_EXCHANGED_PASSED)
 			return true;
+		int player = (Integer) action.getInfo()[0];		
 		if (type == GameActionType.PRODUCT_EXCHANGED_ONE) {
 			ProductType sold = (ProductType) action.getInfo()[1];
 			ProductType offered = (ProductType) action.getInfo()[2];
-			if (sold != gameState.getCheapProduct())
-				;
+			if (sold != gameState.getCheapProduct());
 			if (gameState.getOutDoorMarket().getNumberOf(sold) == 0)
 				return false;
 			if (gameState.getPlayer(player).getBoughtProducts()[offered
@@ -420,8 +419,7 @@ public class Game implements Runnable {
 			ProductType sold = (ProductType) action.getInfo()[1];
 			ProductType offered1 = (ProductType) action.getInfo()[2];
 			ProductType offered2 = (ProductType) action.getInfo()[3];
-			if (sold != gameState.getCheapProduct())
-				;
+			if (sold != gameState.getCheapProduct());
 			if (gameState.getOutDoorMarket().getNumberOf(sold) == 0)
 				return false;
 			if (offered1 == offered2
