@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import queue_game.controller.Game;
 import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.GameState;
+import queue_game.model.Player;
 
 /**
  * @author michal
@@ -24,7 +25,8 @@ public class JGameArea extends JPanel implements View{
 	private ProductPanel productPanel;
 	private JBoard board;
 	private JCardsArea cardsArea;
-
+	private int playerId;
+	
 	public JGameArea(GameState gameState, LocalGameActionCreator creator){
 		super();
 		this.productPanel = new ProductPanel(gameState);
@@ -44,5 +46,10 @@ public class JGameArea extends JPanel implements View{
 		cardsArea.update();
 		
 	}
-
+	
+	public void setPlayerId(int playerId)
+	{
+		this.playerId = playerId;
+		cardsArea.setPlayerId(playerId);
+	}
 }

@@ -82,7 +82,6 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		gameState = new GameState(Arrays.asList(name));
 
 		localCreator = new LocalGameActionCreator(gameState);
@@ -127,9 +126,9 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		System.out.println(action);
 		if(action.getType() == GameActionType.JOIN){
 			nPlayers++;
-			int id = (Integer)action.getInfo()[0];
+			playerId = (Integer)action.getInfo()[0];
 			String name = (String)action.getInfo()[1];
-			addPlayer(id, name);
+			addPlayer(playerId, name);
 		}
 		if(action.getType() == GameActionType.START_GAME){
 			startGame();
@@ -148,8 +147,10 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		game.addView(gameArea);
 		game.addView(playerList);
 		gameArea.setGame(game);
+		gameArea.setPlayerId(playerId);
 		updatePlayers();
 		game.startGame(nPlayers, this, this);
+		
 	}
 
 	private void addPlayer(int id, String name){
