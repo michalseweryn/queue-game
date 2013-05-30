@@ -48,63 +48,63 @@ public class JCardsArea extends JPanel {
 		//	cards[i] = gameState.getDeck(gameState.getActivePlayer());
 		//for(int i = 0; i < 3; i++){
 		if(gameState.getActivePlayer() >=0){
-			Player activePlayer = gameState.getPlayersList().get(gameState.getActivePlayer());
-			//System.out.println(activePlayer.getID() + "==?" + playerId);
-			//if(activePlayer.getID() == playerId)
-				messageLabel = new JLabel(activePlayer.getName() +": " + gameState.getMessage());
-			//else messageLabel = new JLabel("Ruch gracza " + activePlayer.getName());
-			add(messageLabel, BorderLayout.PAGE_START);
-			JPanel contentPanel = new JPanel();
-			Player player = gameState.getPlayersList().get((gameState.getActivePlayer()));
-			if(gameState.getCurrentGamePhase() == GamePhase.JUMPING){
-				JButton button = new JButton("PASS");
-				button.addActionListener(new ActionListener(){
-	
-					public void actionPerformed(ActionEvent e) {
-						creator.queuingCardSelected(gameState.getActivePlayer(), null);
-					}
-				});
-				contentPanel.add(button);
-			}
-			if(gameState.getCurrentGamePhase() == GamePhase.PCT){
-				JButton button = new JButton("PASS");
-				button.addActionListener(new ActionListener(){
-	
-					public void actionPerformed(ActionEvent e) {
-						creator.pawnSelected(game.getGameState().getActivePlayer(), null, -1);
-					}
-				});
-				contentPanel.add(button);
-			}
-			if(gameState.getCurrentGamePhase()!= null && gameState.getCurrentGamePhase().ordinal() < 3)
-			for(QueuingCard i: gameState.getPlayersList().get((gameState.getActivePlayer())).getCardsOnHand()){
-				JQueuingCard temp = new JQueuingCard(player,i,game, creator);
-				contentPanel.add(temp);
-			}
-			if(gameState.getCurrentGamePhase() == GamePhase.EXCHANGING){
-				int id = gameState.getActivePlayer();
-				for(ProductType type : ProductType.values()){
-					int bought = gameState.getPlayer(id).getBoughtProducts()[type.ordinal()];
-					if(bought > 0){
-						JProductSquare square = new JProductSquare(game, type, bought, null, creator);
-						square.setMinimumSize(new Dimension(30, 30));
-						square.setPreferredSize(new Dimension(30, 30));
-						contentPanel.add(square);
-					}
+		Player activePlayer = gameState.getPlayersList().get(gameState.getActivePlayer());
+		//System.out.println(activePlayer.getID() + "==?" + playerId);
+		//if(activePlayer.getID() == playerId)
+			messageLabel = new JLabel(activePlayer.getName() +": " + gameState.getMessage());
+		//else messageLabel = new JLabel("Ruch gracza " + activePlayer.getName());
+		add(messageLabel, BorderLayout.PAGE_START);
+		JPanel contentPanel = new JPanel();
+		Player player = gameState.getPlayersList().get((gameState.getActivePlayer()));
+		if(gameState.getCurrentGamePhase() == GamePhase.JUMPING){
+			JButton button = new JButton("PASS");
+			button.addActionListener(new ActionListener(){
+
+				public void actionPerformed(ActionEvent e) {
+					creator.queuingCardSelected(gameState.getActivePlayer(), null);
 				}
-				JButton button = new JButton("PASS");
-				button.addActionListener(new ActionListener(){
-	
-					public void actionPerformed(ActionEvent e) {
-						creator.productSelected(game.getGameState().getActivePlayer(), null, null);
-					}
-				});
-				contentPanel.add(button);
-	
-				
-				
+			});
+			contentPanel.add(button);
+		}
+		if(gameState.getCurrentGamePhase() == GamePhase.PCT){
+			JButton button = new JButton("PASS");
+			button.addActionListener(new ActionListener(){
+
+				public void actionPerformed(ActionEvent e) {
+					creator.pawnSelected(game.getGameState().getActivePlayer(), null, -1);
+				}
+			});
+			contentPanel.add(button);
+		}
+		if(gameState.getCurrentGamePhase()!= null && gameState.getCurrentGamePhase().ordinal() < 3)
+		for(QueuingCard i: gameState.getPlayersList().get((gameState.getActivePlayer())).getCardsOnHand()){
+			JQueuingCard temp = new JQueuingCard(player,i,game, creator);
+			contentPanel.add(temp);
+		}
+		if(gameState.getCurrentGamePhase() == GamePhase.EXCHANGING){
+			int id = gameState.getActivePlayer();
+			for(ProductType type : ProductType.values()){
+				int bought = gameState.getPlayer(id).getBoughtProducts()[type.ordinal()];
+				if(bought > 0){
+					JProductSquare square = new JProductSquare(game, type, bought, null, creator);
+					square.setMinimumSize(new Dimension(30, 30));
+					square.setPreferredSize(new Dimension(30, 30));
+					contentPanel.add(square);
+				}
 			}
-			add(contentPanel, BorderLayout.CENTER);
+			JButton button = new JButton("PASS");
+			button.addActionListener(new ActionListener(){
+
+				public void actionPerformed(ActionEvent e) {
+					creator.productSelected(game.getGameState().getActivePlayer(), null, null);
+				}
+			});
+			contentPanel.add(button);
+
+			
+			
+		}
+		add(contentPanel, BorderLayout.CENTER);
 		}
 	}
 	public void setGame(Game game){
