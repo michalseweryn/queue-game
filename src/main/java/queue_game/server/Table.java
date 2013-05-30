@@ -146,7 +146,7 @@ public class Table implements Runnable, ActionCreator, Updater {
 	private synchronized void gameHandleAction(GameAction action, int source) {
 		if (gameState.getActivePlayer() != source)
 			try {
-				System.out.println("MOIM ZDANIEM ZLE: TABLE\n" + gameState.getActivePlayer());
+				//System.out.println(gameState.getActivePlayer());
 				players.get(source).sendAction(
 						new GameAction(GameActionType.ERROR));
 			} catch (IOException e) {
