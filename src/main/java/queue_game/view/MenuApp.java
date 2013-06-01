@@ -16,9 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 public class MenuApp {
-	public Color[] kolory = new Color[]{
-		Color.CYAN, Color.GREEN, Color.PINK, Color.YELLOW
-	};
 	public String[][] imiona = new String[][]{
 			{new String("Adam"),new String("Ela")},{new String("Marek23"),new String("Nikt00")},
 			{new String("Michal45"),new String("Jan33")},{new String("Asia23"),new String("Ewa34")}
@@ -58,20 +55,22 @@ public class MenuApp {
 				j++;
 				labela.setHorizontalAlignment(JLabel.CENTER);
 				panela.add(labela);
-				coloreLabel(labela,Color.WHITE);
+				panela.setOpaque(false);
+				coloreLabel(labela,new Color(0x4CC9E6));
 				labela.setPreferredSize(new Dimension(70,40));
 			}
 			label.setHorizontalAlignment(JLabel.CENTER);
 			  JButton button = new JButton("Dołącz");
 			  JPanel panel = new JPanel();
-			  coloreLabel(label,kolory[i-1]);
+			  coloreLabel(label,Color.WHITE);
 			  panel.add(label);
 			  panel.add(button);
-			  
+			  panel.setOpaque(false);
 			  frame.getContentPane().add(panel);
 			  frame.getContentPane().add(panela);
 		}
 		  frame.setSize(400, 450);
+		  frame.getContentPane().setBackground(new Color(0xD8F2DE));
 		  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		  frame.setVisible(true);
 	}
