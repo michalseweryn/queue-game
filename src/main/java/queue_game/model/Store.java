@@ -93,7 +93,10 @@ public class Store {
 		}
 		return hasIt;
 	}
-	
+	/**
+	 * 
+	 * @return true if and only if there is a choice for player in the shop
+	 */
 	public boolean hasAlternative(){
 		int nOfTypes=0;
 		for(int i=0; i<5; i++){
