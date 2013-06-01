@@ -2,6 +2,7 @@ package queue_game.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Point;
 
 import javax.swing.BorderFactory;
@@ -44,8 +45,9 @@ public class MenuApp {
 		JFrame frame = new JFrame("Menu");
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 		for(int i=1;i<5;i++){
-			JLabel label = new JLabel("Stol "+i+":  "+stateOfTable[i-1]);
+			JLabel label = new JLabel("Stół "+i+":  "+stateOfTable[i-1]);
 			 JPanel panela = new JPanel();
+			 label.setFont(new Font("SERIF",1,15));
 			 int j=0;
 			for(int k=0;k<5;k++){
 				JLabel labela;
