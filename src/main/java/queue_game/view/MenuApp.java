@@ -22,6 +22,9 @@ public class MenuApp {
 			{new String("Adam"),new String("Ela")},{new String("Marek23"),new String("Nikt00")},
 			{new String("Michal45"),new String("Jan33")},{new String("Asia23"),new String("Ewa34")}
 		};
+	public String[] stateOfTable = new String[]{
+			new String("GRA TRWA"), new String("BRAK"),new String("GRA TRWA"),new String("BRAK")
+	};
 	public MenuApp() {
 		String str = JOptionPane.showInputDialog(null, "Podaj nick : ", "Nick",
 				1);
@@ -41,22 +44,26 @@ public class MenuApp {
 		JFrame frame = new JFrame("Menu");
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 		for(int i=1;i<5;i++){
-			StringBuilder s = new StringBuilder();
-			for(String j : imiona[i-1]){
-				s.append(j);
-				s.append(" ");
+			JLabel label = new JLabel("Stol "+i+":  "+stateOfTable[i-1]);
+			 JPanel panela = new JPanel();
+			 int j=0;
+			for(int k=0;k<5;k++){
+				JLabel labela;
+				if(j<imiona[i-1].length) labela = new JLabel(imiona[i-1][j]);
+				else labela = new JLabel(" ");
+				j++;
+				labela.setHorizontalAlignment(JLabel.CENTER);
+				panela.add(labela);
+				coloreLabel(labela,Color.WHITE);
+				labela.setPreferredSize(new Dimension(70,40));
 			}
-			JLabel label = new JLabel("Stol "+i+":");
-			  JLabel labela = new JLabel(s.toString());
+			label.setHorizontalAlignment(JLabel.CENTER);
 			  JButton button = new JButton("Dołącz");
 			  JPanel panel = new JPanel();
-			  JPanel panela = new JPanel();
 			  coloreLabel(label,kolory[i-1]);
-			  coloreLabel(labela,Color.WHITE);
-			  labela.setPreferredSize(new Dimension(350,50));
 			  panel.add(label);
 			  panel.add(button);
-			  panela.add(labela);
+			  
 			  frame.getContentPane().add(panel);
 			  frame.getContentPane().add(panela);
 		}
