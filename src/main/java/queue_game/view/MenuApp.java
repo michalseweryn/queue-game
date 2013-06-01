@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -27,15 +29,20 @@ public class MenuApp {
 		String str = JOptionPane.showInputDialog(null, "Podaj nick : ", "Nick",
 				1);
 		if (str != null) {
-			JOptionPane.showMessageDialog(null, "Twój nick to : " + str,
+			if(!str.isEmpty() && !str.contains(" ")){
+				JOptionPane.showMessageDialog(null, "Twój nick to : " + str,
 					"Nick", 1);
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					Menu();
 				}
 			});
+			}
+			else{
+				JOptionPane.showMessageDialog(null, "Błędny nick.", "Nick", 1);
+			}
 		} else
-			JOptionPane.showMessageDialog(null, "Zrezygnowales.", "Nick", 1);
+			JOptionPane.showMessageDialog(null, "Zrezygnowałeś.", "Nick", 1);
 	}
 
 	public void Menu(){
@@ -61,6 +68,12 @@ public class MenuApp {
 			}
 			label.setHorizontalAlignment(JLabel.CENTER);
 			  JButton button = new JButton("Dołącz");
+			  final int tmp=i;
+			  button.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						join(tmp);
+					}
+				});
 			  JPanel panel = new JPanel();
 			  coloreLabel(label,Color.WHITE);
 			  panel.add(label);
@@ -80,6 +93,9 @@ public class MenuApp {
 		label.setBorder(BorderFactory.createLineBorder(Color.black));
 		label.setPreferredSize(new Dimension(200, 25));
 		return label;
+	}
+	private void join(int i){
+		System.out.println("Stol o numerze"+i);
 	}
 	/**
 	 * @param args
