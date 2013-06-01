@@ -23,8 +23,8 @@ public class MenuApp {
 			{new String("Adam"),new String("Ela")},{new String("Marek23"),new String("Nikt00")},
 			{new String("Michal45"),new String("Jan33")},{new String("Asia23"),new String("Ewa34")}
 		};
-	public String[] stateOfTable = new String[]{
-			new String("GRA TRWA"), new String("BRAK"),new String("GRA TRWA"),new String("BRAK")
+	public boolean[] stateOfTable = new boolean[]{
+			true, false,true,false
 	};
 	public MenuApp() {
 		String str = JOptionPane.showInputDialog(null, "Podaj nick : ", "Nick",
@@ -45,7 +45,9 @@ public class MenuApp {
 		JFrame frame = new JFrame("Menu");
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 		for(int i=1;i<5;i++){
-			JLabel label = new JLabel("Stół "+i+":  "+stateOfTable[i-1]);
+			JLabel label;
+			if(stateOfTable[i-1]) label=new JLabel("Stół "+i+":  GRA TRWA");
+			else label=new JLabel("Stół "+i+":  BRAK");
 			 JPanel panela = new JPanel();
 			 label.setFont(new Font("SERIF",1,15));
 			 int j=0;
