@@ -54,8 +54,12 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 	private int cardsLeft = 0;
 	private String[] names = new String[5];
 
-	public ClientApp() {
-		String host = "127.0.0.1";
+	public ClientApp(Socket connection,String name) throws IOException{
+		this.connection = connection;
+		this.in = new InputStreamReader(connection.getInputStream());
+		this.out = new OutputStreamWriter(connection.getOutputStream());
+		this.name = name;
+		/*String host = "127.0.0.1";
 		try {
 			connection = new Socket(host, 17373);
 			in = new InputStreamReader(connection.getInputStream());
@@ -77,11 +81,11 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 			int tables = Utilities.readInt(in);
 			while(tables-- > 0)
 				Utilities.readInt(in);
-			Utilities.writeObject(out, "JOIN 0 ");
+			Utilities.writeObject(out, "JOIN "+ server + " ");
 			Utilities.finishWriting(out);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 		gameState = new GameState(Arrays.asList(name));
 
 		localCreator = new LocalGameActionCreator(gameState);
@@ -175,10 +179,10 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		frame.setVisible(true);
 	}
 
-	public static void main(String[] args) throws InvocationTargetException,
-			InterruptedException {
-		new ClientApp();
-	}
+	//public static void main(String[] args) throws InvocationTargetException,
+	//		InterruptedException {
+	//	new ClientApp();
+//	}
 
 	public GameAction getAction() throws InterruptedException {
 		gameArea.update();

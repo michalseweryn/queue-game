@@ -6,6 +6,15 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -17,7 +26,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import queue_game.client.ClientApp;
+import queue_game.server.PlayerConnection;
+import queue_game.server.Utilities;
+
 public class MenuApp {
+	private String nickname;
+	private Socket connection = null;
+	private Reader in;
+	private Writer out;
+	private PlayerConnection player;
+
 	public String[][] imiona = new String[][]{
 			{new String("Adam"),new String("Ela")},{new String("Marek23"),new String("Nikt00")},
 			{new String("Michal45"),new String("Jan33")},{new String("Asia23"),new String("Ewa34")}
@@ -26,11 +45,11 @@ public class MenuApp {
 			true, false,true,false
 	};
 	public MenuApp() {
-		String str = JOptionPane.showInputDialog(null, "Podaj nick : ", "Nick",
+		nickname = JOptionPane.showInputDialog(null, "Podaj nick : ", "Nick",
 				1);
-		if (str != null) {
-			if(!str.isEmpty() && !str.contains(" ")){
-				JOptionPane.showMessageDialog(null, "Twój nick to : " + str,
+		if (nickname != null) {
+			if(!nickname.isEmpty() && !nickname.contains(" ")){
+				JOptionPane.showMessageDialog(null, "Twój nick to : " + nickname,
 					"Nick", 1);
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
@@ -46,6 +65,7 @@ public class MenuApp {
 	}
 
 	public void Menu(){
+		
 		JFrame frame = new JFrame("Menu");
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 		for(int i=1;i<5;i++){
@@ -95,7 +115,34 @@ public class MenuApp {
 		return label;
 	}
 	private void join(int i){
-		System.out.println("Stol o numerze"+i);
+		String host = "127.0.0.1";
+		try {
+			connection = new Socket(host, 17373);
+			in = new InputStreamReader(connection.getInputStream());
+			out = new OutputStreamWriter(connection.getOutputStream());
+			player = new PlayerConnection(connection);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			Utilities.writeObject(out, "NAME " + nickname + " ");
+			Utilities.finishWriting(out);
+			int tables = Utilities.readInt(in);
+			while(tables-- > 0)
+				Utilities.readInt(in);
+			Utilities.writeObject(out, "JOIN "+ i + " ");
+			Utilities.finishWriting(out);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			new ClientApp(connection,nickname);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * @param args
