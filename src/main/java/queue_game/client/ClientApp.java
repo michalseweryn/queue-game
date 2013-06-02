@@ -59,33 +59,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		this.in = new InputStreamReader(connection.getInputStream());
 		this.out = new OutputStreamWriter(connection.getOutputStream());
 		this.name = name;
-		/*String host = "127.0.0.1";
-		try {
-			connection = new Socket(host, 17373);
-			in = new InputStreamReader(connection.getInputStream());
-			out = new OutputStreamWriter(connection.getOutputStream());
-			player = new PlayerConnection(connection);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		Random r = new Random();
-		name = Arrays.asList("Adam", "Bob", "Carl", "Dan", "Eve").get(
-				r.nextInt(5))
-				+ r.nextInt(100);
-		try {
-			Utilities.writeObject(out, "NAME " + name + " ");
-			Utilities.finishWriting(out);
-			int tables = Utilities.readInt(in);
-			while(tables-- > 0)
-				Utilities.readInt(in);
-			Utilities.writeObject(out, "JOIN "+ server + " ");
-			Utilities.finishWriting(out);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
+		
 		gameState = new GameState(Arrays.asList(name));
 
 		localCreator = new LocalGameActionCreator(gameState);

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -65,8 +67,10 @@ public class MenuApp {
 	}
 
 	public void Menu(){
-		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		JFrame frame = new JFrame("Menu");
+		frame.setLocation(screenSize.width/3, screenSize.height/3);
+		//frame.setLocationRelativeTo(null);
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 		for(int i=1;i<5;i++){
 			JLabel label;
@@ -147,9 +151,9 @@ public class MenuApp {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		MenuApp ma = new MenuApp();
+	public static void main(String[] args) throws InvocationTargetException,
+			InterruptedException {
+		new MenuApp();
 	}
 
 }
