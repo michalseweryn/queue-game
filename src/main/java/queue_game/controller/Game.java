@@ -327,20 +327,30 @@ public class Game implements Runnable {
 	 * 
 	 * @author Jan
 	 */
-	public void openingStoresPhase() {
+	public void openingStoresPhase() throws InterruptedException{
 		gameState.setActivePlayer(-1);
+		GameAction action;
 		for (Store store : gameState.getStores()) {
 			if (store.isClosed())
 				continue;
 			int queueLength = store.getQueue().size();
 			while (queueLength-- > 0) {
-				for (ProductType product : ProductType.values()) {
-					if (store.getNumberOf(product) > 0 && !store.isClosed()) {
-						gameState.sell(store.productType, product);
-						// no full information anyway.
-						// newAction(GameActionType.PRODUCT_BOUGHT,
-						// gameState.sell(type) + 1, type.ordinal());
-						break;
+				if(store.hasAlternative()){
+					gameState.setActivePlayer(store.getQueue().get(0));
+					do {
+						action = actionGiver.getAction();
+					} while ((ProductType) action.getInfo()[2] != store.productType
+							|| store.getNumberOf((ProductType) action.getInfo()[3])==0 );
+					gameState.sell(store.productType, (ProductType) action.getInfo()[3]);
+					update(action);
+					gameState.setActivePlayer(-1);
+				}
+				else{
+					for (ProductType type : ProductType.values()) {
+						while (store.getNumberOf(type) > 0
+								&& !store.getQueue().isEmpty()) {
+							gameState.sell(store.productType, type);
+						}
 					}
 				}
 			}

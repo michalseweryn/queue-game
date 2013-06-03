@@ -75,7 +75,7 @@ public class LocalGameActionCreator implements ActionCreator {
 		case JUMPING:
 			return getJumpingAction();
 		case OPENING:
-			throw new IllegalStateException("No actions for opening right now.");
+			return getOpeningAction();
 		case PCT:
 			return getPCTAction();
 		case QUEUING_UP:
@@ -85,6 +85,11 @@ public class LocalGameActionCreator implements ActionCreator {
 
 		}
 		return null;
+	}
+	private GameAction getOpeningAction() throws InterruptedException{
+		ProductParameters product = requestProduct(SELECT_PRODUCT_TO_MOVE);
+		return new GameAction(GameActionType.PRODUCT_BOUGHT,
+				gameState.getActivePlayer(),  product.store, product.product);
 	}
 
 	/**

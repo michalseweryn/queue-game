@@ -236,6 +236,8 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 			return;
 		if(action.getType() == GameActionType.PRODUCT_DELIVERED)
 			return;
+		if(action.getType()==GameActionType.PRODUCT_BOUGHT)
+			return;
 		if((Integer)action.getInfo()[0] != playerId)
 			return;
 		try {
