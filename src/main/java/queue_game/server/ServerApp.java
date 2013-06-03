@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 
 public class ServerApp {
 	public static void main(String[] args) {
-		final int tableCount = 1;
+		final int tableCount = 5;
 		for(int i = 0; i < tableCount; ++i) {
 			Thread tableThread = new Thread(new Table(i, 5));
 			tableThread.setDaemon(true);
