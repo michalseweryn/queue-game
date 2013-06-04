@@ -335,7 +335,8 @@ public class Game implements Runnable {
 			if (store.isClosed())
 				continue;
 			boolean sold;
-			while (store.getQueue().size() > 0) {
+			int queueLength=store.getQueue().size();
+			while (queueLength-- > 0) {
 				sold = false;
 				if (store.getQueue().get(0) == -1) {
 					if (store.getNumberOf() != 0) {
@@ -356,14 +357,14 @@ public class Game implements Runnable {
 						action = actionGiver.getAction();		
 					} while (action == null
 							|| action.getType() != GameActionType.PRODUCT_BOUGHT
-							|| !(((Integer) action.getInfo()[0])
+							|| !(((Integer) action.getInfo()[1])
 									.equals(store.productType.ordinal()))
-							|| store.getNumberOf((ProductType) action.getInfo()[1]) == 0);
+							|| store.getNumberOf((ProductType) action.getInfo()[2]) == 0);
 					gameState.sellProduct(store,
-							(ProductType) action.getInfo()[1]);
+							(ProductType) action.getInfo()[2]);
 					sold = true;
 					update(action);
-					gameState.setActivePlayer(-1);
+					//gameState.setActivePlayer(-1);
 				} else {
 					// jest tu tylko jeden produkt wiec konczymy
 					for (ProductType type : ProductType.values()) {

@@ -89,7 +89,7 @@ public class LocalGameActionCreator implements ActionCreator {
 	
 	private GameAction getOpeningAction() throws InterruptedException{
 		ProductParameters product = requestProduct(SELECT_PRODUCT_TO_BUY);
-		return new GameAction(GameActionType.PRODUCT_BOUGHT,
+		return new GameAction(GameActionType.PRODUCT_BOUGHT, gameState.getActivePlayer(),
 				product.store.ordinal(), product.product);
 	}
 

@@ -144,9 +144,10 @@ public class GameAction {
 			//nie ma numeru gracza bo ta akcja zawsze trafia tylko do gracza ktory podejrzal karty
 			break;
 		case PRODUCT_BOUGHT:
-			action.info = new Object[2];
-			action.info[0] = Utilities.readInt(in); //ktory sklep
-			action.info[1] = Utilities.readEnum(in, ProductType.class); //ktory produkt
+			action.info = new Object[3];
+			action.info[0] = Utilities.readInt(in); //ktory gracz
+			action.info[1] = Utilities.readInt(in); //ktory sklep
+			action.info[2] = Utilities.readEnum(in, ProductType.class); //ktory produkt
 			break;
 		case PAWN_REMOVED:
 			action.info = new Object[3];
