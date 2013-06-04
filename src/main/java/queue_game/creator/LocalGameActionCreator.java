@@ -39,7 +39,7 @@ public class LocalGameActionCreator implements ActionCreator {
 	private static final String SELECT_STORE_TO_ADD = "Wybierz sklep w którym ma być dodany towar";
 	private static final String SELECT_STORE_REVERSED = "Wybierz kolejkę do odwrócenia";
 	private static final String SELECT_STORE_TO_CLOSE = "Wybierz sklep do zamknięcia";
-
+	private static final String SELECT_PRODUCT_TO_BUY = "Wybierz produkt który chcesz kupić";
 	GameState gameState;
 
 	public LocalGameActionCreator(GameState gameState) {
@@ -87,7 +87,7 @@ public class LocalGameActionCreator implements ActionCreator {
 		return null;
 	}
 	private GameAction getOpeningAction() throws InterruptedException{
-		ProductParameters product = requestProduct(SELECT_PRODUCT_TO_MOVE);
+		ProductParameters product = requestProduct(SELECT_PRODUCT_TO_BUY);
 		return new GameAction(GameActionType.PRODUCT_BOUGHT,
 				gameState.getActivePlayer(),  product.store, product.product);
 	}

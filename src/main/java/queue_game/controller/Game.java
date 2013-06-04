@@ -329,6 +329,7 @@ public class Game implements Runnable {
 	 */
 	public void openingStoresPhase() throws InterruptedException{
 		gameState.setActivePlayer(-1);
+		gameState.setCurrentGamePhase(GamePhase.OPENING);
 		GameAction action;
 		for (Store store : gameState.getStores()) {
 			if (store.isClosed())
@@ -339,9 +340,9 @@ public class Game implements Runnable {
 					gameState.setActivePlayer(store.getQueue().get(0));
 					do {
 						action = actionGiver.getAction();
-					} while ((ProductType) action.getInfo()[2] != store.productType
-							|| store.getNumberOf((ProductType) action.getInfo()[3])==0 );
-					gameState.sell(store.productType, (ProductType) action.getInfo()[3]);
+					} while (action==null || ((ProductType) action.getInfo()[1] != store.productType
+							|| store.getNumberOf((ProductType) action.getInfo()[2])==0 ));
+					gameState.sellProduct(store.productType, (ProductType) action.getInfo()[2]);
 					update(action);
 					gameState.setActivePlayer(-1);
 				}
@@ -349,7 +350,7 @@ public class Game implements Runnable {
 					for (ProductType type : ProductType.values()) {
 						while (store.getNumberOf(type) > 0
 								&& !store.getQueue().isEmpty()) {
-							gameState.sell(store.productType, type);
+							gameState.sellProduct(store.productType, type);
 						}
 					}
 				}

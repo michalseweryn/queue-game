@@ -156,7 +156,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 	//public static void main(String[] args) throws InvocationTargetException,
 	//		InterruptedException {
 	//	new ClientApp();
-//	}
+	//}
 
 	public GameAction getAction() throws InterruptedException {
 		gameArea.update();
@@ -235,8 +235,6 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		if(action.getType() == GameActionType.CARDS_PEEKED)
 			return;
 		if(action.getType() == GameActionType.PRODUCT_DELIVERED)
-			return;
-		if(action.getType()==GameActionType.PRODUCT_BOUGHT)
 			return;
 		if((Integer)action.getInfo()[0] != playerId)
 			return;
