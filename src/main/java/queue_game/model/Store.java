@@ -93,6 +93,23 @@ public class Store {
 		}
 		return hasIt;
 	}
+	/**
+	 * 
+	 * @return true if and only if there is a choice for player in the shop
+	 */
+	public boolean hasAlternative(){
+		int nOfTypes=0;
+		for(int i=0; i<5; i++){
+			if(numberOf[i]!=0)
+				nOfTypes++;
+		}
+		if(nOfTypes>1){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 	
 	public int totalNumber(){
 		int total = 0;

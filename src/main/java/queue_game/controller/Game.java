@@ -325,24 +325,58 @@ public class Game implements Runnable {
 	 * Fourth Phase of Day. For each store with products, removes the right
 	 * amount of product and pawns.
 	 * 
-	 * @author Jan
+	 * @author Jan and Piotr
 	 */
-	public void openingStoresPhase() {
-		gameState.setActivePlayer(-1);
+	public void openingStoresPhase() throws InterruptedException {
+		//gameState.setActivePlayer(-1);
+		gameState.setCurrentGamePhase(GamePhase.OPENING);
+		GameAction action;
 		for (Store store : gameState.getStores()) {
 			if (store.isClosed())
 				continue;
-			int queueLength = store.getQueue().size();
+			boolean sold;
+			int queueLength=store.getQueue().size();
 			while (queueLength-- > 0) {
-				for (ProductType product : ProductType.values()) {
-					if (store.getNumberOf(product) > 0 && !store.isClosed()) {
-						gameState.sell(store.productType, product);
-						// no full information anyway.
-						// newAction(GameActionType.PRODUCT_BOUGHT,
-						// gameState.sell(type) + 1, type.ordinal());
-						break;
+				sold = false;
+				if (store.getQueue().get(0) == -1) {
+					if (store.getNumberOf() != 0) {
+						gameState.sellProduct(store, store.productType);
+						sold = true;
+					} else {
+						for (ProductType prod : ProductType.values()) {
+							if (store.getNumberOf(prod) != 0) {
+								gameState.sellProduct(store, prod);
+								sold = true;
+								break;
+							}
+						}
+					}
+				} else if (store.hasAlternative()) {
+					gameState.setActivePlayer(store.getQueue().get(0));
+					do {
+						action = actionGiver.getAction();		
+					} while (action == null
+							|| action.getType() != GameActionType.PRODUCT_BOUGHT
+							|| !(((Integer) action.getInfo()[1])
+									.equals(store.productType.ordinal()))
+							|| store.getNumberOf((ProductType) action.getInfo()[2]) == 0);
+					gameState.sellProduct(store,
+							(ProductType) action.getInfo()[2]);
+					sold = true;
+					update(action);
+					//gameState.setActivePlayer(-1);
+				} else {
+					// jest tu tylko jeden produkt wiec konczymy
+					for (ProductType type : ProductType.values()) {
+						while (store.getNumberOf(type) > 0
+								&& !store.getQueue().isEmpty()) {
+							gameState.sellProduct(store, type);
+							sold = true;
+						}
 					}
 				}
+				if (!sold)
+					break;
 			}
 		}
 	}

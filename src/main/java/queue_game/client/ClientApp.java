@@ -155,8 +155,9 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 
 	//public static void main(String[] args) throws InvocationTargetException,
 	//		InterruptedException {
-	//	new ClientApp();
-//	}
+	//	new ClientApp(new Socket("127.0.0.1", 17373), "a");
+	//	
+	//}
 
 	public GameAction getAction() throws InterruptedException {
 		gameArea.update();
@@ -227,7 +228,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 	public void update(GameAction action) {
 		playerList.update();
 		gameArea.update();
-		System.out.println("UPDATE: " + action);
+		System.out.println("UPDATE1: " + action);
 		if(action.getType() == GameActionType.ERROR)
 			throw new RuntimeException("Sending ERROR");
 		if(action.getType() == GameActionType.DRAW_CARD)
