@@ -325,54 +325,60 @@ public class Game implements Runnable {
 	 * Fourth Phase of Day. For each store with products, removes the right
 	 * amount of product and pawns.
 	 * 
-	 * @author Jan
+	 * @author Jan and Piotr
 	 */
 	public void openingStoresPhase() throws InterruptedException{
 		gameState.setActivePlayer(-1);
 		gameState.setCurrentGamePhase(GamePhase.OPENING);
 		GameAction action;
-		outer: for (Store store : gameState.getStores()) {
+		for (Store store : gameState.getStores()) {
 			if (store.isClosed())
 				continue;
-			int queueLength = store.getQueue().size();
-			while (queueLength-- > 0) {
-				if (store.hasAlternative()) {
-					if (store.getQueue().get(0) == -1) {
-						if (store.getNumberOf() != 0) {
-							gameState.sellProduct(store.productType,
-									store.productType);
-						} else {
-							for (ProductType prod : ProductType.values()) {
-								if (store.getNumberOf(prod) != 0) {
-									gameState.sellProduct(store.productType,
-											prod);
-								}
+			boolean sold;
+			while (store.getQueue().size() > 0) {
+				sold=false;
+				if(store.getQueue().get(0)==-1){
+					if (store.getNumberOf() != 0) {
+						gameState.sellProduct(store,
+								store.productType);
+						sold=true;
+					} else {
+						for (ProductType prod : ProductType.values()) {
+							if (store.getNumberOf(prod) != 0) {
+								gameState.sellProduct(store,
+										prod);
+								sold=true;
+								break;
 							}
 						}
-						continue;
-					} else {
+					}
+				}
+				else if (store.hasAlternative()){
 						gameState.setActivePlayer(store.getQueue().get(0));
 						do {
 							action = actionGiver.getAction();
-							System.out.println(action);
 						} while (action == null
 								|| !(((Integer) action.getInfo()[0])
 										.equals(store.productType.ordinal()))
 								|| store.getNumberOf((ProductType) action
 										.getInfo()[1]) == 0);
-						gameState.sellProduct(store.productType,
-								(ProductType) action.getInfo()[1]);
 						update(action);
+						gameState.sellProduct(store,
+								(ProductType) action.getInfo()[1]);
+						sold=true;
 						gameState.setActivePlayer(-1);
-					}
 				} else {
+					//jest tu tylko jeden produkt wiec konczymy
 					for (ProductType type : ProductType.values()) {
 						while (store.getNumberOf(type) > 0
 								&& !store.getQueue().isEmpty()) {
-							gameState.sellProduct(store.productType, type);
+							gameState.sellProduct(store, type);
+							sold=true;
 						}
 					}
 				}
+				if(!sold)
+					break;
 			}
 		}
 	}

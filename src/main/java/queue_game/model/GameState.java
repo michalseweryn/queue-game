@@ -368,8 +368,7 @@ public class GameState {
 		players.get(player).setNumberOfPawns(nPawns + 1);
 		this.getStore(destination).getQueue().remove(position);
 	}
-	public synchronized void sellProduct(ProductType shop, ProductType soldProduct){
-		Store store=getStore(shop);
+	public synchronized void sellProduct(Store store, ProductType soldProduct){
 		if(store.getNumberOf(soldProduct)==0)
 			throw new RuntimeException("Nie ma produktu w sklepie");
 		int plInd=store.getQueue().remove(0);
