@@ -155,7 +155,8 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 
 	//public static void main(String[] args) throws InvocationTargetException,
 	//		InterruptedException {
-	//	new ClientApp();
+	//	new ClientApp(new Socket("127.0.0.1", 17373), "a");
+	//	
 	//}
 
 	public GameAction getAction() throws InterruptedException {

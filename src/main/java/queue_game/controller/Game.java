@@ -327,8 +327,8 @@ public class Game implements Runnable {
 	 * 
 	 * @author Jan and Piotr
 	 */
-	public void openingStoresPhase() throws InterruptedException{
-		gameState.setActivePlayer(-1);
+	public void openingStoresPhase() throws InterruptedException {
+		//gameState.setActivePlayer(-1);
 		gameState.setCurrentGamePhase(GamePhase.OPENING);
 		GameAction action;
 		for (Store store : gameState.getStores()) {
@@ -336,48 +336,45 @@ public class Game implements Runnable {
 				continue;
 			boolean sold;
 			while (store.getQueue().size() > 0) {
-				sold=false;
-				if(store.getQueue().get(0)==-1){
+				sold = false;
+				if (store.getQueue().get(0) == -1) {
 					if (store.getNumberOf() != 0) {
-						gameState.sellProduct(store,
-								store.productType);
-						sold=true;
+						gameState.sellProduct(store, store.productType);
+						sold = true;
 					} else {
 						for (ProductType prod : ProductType.values()) {
 							if (store.getNumberOf(prod) != 0) {
-								gameState.sellProduct(store,
-										prod);
-								sold=true;
+								gameState.sellProduct(store, prod);
+								sold = true;
 								break;
 							}
 						}
 					}
-				}
-				else if (store.hasAlternative()){
-						gameState.setActivePlayer(store.getQueue().get(0));
-						do {
-							action = actionGiver.getAction();
-						} while (action == null
-								|| !(((Integer) action.getInfo()[0])
-										.equals(store.productType.ordinal()))
-								|| store.getNumberOf((ProductType) action
-										.getInfo()[1]) == 0);
-						update(action);
-						gameState.sellProduct(store,
-								(ProductType) action.getInfo()[1]);
-						sold=true;
-						gameState.setActivePlayer(-1);
+				} else if (store.hasAlternative()) {
+					gameState.setActivePlayer(store.getQueue().get(0));
+					do {
+						action = actionGiver.getAction();		
+					} while (action == null
+							|| action.getType() != GameActionType.PRODUCT_BOUGHT
+							|| !(((Integer) action.getInfo()[0])
+									.equals(store.productType.ordinal()))
+							|| store.getNumberOf((ProductType) action.getInfo()[1]) == 0);
+					gameState.sellProduct(store,
+							(ProductType) action.getInfo()[1]);
+					sold = true;
+					update(action);
+					gameState.setActivePlayer(-1);
 				} else {
-					//jest tu tylko jeden produkt wiec konczymy
+					// jest tu tylko jeden produkt wiec konczymy
 					for (ProductType type : ProductType.values()) {
 						while (store.getNumberOf(type) > 0
 								&& !store.getQueue().isEmpty()) {
 							gameState.sellProduct(store, type);
-							sold=true;
+							sold = true;
 						}
 					}
 				}
-				if(!sold)
+				if (!sold)
 					break;
 			}
 		}
