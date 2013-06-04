@@ -331,22 +331,41 @@ public class Game implements Runnable {
 		gameState.setActivePlayer(-1);
 		gameState.setCurrentGamePhase(GamePhase.OPENING);
 		GameAction action;
-		for (Store store : gameState.getStores()) {
+		outer: for (Store store : gameState.getStores()) {
 			if (store.isClosed())
 				continue;
 			int queueLength = store.getQueue().size();
 			while (queueLength-- > 0) {
-				if(store.hasAlternative()){
-					gameState.setActivePlayer(store.getQueue().get(0));
-					do {
-						action = actionGiver.getAction();
-					} while (action==null || ((ProductType) action.getInfo()[1] != store.productType
-							|| store.getNumberOf((ProductType) action.getInfo()[2])==0 ));
-					gameState.sellProduct(store.productType, (ProductType) action.getInfo()[2]);
-					update(action);
-					gameState.setActivePlayer(-1);
-				}
-				else{
+				if (store.hasAlternative()) {
+					if (store.getQueue().get(0) == -1) {
+						if (store.getNumberOf() != 0) {
+							gameState.sellProduct(store.productType,
+									store.productType);
+						} else {
+							for (ProductType prod : ProductType.values()) {
+								if (store.getNumberOf(prod) != 0) {
+									gameState.sellProduct(store.productType,
+											prod);
+								}
+							}
+						}
+						continue;
+					} else {
+						gameState.setActivePlayer(store.getQueue().get(0));
+						do {
+							action = actionGiver.getAction();
+							System.out.println(action);
+						} while (action == null
+								|| !(((Integer) action.getInfo()[0])
+										.equals(store.productType.ordinal()))
+								|| store.getNumberOf((ProductType) action
+										.getInfo()[1]) == 0);
+						gameState.sellProduct(store.productType,
+								(ProductType) action.getInfo()[1]);
+						update(action);
+						gameState.setActivePlayer(-1);
+					}
+				} else {
 					for (ProductType type : ProductType.values()) {
 						while (store.getNumberOf(type) > 0
 								&& !store.getQueue().isEmpty()) {
