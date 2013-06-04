@@ -58,7 +58,12 @@ Krzysztof , Szymon
 Karty akcji:
 	Helena
 
+Mechanika bazaru:
+	Jan
 
+Mechanika menu:
+	Jan
+		
 GUI (brand new):
 	Michał
 

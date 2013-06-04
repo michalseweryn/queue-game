@@ -38,6 +38,15 @@ public class PlayerConnection implements Runnable {
 	}
 
 	public void run() {
+
+		try {
+			Table.writeInfo(out);
+			System.out.println("TU");
+			Utilities.finishWriting(out);
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		try {
 			Utilities.expectString(in, "NAME");
 			name = Utilities.readRawString(in);
@@ -71,5 +80,9 @@ public class PlayerConnection implements Runnable {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void info() {
+		
 	}
 }

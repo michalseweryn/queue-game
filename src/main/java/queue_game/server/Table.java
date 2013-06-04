@@ -17,7 +17,7 @@ import queue_game.model.StandardDeckOfDeliveryCards;
 
 public class Table implements Runnable, ActionCreator, Updater {
 
-	private static List<Table> tables = new ArrayList<Table>();
+	public static List<Table> tables = new ArrayList<Table>();
 	private final int id;
 	private final int playerLimit;
 	private List<PlayerConnection> players = new LinkedList<PlayerConnection>();
@@ -53,6 +53,7 @@ public class Table implements Runnable, ActionCreator, Updater {
 	}
 
 	public static void writeList(Writer out) throws IOException {
+		System.out.println("LIST");
 		Utilities.writeObject(out, tables.size());
 		out.write('\n');
 		for (Table t : tables) {
@@ -61,7 +62,23 @@ public class Table implements Runnable, ActionCreator, Updater {
 		}
 		Utilities.finishWriting(out);
 	}
-
+	
+	public static void writeInfo(Writer out) throws IOException {
+		Utilities.writeObject(out, tables.size());
+		out.write('\n');
+		for (Table t : tables) {
+			Utilities.writeObject(out, ((t.gameOnRun )? 1 : 0 ) );
+			out.write('\n');
+			Utilities.writeObject(out, t.players.size());
+			out.write('\n');
+			for(PlayerConnection p: t.players){
+				Utilities.writeString(out, p.getName());
+				out.write('\n');
+			}
+			out.write('\n');
+		}
+		Utilities.finishWriting(out);
+	}
 	public int join(PlayerConnection player) {
 		synchronized (players) {
 			if (players.size() >= playerLimit)
@@ -203,7 +220,6 @@ public class Table implements Runnable, ActionCreator, Updater {
 		recentAction[activePlayer] = null;
 		return action;
 	}
-
 	/*
 	 * (non-Javadoc)
 	 * 

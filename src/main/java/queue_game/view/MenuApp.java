@@ -30,6 +30,7 @@ import javax.swing.SwingUtilities;
 
 import queue_game.client.ClientApp;
 import queue_game.server.PlayerConnection;
+import queue_game.server.Table;
 import queue_game.server.Utilities;
 
 public class MenuApp {
@@ -38,14 +39,9 @@ public class MenuApp {
 	private Reader in;
 	private Writer out;
 	private PlayerConnection player;
-
-	public String[][] imiona = new String[][]{
-			{new String("Adam"),new String("Ela")},{new String("Marek23"),new String("Nikt00")},
-			{new String("Michal45"),new String("Jan33")},{new String("Asia23"),new String("Ewa34")}
-		};
-	public boolean[] stateOfTable = new boolean[]{
-			true, false,true,false
-	};
+	private Table table;
+	public String[][] imiona = new String[5][5];
+	public boolean[] stateOfTable = new boolean[5];
 	public MenuApp() {
 		nickname = JOptionPane.showInputDialog(null, "Podaj nick : ", "Nick",
 				1);
@@ -67,23 +63,52 @@ public class MenuApp {
 	}
 
 	public void Menu(){
+		String host = "127.0.0.1";
+		try {
+			connection = new Socket(host, 17373);
+			in = new InputStreamReader(connection.getInputStream());
+			out = new OutputStreamWriter(connection.getOutputStream());
+			player = new PlayerConnection(connection);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			Utilities.writeObject(out, "INFO");			
+			Utilities.finishWriting(out);
+			
+			int numberOfTables = Utilities.readInt(in);
+			int size;
+			for(int i = 0; i < numberOfTables; i++){
+				stateOfTable[i]  =  (Utilities.readInt(in) == 1) ? true : false ;
+				size = Utilities.readInt(in); 
+				for(int j = 0; j < size; j++)
+					imiona[i][j] = Utilities.readString(in);
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		JFrame frame = new JFrame("Menu");
 		frame.setLocation(screenSize.width/3, screenSize.height/3);
 		//frame.setLocationRelativeTo(null);
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-		for(int i=1;i<5;i++){
+		for(int i=0;i<4;i++){
 			JLabel label;
-			if(stateOfTable[i-1]) label=new JLabel("Stół "+i+":  GRA TRWA");
-			else label=new JLabel("Stół "+i+":  BRAK");
+			if(stateOfTable[i]) label=new JLabel("Stół "+ (i+1) +":  GRA TRWA");
+			else label=new JLabel("Stół "+(i+1)+":  BRAK");
 			 JPanel panela = new JPanel();
 			 label.setFont(new Font("SERIF",1,15));
-			 int j=0;
 			for(int k=0;k<5;k++){
 				JLabel labela;
-				if(j<imiona[i-1].length) labela = new JLabel(imiona[i-1][j]);
-				else labela = new JLabel(" ");
-				j++;
+				if(imiona[i][k] != null)
+					labela = new JLabel(imiona[i][k]);
+				else	
+					labela = new JLabel(" ");
 				labela.setHorizontalAlignment(JLabel.CENTER);
 				panela.add(labela);
 				panela.setOpaque(false);
@@ -119,18 +144,6 @@ public class MenuApp {
 		return label;
 	}
 	private void join(int i){
-		String host = "127.0.0.1";
-		try {
-			connection = new Socket(host, 17373);
-			in = new InputStreamReader(connection.getInputStream());
-			out = new OutputStreamWriter(connection.getOutputStream());
-			player = new PlayerConnection(connection);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 		try {
 			Utilities.writeObject(out, "NAME " + nickname + " ");
 			Utilities.finishWriting(out);
