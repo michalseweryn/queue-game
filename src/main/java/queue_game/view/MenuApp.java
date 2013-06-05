@@ -97,16 +97,6 @@ public class MenuApp {
 		frame.setLocation(screenSize.width/3, screenSize.height/3);
 		//frame.setLocationRelativeTo(null);
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-		JPanel panelrefresh = new JPanel();
-		JButton buttonrefresh = new JButton("Odśwież");
-		buttonrefresh.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				refresh();
-			}
-		});
-		panelrefresh.setOpaque(false);
-		panelrefresh.add(buttonrefresh);
-		frame.getContentPane().add(panelrefresh);
 		for(int i=0;i<4;i++){
 			JLabel label;
 			if(stateOfTable[i]) label=new JLabel("Stół "+ (i+1) +":  GRA TRWA");
@@ -141,6 +131,16 @@ public class MenuApp {
 			  frame.getContentPane().add(panel);
 			  frame.getContentPane().add(panela);
 		}
+		JPanel panelrefresh = new JPanel();
+		JButton buttonrefresh = new JButton("Odśwież");
+		buttonrefresh.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				refresh();
+			}
+		});
+		panelrefresh.setOpaque(false);
+		panelrefresh.add(buttonrefresh);
+		frame.getContentPane().add(panelrefresh);
 		  frame.setSize(400, 450);
 		  frame.getContentPane().setBackground(new Color(0xD8F2DE));
 		  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
