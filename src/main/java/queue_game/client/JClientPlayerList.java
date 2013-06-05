@@ -83,6 +83,7 @@ public class JClientPlayerList extends JPanel implements queue_game.view.View, A
 		addFields();
 		log.setText(makeLog(gameState.getGameActions()));
 		revalidate();
+		repaint();
 	}
 
 	/* (non-Javadoc)
