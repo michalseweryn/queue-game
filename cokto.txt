@@ -61,9 +61,18 @@ Karty akcji:
 Mechanika bazaru:
 	Jan
 
+ActionCreator:
+   Helena
+   
+Naprawa błędów w kartach (nie uzywanie na bazarze etc):
+	Helena
+	
 Mechanika menu:
 	Jan
 		
+GUI Menu:
+	Helena
+	
 GUI (brand new):
 	Michał
 
