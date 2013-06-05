@@ -244,6 +244,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		updatePlayers();
 	}
 
 	public Collection<DeliveryCard> removeThreeCards() {
