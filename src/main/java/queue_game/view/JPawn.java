@@ -134,7 +134,7 @@ public class JPawn extends JComponent implements MouseListener {
 	@Override
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		if (JGameArea.ANTYALIASING)
+		//if (JGameArea.ANTYALIASING)
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		Color c = Color.black;

@@ -36,7 +36,7 @@ public class JStore extends JComponent implements MouseListener{
     protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d= (Graphics2D) g;
-		if (JGameArea.ANTYALIASING)
+		//if (JGameArea.ANTYALIASING)
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		
