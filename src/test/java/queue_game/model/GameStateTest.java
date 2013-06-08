@@ -286,7 +286,7 @@ public class GameStateTest {
 	
 
 	@Test
-	public void sellTest() {
+	public void sellProductTest() {
 		gameState.putPlayerPawn(0, ProductType.CLOTHES);
 		gameState.putPlayerPawn(1, ProductType.CLOTHES);
 		gameState.putPlayerPawn(3, ProductType.CLOTHES);
@@ -295,28 +295,28 @@ public class GameStateTest {
 		gameState.getStore(ProductType.CLOTHES).addProducts(3);
 		gameState.getStore(ProductType.CLOTHES).addProduct(ProductType.FOOD);
 		gameState.getStore(ProductType.CLOTHES).addProduct(ProductType.FURNITURE);
-		gameState.sell(ProductType.CLOTHES, ProductType.FURNITURE);
+		gameState.sellProduct(gameState.getStore(ProductType.CLOTHES), ProductType.FURNITURE);
 		assertEquals(new ArrayList<Integer>(Arrays.asList(1, 3, 2, 4)), gameState.getStore(ProductType.CLOTHES).getQueue());
-		gameState.sell(ProductType.CLOTHES, ProductType.CLOTHES);
+		gameState.sellProduct(gameState.getStore(ProductType.CLOTHES), ProductType.CLOTHES);
 		assertEquals(new ArrayList<Integer>(Arrays.asList(3, 2, 4)), gameState.getStore(ProductType.CLOTHES).getQueue());
-		gameState.sell(ProductType.CLOTHES, ProductType.CLOTHES);
+		gameState.sellProduct(gameState.getStore(ProductType.CLOTHES), ProductType.CLOTHES);
 		assertEquals(new ArrayList<Integer>(Arrays.asList(2, 4)), gameState.getStore(ProductType.CLOTHES).getQueue());
-		gameState.sell(ProductType.CLOTHES, ProductType.CLOTHES);
+		gameState.sellProduct(gameState.getStore(ProductType.CLOTHES), ProductType.CLOTHES);
 		assertEquals(new ArrayList<Integer>(Arrays.asList(4)), gameState.getStore(ProductType.CLOTHES).getQueue());
-		gameState.sell(ProductType.CLOTHES, ProductType.FOOD);
+		gameState.sellProduct(gameState.getStore(ProductType.CLOTHES), ProductType.FOOD);
 		assertEquals(new ArrayList<Integer>(), gameState.getStore(ProductType.CLOTHES).getQueue());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void sellTest2() {
-		gameState.sell(ProductType.CLOTHES, ProductType.CLOTHES);
+	@Test(expected = RuntimeException.class)
+	public void sellProductTest2() {
+		gameState.sellProduct(gameState.getStore(ProductType.CLOTHES), ProductType.CLOTHES);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void sellTest3() {
+	@Test(expected = RuntimeException.class)
+	public void sellProductTest3() {
 		gameState.putPlayerPawn(0, ProductType.CLOTHES);
 		gameState.getStore(ProductType.CLOTHES).addProducts(3);
-		gameState.sell(ProductType.CLOTHES, ProductType.FOOD);
+		gameState.sellProduct(gameState.getStore(ProductType.CLOTHES), ProductType.FOOD);
 	}
 
 	@Test
@@ -348,11 +348,13 @@ public class GameStateTest {
 		assertEquals(4, gameState.getActivePlayer());
 	}
 
+	/*
 	@Test(expected = IllegalArgumentException.class)
 	public void setActivePlayerTest2() {
 		gameState.setActivePlayer(-1);
 	}
-
+	*/
+	
 	@Test(expected = IllegalArgumentException.class)
 	public void setActivePlayerTest3() {
 		gameState.setActivePlayer(5);

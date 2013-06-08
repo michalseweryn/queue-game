@@ -86,7 +86,8 @@ public class JBoard extends JPanel implements ComponentListener {
 		public void paintComponent(Graphics g) {
 			Random rand = new Random(0);
 			Graphics2D g2d = (Graphics2D) g;
-			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+			if (JGameArea.ANTYALIASING)
+				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
 			double height = getParent().getSize().getHeight();
 			double width = getParent().getSize().getWidth();

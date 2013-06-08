@@ -26,6 +26,7 @@ public class JGameArea extends JPanel implements View{
 	private JBoard board;
 	private JCardsArea cardsArea;
 	private int playerId;
+	public static final boolean ANTYALIASING = false;
 	
 	public JGameArea(GameState gameState, LocalGameActionCreator creator){
 		super();

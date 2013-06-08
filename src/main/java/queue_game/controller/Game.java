@@ -555,7 +555,7 @@ public class Game implements Runnable {
 			messageForPlayer("BŁĄD. Ten sklep jest zamknięty.");
 			return false;
 		}
-		gameState.sell(store0, type);
+		gameState.sellProduct(gameState.getStore(store0), type);
 		newAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer() + 1,
 				QueuingCard.UNDER_THE_COUNTER_GOODS.ordinal());
 		return true;
