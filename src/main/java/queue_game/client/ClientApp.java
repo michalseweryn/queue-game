@@ -226,7 +226,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		
 	}
 	public void update(GameAction action) {
-		playerList.update();
+		playerList.updateWithoutRemoving();
 		gameArea.update();
 		System.out.println("UPDATE1: " + action);
 		if(action.getType() == GameActionType.ERROR)
