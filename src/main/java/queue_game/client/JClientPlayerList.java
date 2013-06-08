@@ -18,7 +18,7 @@ import queue_game.model.GameActionType;
 import queue_game.model.GameState;
 import queue_game.model.Player;
 import queue_game.view.JPlayerInfo;
-
+ 
 public class JClientPlayerList extends JPanel implements queue_game.view.View, ActionListener {
 	private static final long serialVersionUID = 6386690129053320221L;
 	private GameState gameState; 
@@ -84,6 +84,11 @@ public class JClientPlayerList extends JPanel implements queue_game.view.View, A
 		log.setText(makeLog(gameState.getGameActions()));
 		revalidate();
 		repaint();
+	}
+	
+	public void updateWithoutRemoving(){
+		for (JPlayerInfo pI : list)
+			pI.update();
 	}
 
 	/* (non-Javadoc)
