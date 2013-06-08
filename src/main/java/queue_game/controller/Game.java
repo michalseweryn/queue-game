@@ -203,6 +203,10 @@ public class Game implements Runnable {
 		prepareToQueueJumping();
 		gameState.openStores();
 		pawnsTaking();
+
+		gameState.setGameOpeningMarker(
+				(gameState.getGameOpeningMarker()+1)
+				% gameState.getNumberOfPlayers());
 	}
 
 	/**
