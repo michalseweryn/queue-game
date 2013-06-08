@@ -42,6 +42,7 @@ public class MenuApp {
 	private Table table;
 	public String[][] imiona = new String[5][5];
 	public boolean[] stateOfTable = new boolean[5];
+	private JFrame frame;
 	public MenuApp() {
 		nickname = JOptionPane.showInputDialog(null, "Podaj nick : ", "Nick",
 				1);
@@ -61,39 +62,13 @@ public class MenuApp {
 		} else
 			JOptionPane.showMessageDialog(null, "Zrezygnowałeś.", "Nick", 1);
 	}
-
-	public void Menu(){
-		String host = "127.0.0.1";
-		try {
-			connection = new Socket(host, 17373);
-			in = new InputStreamReader(connection.getInputStream());
-			out = new OutputStreamWriter(connection.getOutputStream());
-			player = new PlayerConnection(connection);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	
+	public void Menu(){	
 		
-		try {
-			Utilities.writeObject(out, "INFO");			
-			Utilities.finishWriting(out);
-			
-			int numberOfTables = Utilities.readInt(in);
-			int size;
-			for(int i = 0; i < numberOfTables; i++){
-				stateOfTable[i]  =  (Utilities.readInt(in) == 1) ? true : false ;
-				size = Utilities.readInt(in); 
-				for(int j = 0; j < size; j++)
-					imiona[i][j] = Utilities.readString(in);
-			}
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		net();
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		JFrame frame = new JFrame("Menu");
+		frame = new JFrame("Menu");
 		frame.setLocation(screenSize.width/3, screenSize.height/3);
 		//frame.setLocationRelativeTo(null);
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
@@ -130,6 +105,7 @@ public class MenuApp {
 			  panel.setOpaque(false);
 			  frame.getContentPane().add(panel);
 			  frame.getContentPane().add(panela);
+			  
 		}
 		JPanel panelrefresh = new JPanel();
 		JButton buttonrefresh = new JButton("Odśwież");
@@ -145,6 +121,7 @@ public class MenuApp {
 		  frame.getContentPane().setBackground(new Color(0xD8F2DE));
 		  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		  frame.setVisible(true);
+		  frame.repaint();
 	}
 	private JLabel coloreLabel(JLabel label,Color color) {
 		label.setOpaque(true);
@@ -165,14 +142,47 @@ public class MenuApp {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		frame.dispose();
+		
 		try {
 			new ClientApp(connection,nickname);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	private void net(){
+		String host = "127.0.0.1";
+		try {
+			connection = new Socket(host, 17373);
+			in = new InputStreamReader(connection.getInputStream());
+			out = new OutputStreamWriter(connection.getOutputStream());
+			player = new PlayerConnection(connection);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			Utilities.writeObject(out, "INFO");			
+			Utilities.finishWriting(out);
+			
+			int numberOfTables = Utilities.readInt(in);
+			int size;
+			for(int i = 0; i < numberOfTables; i++){
+				stateOfTable[i]  =  (Utilities.readInt(in) == 1) ? true : false ;
+				size = Utilities.readInt(in); 
+				for(int j = 0; j < size; j++)
+					imiona[i][j] = Utilities.readString(in);
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 	private void refresh(){
-		System.out.println("Odswiezam");
+		//frame.setVisible(false);
+		//net();
+		Menu();
 	}
 	/**
 	 * @param args
