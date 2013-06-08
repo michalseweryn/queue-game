@@ -59,7 +59,8 @@ public class JQueuingCard extends JPanel implements MouseListener {
 		Graphics2D g2d = (Graphics2D) g;
 		Dimension size = getSize();
 		Dimension arcs = new Dimension(size.width / 10, size.width / 10); 
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		if (JGameArea.ANTYALIASING)
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		//RoundRectangle2D rect = new Rectangle(0, 0, size.width - 1, size.height - 1);
 		//g2d.setStroke(new BasicStroke(size.height/50));
 		int indexInColorArray = player.getID();
