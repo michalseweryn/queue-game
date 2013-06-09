@@ -64,7 +64,7 @@ public class PlayerConnection implements Runnable {
 			if(table != null) {
 				table.unjoin(this);
 			}
-			System.out.println("Nieudane połączenie");
+			System.out.println("Nieudane połączenie");		
 			e.printStackTrace();
 		} finally {
 			try {
@@ -74,7 +74,6 @@ public class PlayerConnection implements Runnable {
 			}
 		}
 	}
-	
 	public void info() {
 		try {
 			Utilities.expectString(in, "INFO");

@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -53,7 +55,8 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 	private int playerId;
 	private int cardsLeft = 0;
 	private String[] names = new String[5];
-
+	private JFrame frame;
+	private LinkedBlockingQueue<GameAction> actions = new LinkedBlockingQueue<GameAction>();
 	public ClientApp(Socket connection,String name) throws IOException{
 		this.connection = connection;
 		this.in = new InputStreamReader(connection.getInputStream());
@@ -77,29 +80,40 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		new Thread(new Runnable() {
 
 			public void run() {
-				while (true) {
+				synchronized(actions){
+					while (true) {				
 					GameAction action;
 					try {
-						action = GameAction.read(in);
-						
+						action = GameAction.read(in);						
 						handleAction(action);
-						if(action.getType() == GameActionType.START_GAME)
+						if(action.getType() == GameActionType.END_GAME)
 							break;
+						addAction(action);
 					} catch (IOException e) {
 						e.printStackTrace();
 						break;
 					}
 				}
 			}
-
+		}
 		}).start();
+		
 		/*game = new Game(gameState, localCreator, null);
 		game.addView(gameArea);
 		game.addView(playerList);
 		gameArea.setGame(game);
 		game.startGame(5, this);*/
 	}
-
+	private synchronized void addAction(GameAction action){
+		boolean is = true;
+		if(action.getType() == GameActionType.START_GAME)
+				is = false;	
+		if(action.getType() == GameActionType.JOIN)
+			is = false;
+		if(!is)
+			actions.add(action);
+		ClientApp.this.notifyAll();
+	}
 	private void handleAction(GameAction action) {
 		System.out.println(action);
 		if(action.getType() == GameActionType.JOIN){
@@ -111,6 +125,15 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		if(action.getType() == GameActionType.START_GAME){
 			startGame();
 		}
+		if(action.getType() == GameActionType.END_GAME){
+			endGame();
+			try {
+				connection.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	private void updatePlayers(){
 		List<String> namesList = new LinkedList<String>();
@@ -130,7 +153,13 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		game.startGame(nPlayers, this, this);
 		
 	}
-
+	
+	private void endGame(){
+		game.endGame();
+		frame.dispose();
+		
+	}
+	
 	private void addPlayer(int id, String name){
 		names[id] = name;
 		if(name.equals(this.name))
@@ -140,7 +169,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 	}
 
 	private void createAndShowGUI() {
-		JFrame frame = new JFrame("FIAO");
+		frame = new JFrame("FIAO");
 		frame.setPreferredSize(new Dimension(800, 500));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout());
@@ -163,12 +192,12 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		gameArea.update();
 		if(gameState.getActivePlayer() == playerId)
 			return localCreator.getAction();
-		try {
-			return GameAction.read(in);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+		//try {
+			return actions.take();
+		//} catch (IOException e) {
+		//	e.printStackTrace();
+		//}
+		//return null;
 	}
 
 	public List<QueuingCard> getCardsToFillTheHandOfPlayer(int playerNr) {

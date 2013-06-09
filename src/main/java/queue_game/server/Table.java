@@ -79,6 +79,14 @@ public class Table implements Runnable, ActionCreator, Updater {
 		}
 		Utilities.finishWriting(out);
 	}
+	
+	public void unjoin(PlayerConnection player) {
+		synchronized(players) {
+			players.remove(player);			
+			endGame();
+		}
+	}
+	
 	public int join(PlayerConnection player) {
 		synchronized (players) {
 			if (players.size() >= playerLimit)
@@ -103,14 +111,6 @@ public class Table implements Runnable, ActionCreator, Updater {
 			return players.size() - 1;
 		}
 	}
-	
-	public void unjoin(PlayerConnection player) {
-		synchronized(players) {
-			if(players.remove(player)) {
-				//TODO jesli gra sie zaczela to nalezy ja zakonczyc bo stracilismy polaczenie z graczem
-			}
-		}
-	}
 
 	public void handleAction(GameAction action, int source) {
 		synchronized (actions) {
@@ -119,7 +119,7 @@ public class Table implements Runnable, ActionCreator, Updater {
 			actions.notifyAll();
 		}
 	}
-
+	
 	public void run() {
 		GameAction action;
 		int source;
@@ -155,6 +155,8 @@ public class Table implements Runnable, ActionCreator, Updater {
 						allReady = false;
 				if (allReady)
 					startGame();
+			}else if(action.getType() == GameActionType.END_GAME){
+				endGame();
 			}
 			action = null;
 		}
@@ -195,7 +197,26 @@ public class Table implements Runnable, ActionCreator, Updater {
 			}
 		game.startGame(names.size(), new StandardDeckOfDeliveryCards(), queuingCardsDecks);
 	}
-
+	
+	private void endGame(){
+		System.out.println("endGame");
+		System.out.println(players.size());
+		for(PlayerConnection user : players){		
+			System.out.println("WYSYLAM AKCJE");
+			try {
+				System.out.println("WYSYLAM AKCJE");
+				user.sendAction(new GameAction(GameActionType.END_GAME));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		players.clear();
+		recentAction = new GameAction[playerLimit];
+		isReady = new boolean[playerLimit];
+		actions.clear();
+		sources.clear();
+		gameOnRun = false;
+	}
 	private void chatMessage(GameAction action) {
 		if (action.getType() != GameActionType.CHAT)
 			throw new IllegalArgumentException("Not a chat action");
@@ -214,6 +235,7 @@ public class Table implements Runnable, ActionCreator, Updater {
 	 */
 	public synchronized GameAction getAction() throws InterruptedException {
 		int activePlayer = gameState.getActivePlayer();
+		System.out.println("NIE DOBRZE");
 		while (recentAction[activePlayer] == null)
 			wait();
 		GameAction action = recentAction[activePlayer];

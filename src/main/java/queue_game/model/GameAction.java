@@ -64,6 +64,8 @@ public class GameAction {
 		case START_GAME:
 			action.info = new Object[0];
 			break;
+		case END_GAME:
+			break;
 		case ERROR:
 			action.info = new Object[1];
 			action.info[0] = Utilities.readInt(in); //numer gracza

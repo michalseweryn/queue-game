@@ -57,7 +57,9 @@ public class Game implements Runnable {
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
-
+	public void endGame(){
+		gameThread.interrupt();
+	}
 	/**
 	 * All Phases of all days.
 	 */

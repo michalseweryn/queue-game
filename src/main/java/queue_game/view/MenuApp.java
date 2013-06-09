@@ -182,6 +182,7 @@ public class MenuApp {
 	private void refresh(){
 		//frame.setVisible(false);
 		//net();
+		frame.dispose();
 		Menu();
 	}
 	/**
