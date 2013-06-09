@@ -106,7 +106,8 @@ public class JCardsArea extends JPanel {
 					for(ProductType type : ProductType.values()){
 						int bought = gameState.getPlayer(id).getBoughtProducts()[type.ordinal()];
 						if(bought > 0){
-							JProductSquare square = new JProductSquare(game, type, bought, null, creator);
+							JProductSquare square = new JProductSquare(game, type, bought, null, creator,
+									true, false);
 							square.setMinimumSize(new Dimension(30, 30));
 							square.setPreferredSize(new Dimension(30, 30));
 							contentPanel.add(square);
@@ -117,7 +118,8 @@ public class JCardsArea extends JPanel {
 						passButton.addActionListener(new ActionListener(){
 		
 							public void actionPerformed(ActionEvent e) {
-								creator.productSelected(game.getGameState().getActivePlayer(), null, null);
+								creator.productSelected(game.getGameState().getActivePlayer(), null, null,
+										false, false);
 							}
 						});
 						contentPanel.add(passButton);
