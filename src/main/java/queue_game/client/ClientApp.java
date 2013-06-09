@@ -68,6 +68,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		gameArea = new JGameArea(gameState, localCreator);
 		localCreator.addView(playerList);
 		localCreator.addView(gameArea);
+		localCreator.setCardsArea(gameArea.getCardsArea());
 		updatePlayers();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {

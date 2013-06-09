@@ -3,6 +3,7 @@
  */
 package queue_game.model;
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,7 +43,7 @@ public class GameState {
 	private Collection<DeliveryCard> currentDeliveryList;
 	private Store market;
 	private String message = "";
-
+	
 	public GameState(List<String> names) {
 		stores = new Store[ProductType.values().length];
 		int ind = 0;
@@ -207,7 +208,8 @@ public class GameState {
 	public synchronized Collection<DeliveryCard> getCurrentDeliveryList() {
 		return currentDeliveryList;
 	}
-
+	
+	
 	/**
 	 * @return ID of player whose turn is now.
 	 */

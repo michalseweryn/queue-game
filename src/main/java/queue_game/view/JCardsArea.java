@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.BitSet;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -11,6 +12,7 @@ import javax.swing.JPanel;
 
 import queue_game.controller.Game;
 import queue_game.creator.LocalGameActionCreator;
+import queue_game.model.ButtonType;
 import queue_game.model.GamePhase;
 import queue_game.model.GameState;
 import queue_game.model.Player;
@@ -29,7 +31,7 @@ public class JCardsArea extends JPanel {
 	private JLabel messageLabel;
 	private LocalGameActionCreator creator;
 	private int playerId; //-1 while hot-seat game
-	
+	private ButtonType buttonType = null;
 	public JCardsArea(GameState gameState, LocalGameActionCreator creator){
 		super();
 		this.creator = creator; 
@@ -43,6 +45,15 @@ public class JCardsArea extends JPanel {
 		this.game = game;
 	}
 	
+
+	public synchronized void setButtonType(ButtonType buttonType){
+		if(this.buttonType != buttonType)
+		{
+			this.buttonType = buttonType;
+			update();
+		}
+	}
+	
 	private void addCards(){
 		if(gameState.getActivePlayer() >=0){
 			Player activePlayer = gameState.getPlayersList().get(gameState.getActivePlayer());
@@ -53,24 +64,36 @@ public class JCardsArea extends JPanel {
 			JPanel contentPanel = new JPanel();
 			Player player = gameState.getPlayersList().get((gameState.getActivePlayer()));
 			if(gameState.getCurrentGamePhase() == GamePhase.JUMPING){
-				JButton button = new JButton("PASS");
-				button.addActionListener(new ActionListener(){
+				if(buttonType == ButtonType.PASS){
+					JButton passButton = new JButton("PASS");
+					passButton.addActionListener(new ActionListener(){
 	
-					public void actionPerformed(ActionEvent e) {
-						creator.queuingCardSelected(gameState.getActivePlayer(), null);
-					}
-				});
-				contentPanel.add(button);
+						public void actionPerformed(ActionEvent e) {
+							creator.queuingCardSelected(gameState.getActivePlayer(), null);
+						}
+					});
+					contentPanel.add(passButton);
+				}
+				if(buttonType == ButtonType.CANCEL){
+					JButton cancelButton = new JButton("ANULUJ");
+					cancelButton.addActionListener(new ActionListener(){
+		
+						public void actionPerformed(ActionEvent e) {
+							creator.cancel(gameState.getActivePlayer());
+						}
+					});
+					contentPanel.add(cancelButton);
+				}
 			}
 			if(gameState.getCurrentGamePhase() == GamePhase.PCT){
-				JButton button = new JButton("PASS");
-				button.addActionListener(new ActionListener(){
+				JButton passButton = new JButton("PASS");
+				passButton.addActionListener(new ActionListener(){
 	
 					public void actionPerformed(ActionEvent e) {
 						creator.pawnSelected(game.getGameState().getActivePlayer(), null, -1);
 					}
 				});
-				contentPanel.add(button);
+				contentPanel.add(passButton);
 			}
 			if(gameState.getCurrentGamePhase()!= null && gameState.getCurrentGamePhase().ordinal() < 3)
 			for(QueuingCard i: gameState.getPlayersList().get((gameState.getActivePlayer())).getCardsOnHand()){
@@ -89,18 +112,31 @@ public class JCardsArea extends JPanel {
 							contentPanel.add(square);
 						}
 					}
-					JButton button = new JButton("PASS");
-					button.addActionListener(new ActionListener(){
+					if(buttonType == ButtonType.PASS){
+						JButton passButton = new JButton("PASS");
+						passButton.addActionListener(new ActionListener(){
 		
-						public void actionPerformed(ActionEvent e) {
-							creator.productSelected(game.getGameState().getActivePlayer(), null, null);
-						}
-					});
-					contentPanel.add(button);
+							public void actionPerformed(ActionEvent e) {
+								creator.productSelected(game.getGameState().getActivePlayer(), null, null);
+							}
+						});
+						contentPanel.add(passButton);
+					}
+					if(buttonType == ButtonType.CANCEL){
+						JButton cancelButton = new JButton("ANULUJ");
+						cancelButton.addActionListener(new ActionListener(){
+			
+							public void actionPerformed(ActionEvent e) {
+								creator.cancel(gameState.getActivePlayer());
+							}
+						});
+						contentPanel.add(cancelButton);
+					}
 				}	
 			}
 			add(contentPanel, BorderLayout.CENTER);
 		}
+
 	}
 	public void setGame(Game game){
 		this.game = game;

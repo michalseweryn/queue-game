@@ -38,6 +38,7 @@ public class App {
         gameArea.setPlayerId(-1);
         creator.addView(playerList);
         creator.addView(gameArea);
+        creator.setCardsArea(gameArea.getCardsArea());
         
         SwingUtilities.invokeLater(new Runnable() {
 			public void run() {

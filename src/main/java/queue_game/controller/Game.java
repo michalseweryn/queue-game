@@ -247,7 +247,9 @@ public class Game implements Runnable {
 				messageForPlayer("Wybierz kartę przepychanek, lub spasuj.");
 				do {
 					GameAction action = actionGiver.getAction();
-					if (action.getType() == GameActionType.CARD_PLAYED_PASSED) {
+					if(action.getType()== GameActionType.CARD_PLAYING_CANCELLED)
+						continue;
+					else if (action.getType() == GameActionType.CARD_PLAYED_PASSED) {
 						finished[player] = true;
 						success = true;
 						nFinished++;
@@ -405,6 +407,8 @@ public class Game implements Runnable {
 				do {
 					action = actionGiver.getAction();
 				} while (!succesfulTransaction(action));
+				if(action.getType() == GameActionType.EXCHANGING_CANCELLED)
+					continue;
 				if (action.getType() == GameActionType.PRODUCT_EXCHANGED_ONE) {
 					ProductType sold = (ProductType) action.getInfo()[1];
 					ProductType offered = (ProductType) action.getInfo()[2];
