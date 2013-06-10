@@ -110,7 +110,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 				is = false;	
 		if(action.getType() == GameActionType.JOIN)
 			is = false;
-		if(!is)
+		if(is)
 			actions.add(action);
 		ClientApp.this.notifyAll();
 	}
@@ -123,6 +123,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 			addPlayer(id, name);
 		}
 		if(action.getType() == GameActionType.START_GAME){
+			System.out.println("START");
 			startGame();
 		}
 		if(action.getType() == GameActionType.END_GAME){
@@ -143,6 +144,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		playerList.update();
 		
 	}
+	
 	private void startGame() {
 		game = new Game(gameState, this, this);
 		game.addView(gameArea);
@@ -189,6 +191,8 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 	//}
 
 	public GameAction getAction() throws InterruptedException {
+		System.out.println("string rozpoznawczy" + gameState.getActivePlayer() + " " + playerId);
+		
 		gameArea.update();
 		if(gameState.getActivePlayer() == playerId)
 			return localCreator.getAction();
@@ -208,11 +212,11 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 			while(cards.size() + gameState.getPlayer(playerId).getCardsOnHand().size() < 3 && cardsLeft-- > 0){
 				GameAction action;
 				try {
-					action = GameAction.read(in);
+					action = getAction();
 				if(action.getType() != GameActionType.DRAW_CARD)
 					throw new RuntimeException("Expected queuing cards: " + action);
 					cards.add((QueuingCard) action.getInfo()[1]);
-				} catch (IOException e) {
+				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}

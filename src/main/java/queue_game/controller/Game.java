@@ -51,6 +51,7 @@ public class Game implements Runnable {
 	 * Creates new thread for the game.
 	 */
 	public void startGame(int nPlayers, DeckOfDeliveryCards deckOfDeliveryCards, DecksOfQueuingCardsBoxInterface decks) {
+		System.out.println("zaczynamy");
 		this.nPlayers = nPlayers;
 		this.deckOfDeliveryCards = deckOfDeliveryCards;
 		this.decks = decks;
@@ -64,6 +65,7 @@ public class Game implements Runnable {
 	 * All Phases of all days.
 	 */
 	public void run() {
+		System.out.println("run");
 		try {
 			PreparingToGamePhase();
 			for (int day = 0; !gameOver(); day++) {
@@ -93,8 +95,10 @@ public class Game implements Runnable {
 	 */
 	public void PreparingToGamePhase() throws InterruptedException {
 		//List<String> names = generateNames();
+		gameState.setActivePlayer(-1);
 		ArrayList<List<Integer>> lists = generateShoppingLists();
 		gameState.initGame(lists.subList(0, nPlayers));
+		System.out.println("preparing1");
 		resetQueuingCards();
 		queuingUpPhase();
 		gameState.putSpeculators();

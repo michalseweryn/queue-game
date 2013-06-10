@@ -69,7 +69,7 @@ public class GameState {
 	private synchronized void reset(int nPlayers) {
 		dayNumber = 0;
 		gameOpeningMarker = 0;
-		activePlayer = 0;
+		activePlayer = -1;
 		numberOfPlayers = nPlayers;
 		currentGamePhase = null;
 		gameOver = false;
