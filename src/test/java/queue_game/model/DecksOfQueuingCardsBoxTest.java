@@ -29,8 +29,6 @@ public class DecksOfQueuingCardsBoxTest {
 
 	@Test
 	public void hasCardTest(){
-		gameState.getPlayer(2).addCardsToHand(deck.getCardsToFillTheHandOfPlayer(2));
-		assertEquals(true,deck.hasCard(2, QueuingCard.DELIVERY_ERROR));
 		assertEquals(false,deck.hasCard(3, QueuingCard.DELIVERY_ERROR));
 	}
 	@Test
