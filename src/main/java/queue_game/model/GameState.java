@@ -42,7 +42,8 @@ public class GameState {
 	private ArrayList<GameAction> actions = new ArrayList<GameAction>();
 	private Collection<DeliveryCard> currentDeliveryList;
 	private Store market;
-	private String message = "";
+	private String message = "";	
+	private String errorMessage = "";
 	
 	public GameState(List<String> names) {
 		stores = new Store[ProductType.values().length];
@@ -442,6 +443,14 @@ public class GameState {
 
 	public String getMessage() {
 		return message;
+	}
+	
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
 	}
 
 	/**

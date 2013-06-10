@@ -58,7 +58,8 @@ public class JCardsArea extends JPanel {
 		if(gameState.getActivePlayer() >=0){
 			Player activePlayer = gameState.getPlayersList().get(gameState.getActivePlayer());
 			if(playerId == -1 || activePlayer.getID() == playerId)
-				messageLabel = new JLabel(activePlayer.getName() +": " + gameState.getMessage());
+				messageLabel = new JLabel(activePlayer.getName() +": " + gameState.getErrorMessage()
+						+ " " + gameState.getMessage());
 			else messageLabel = new JLabel("Ruch gracza " + activePlayer.getName());
 			add(messageLabel, BorderLayout.PAGE_START);
 			JPanel contentPanel = new JPanel();
