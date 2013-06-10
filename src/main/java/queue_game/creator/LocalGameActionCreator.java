@@ -266,7 +266,7 @@ public class LocalGameActionCreator implements ActionCreator {
 			while (expectedType != null && cancelled==false) {
 				wait();
 			}
-			if (selectedProduct.product == null || cancelled || (selectedProduct.onHand == onHand
+			if (cancelled || selectedProduct.product == null || (selectedProduct.onHand == onHand
 					  && selectedProduct.inMarket == inMarket))
 				break;
 			else expectedType = ProductParameters.class;
