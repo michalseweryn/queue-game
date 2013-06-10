@@ -98,7 +98,6 @@ public class Game implements Runnable {
 		gameState.setActivePlayer(-1);
 		ArrayList<List<Integer>> lists = generateShoppingLists();
 		gameState.initGame(lists.subList(0, nPlayers));
-		System.out.println("preparing1");
 		resetQueuingCards();
 		queuingUpPhase();
 		gameState.putSpeculators();
@@ -177,6 +176,7 @@ public class Game implements Runnable {
 	 */
 	public void deliveryPhase() {
 		gameState.setActivePlayer(-1);
+
 		Collection<DeliveryCard> tempDCList = deckOfDeliveryCards
 				.removeThreeCards();
 		ProductType type;

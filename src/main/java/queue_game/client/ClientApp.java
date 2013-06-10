@@ -56,7 +56,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 	private int cardsLeft = 0;
 	private String[] names = new String[5];
 	private JFrame frame;
-	private LinkedBlockingQueue<GameAction> actions = new LinkedBlockingQueue<GameAction>();
+	private LinkedBlockingQueue<GameAction> actions;
 	public ClientApp(Socket connection,String name) throws IOException{
 		this.connection = connection;
 		this.in = new InputStreamReader(connection.getInputStream());
@@ -66,7 +66,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		gameState = new GameState(Arrays.asList(name));
 
 		localCreator = new LocalGameActionCreator(gameState);
-
+		actions = new LinkedBlockingQueue<GameAction>();
 		playerList = new JClientPlayerList(gameState, this);
 		gameArea = new JGameArea(gameState, localCreator);
 		localCreator.addView(playerList);
@@ -85,7 +85,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 					while (true) {				
 					GameAction action;
 					try {
-						action = GameAction.read(in);						
+						action = GameAction.read(in);	
 						handleAction(action);
 						if(action.getType() == GameActionType.END_GAME)
 							break;
@@ -156,9 +156,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 	}
 	
 	private void endGame(){
-		game.endGame();
-		frame.dispose();
-		
+		System.exit(0);		
 	}
 	
 	private void addPlayer(int id, String name){
@@ -190,17 +188,11 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 	//}
 
 	public GameAction getAction() throws InterruptedException {
-		System.out.println("string rozpoznawczy" + gameState.getActivePlayer() + " " + playerId);
-		
 		gameArea.update();
 		if(gameState.getActivePlayer() == playerId)
 			return localCreator.getAction();
-		//try {
-			return actions.take();
-		//} catch (IOException e) {
-		//	e.printStackTrace();
-		//}
-		//return null;
+		
+		return actions.take();
 	}
 
 	public List<QueuingCard> getCardsToFillTheHandOfPlayer(int playerNr) {
@@ -212,7 +204,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 				GameAction action;
 				try {
 					action = getAction();
-				if(action.getType() != GameActionType.DRAW_CARD)
+					if(action.getType() != GameActionType.DRAW_CARD)
 					throw new RuntimeException("Expected queuing cards: " + action);
 					cards.add((QueuingCard) action.getInfo()[1]);
 				} catch (InterruptedException e) {
@@ -281,6 +273,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 	public Collection<DeliveryCard> removeThreeCards() {
 		GameAction action = null;
 		try {
+			while(actions.size() == 0){}
 			action = getAction();
 		} catch (InterruptedException e) {
 			e.printStackTrace();

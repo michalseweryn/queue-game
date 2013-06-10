@@ -213,6 +213,7 @@ public class Table implements Runnable, ActionCreator, Updater {
 		actions.clear();
 		sources.clear();
 		gameOnRun = false;
+		game.endGame();
 	}
 	private void chatMessage(GameAction action) {
 		if (action.getType() != GameActionType.CHAT)
@@ -232,7 +233,6 @@ public class Table implements Runnable, ActionCreator, Updater {
 	 */
 	public synchronized GameAction getAction() throws InterruptedException {
 		int activePlayer = gameState.getActivePlayer();
-		System.out.println("NIE DOBRZE");
 		while (recentAction[activePlayer] == null)
 			wait();
 		GameAction action = recentAction[activePlayer];
