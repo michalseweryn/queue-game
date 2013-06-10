@@ -115,7 +115,6 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		ClientApp.this.notifyAll();
 	}
 	private void handleAction(GameAction action) {
-		System.out.println(action);
 		if(action.getType() == GameActionType.JOIN){
 			nPlayers++;
 			int id = (Integer)action.getInfo()[0];
@@ -123,7 +122,6 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 			addPlayer(id, name);
 		}
 		if(action.getType() == GameActionType.START_GAME){
-			System.out.println("START");
 			startGame();
 		}
 		if(action.getType() == GameActionType.END_GAME){

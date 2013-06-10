@@ -14,8 +14,9 @@ public class ServerApp {
 		try {
 			ServerSocket listener = new ServerSocket(17373);
 			while(!Thread.currentThread().isInterrupted()) {
+				Thread playerThread ;
 				try {
-					Thread playerThread = new Thread(new PlayerConnection(listener.accept()));
+					playerThread = new Thread(new PlayerConnection(listener.accept()));
 					playerThread.setDaemon(true);
 					playerThread.start();
 				} catch(IOException e) {

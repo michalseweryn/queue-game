@@ -62,9 +62,10 @@ public class PlayerConnection implements Runnable {
 			}
 		} catch (IOException e) {
 			if(table != null) {
+				System.out.println("Nieudane połączenie oneoneone");	
 				table.unjoin(this);
 			}
-			System.out.println("Nieudane połączenie");		
+				
 			e.printStackTrace();
 		} finally {
 			try {

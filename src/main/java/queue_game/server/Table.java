@@ -200,11 +200,8 @@ public class Table implements Runnable, ActionCreator, Updater {
 	
 	private void endGame(){
 		System.out.println("endGame");
-		System.out.println(players.size());
 		for(PlayerConnection user : players){		
-			System.out.println("WYSYLAM AKCJE");
 			try {
-				System.out.println("WYSYLAM AKCJE");
 				user.sendAction(new GameAction(GameActionType.END_GAME));
 			} catch (IOException e) {
 				e.printStackTrace();
