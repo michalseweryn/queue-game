@@ -48,6 +48,11 @@ public class JGameArea extends JPanel implements View{
 		
 	}
 	
+	public JCardsArea getCardsArea()
+	{
+		return cardsArea;
+	}
+	
 	public void setPlayerId(int playerId)
 	{
 		this.playerId = playerId;
