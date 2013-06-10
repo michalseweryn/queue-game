@@ -253,6 +253,12 @@ public class LocalGameActionCreator implements ActionCreator {
 	
 	private void messageForPlayer(String message) {
 		gameState.setMessage(message);
+		//gameState.setErrorMessage("");
+		updateViews();
+	}
+	private void errorMessageForPlayer(String errorMessage) {
+		gameState.setErrorMessage(errorMessage);
+		//gameState.setErrorMessage("");
 		updateViews();
 	}
 
@@ -261,7 +267,7 @@ public class LocalGameActionCreator implements ActionCreator {
 			throws InterruptedException {
 		expectedType = ProductParameters.class;
 		messageForPlayer(message);
-		
+		errorMessageForPlayer("");
 		while(true){
 			while (expectedType != null && cancelled==false) {
 				wait();
@@ -296,6 +302,7 @@ public class LocalGameActionCreator implements ActionCreator {
 			throws InterruptedException {
 		expectedType = ProductType.class;
 		messageForPlayer(message);
+		errorMessageForPlayer("");
 		while (expectedType != null && cancelled==false)
 			wait();
 		return selectedQueue;
@@ -320,6 +327,7 @@ public class LocalGameActionCreator implements ActionCreator {
 			throws InterruptedException {
 		expectedType = PawnParameters.class;
 		messageForPlayer(message);
+		errorMessageForPlayer("");
 		while (selectedPawn == null && cancelled==false)
 			wait();
 		expectedType = null;
