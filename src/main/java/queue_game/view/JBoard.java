@@ -396,7 +396,7 @@ public class JBoard extends JPanel implements ComponentListener {
 			while (count > lsize) {
 				JProductSquare square = new JProductSquare(game,
 						ProductType.values()[0], 0, ProductType.values()[i],
-						creator);
+						creator, false, false);
 				square.setBounds(
 						(int) (tileWidth * (3 * ind + 0.5) + (2 - lsize % 3)
 								* side),
@@ -439,7 +439,7 @@ public class JBoard extends JPanel implements ComponentListener {
 		}
 		while (count > lsize) {
 			JProductSquare square = new JProductSquare(game, null, 0, null,
-					creator);
+					creator, false, true);
 			square.setBounds((int) (3 * tileWidth * ind + lsize++ * side),
 					(int) (tileHeight), (int) side, (int) side);
 			list.add(square);
