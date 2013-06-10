@@ -917,11 +917,13 @@ public class Game implements Runnable {
 		decks.resetAllDecks();
 		for (int i = 0; i < nPlayers; i++) {
 			gameState.getPlayer(i).setCardsOnHand(new ArrayList<QueuingCard>());
+			List<QueuingCard> cards = decks.getCardsToFillTheHandOfPlayer(i); 
 			gameState.getPlayersList().get(i)
-					.addCardsToHand(decks.getCardsToFillTheHandOfPlayer(i));
+					.addCardsToHand(cards);
+			for(QueuingCard card : cards)
+				update(new GameAction(GameActionType.DRAW_CARD, i, card));
 		}
 	}
-
 	/*
 	 * public synchronized StandardDeckOfQueuingCards getDeck(int playerNr) {
 	 * return decks.getDeck(); }
