@@ -21,9 +21,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import queue_game.ActionCreator;
-import queue_game.Updater;
 import queue_game.controller.Game;
+import queue_game.creator.ActionCreator;
 import queue_game.creator.LocalGameActionCreator;
 import queue_game.model.DeckOfDeliveryCards;
 import queue_game.model.DecksOfQueuingCardsBoxInterface;
@@ -33,6 +32,7 @@ import queue_game.model.GameActionType;
 import queue_game.model.GameState;
 import queue_game.model.QueuingCard;
 import queue_game.server.PlayerConnection;
+import queue_game.server.Updater;
 import queue_game.server.Utilities;
 import queue_game.view.JGameArea;
 

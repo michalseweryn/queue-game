@@ -6,7 +6,6 @@ package queue_game.creator;
 import java.util.ArrayList;
 import java.util.List;
 
-import queue_game.ActionCreator;
 import queue_game.model.ButtonType;
 import queue_game.model.GameAction;
 import queue_game.model.GameActionType;

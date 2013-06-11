@@ -9,8 +9,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import queue_game.ActionCreator;
-import queue_game.Updater;
+import queue_game.creator.ActionCreator;
 import queue_game.model.DeckOfDeliveryCards;
 import queue_game.model.DecksOfQueuingCardsBoxInterface;
 import queue_game.model.DeliveryCard;
@@ -22,6 +21,7 @@ import queue_game.model.Player;
 import queue_game.model.ProductType;
 import queue_game.model.QueuingCard;
 import queue_game.model.Store;
+import queue_game.server.Updater;
 import queue_game.view.View;
 
 /**

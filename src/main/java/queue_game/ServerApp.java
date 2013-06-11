@@ -1,7 +1,10 @@
-package queue_game.server;
+package queue_game;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+
+import queue_game.server.PlayerConnection;
+import queue_game.server.Table;
 
 public class ServerApp {
 	public static void main(String[] args) {

@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import queue_game.ActionCreator;
-import queue_game.Updater;
 import queue_game.controller.Game;
+import queue_game.creator.ActionCreator;
 import queue_game.model.DecksOfQueuingCardsBox;
 import queue_game.model.GameAction;
 import queue_game.model.GameActionType;
