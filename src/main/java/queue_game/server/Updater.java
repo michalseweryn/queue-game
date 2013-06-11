@@ -1,7 +1,7 @@
 /**
  * 
  */
-package queue_game;
+package queue_game.server;
 
 import queue_game.model.GameAction;
 
