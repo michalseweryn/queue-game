@@ -81,6 +81,7 @@ public class Game implements Runnable {
 			}
 			gameState.setGameOver();
 			updateViews();
+			update(new GameAction(GameActionType.END_GAME));			
 		} catch (InterruptedException e) {
 			return;
 		}

@@ -257,6 +257,10 @@ public class Table implements Runnable, ActionCreator, Updater {
 			if(action.getType() == GameActionType.CARDS_PEEKED){
 				players.get(gameState.getActivePlayer()).sendAction(action);
 			}
+			if(action.getType() == GameActionType.END_GAME){
+				endGame();
+				return;
+			}
 			int ind = 0;
 			for (PlayerConnection player : players){
 				if(ind++ != gameState.getActivePlayer())

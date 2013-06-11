@@ -91,17 +91,21 @@ public class MenuApp {
 				labela.setPreferredSize(new Dimension(70,40));
 			}
 			label.setHorizontalAlignment(JLabel.CENTER);
-			  JButton button = new JButton("Dołącz");
+			JButton button = new JButton("Dołącz");			  
+			if(stateOfTable[i] == false){
+			  //JButton button = new JButton("Dołącz");
 			  final int tmp=i;
 			  button.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
 						join(tmp);
 					}
 				});
+			}
 			  JPanel panel = new JPanel();
 			  coloreLabel(label,Color.WHITE);
 			  panel.add(label);
-			  panel.add(button);
+			  if(stateOfTable[i] == false)
+				  panel.add(button);
 			  panel.setOpaque(false);
 			  frame.getContentPane().add(panel);
 			  frame.getContentPane().add(panela);
