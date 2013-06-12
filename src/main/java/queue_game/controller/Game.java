@@ -133,10 +133,14 @@ public class Game implements Runnable {
 		gameState.setCurrentGamePhase(GamePhase.QUEUING_UP);
 		int timeSinceLastPawnLocation = 0;
 		outer: while (true) {
-			for (int player = gameState.getGameOpeningMarker(); player < gameState
+			int[] pawnsLeft = new int[5];
+			int player;
+			for (player = 0; player < gameState.getNumberOfPlayers(); player++)
+				pawnsLeft[player] = gameState.getNumberOfPawns(player); 
+			for (player = gameState.getGameOpeningMarker(); player < gameState
 					.getNumberOfPlayers(); player = (player + 1)
 					% gameState.getNumberOfPlayers()) {
-				if (gameState.getNumberOfPawns(player) > 0) {
+				if (pawnsLeft[player]-- > 0) {
 					gameState.setActivePlayer(player);
 					GameAction action;
 					do {
@@ -850,7 +854,8 @@ public class Game implements Runnable {
 		do {
 			gameState.setActivePlayer(player);
 			Player temp = gameState.getPlayersList().get(player);
-			while (temp.getNumberOfPawns() < 5) {
+			int numberOfPawns = temp.getNumberOfPawns();
+			while (numberOfPawns++ < 5) {
 				GameAction action = actionGiver.getAction();
 				if (action.getType() == GameActionType.PAWN_REMOVED_PASSED){
 					update(action);
