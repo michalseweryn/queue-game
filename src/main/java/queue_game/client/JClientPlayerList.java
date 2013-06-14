@@ -3,6 +3,8 @@ package queue_game.client;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +55,10 @@ public class JClientPlayerList extends JPanel implements queue_game.view.View, A
 		log.setText(makeLog(gameState.getGameActions()));
 		JScrollPane scrollingLog = new JScrollPane(log, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollingLog.setPreferredSize(new Dimension(150, 100));
+		scrollingLog.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener(){
+			public void adjustmentValueChanged(AdjustmentEvent e){
+				log.select(log.getHeight()+1000,0);
+		}});
 		add(scrollingLog);
 		if(addButton){
 			startButton = new JButton("START");
