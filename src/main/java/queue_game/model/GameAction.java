@@ -115,9 +115,9 @@ public class GameAction {
 				action.info[3] = Utilities.readInt(in); //ktory pionek
 				action.info[4] = Utilities.readEnum(in, ProductType.class); //sklep docelowy
 				break;
-			case TIPPING_FRIEND:
+		/*	case TIPPING_FRIEND:
 				action.info = new Object[2];
-				break;
+				break;*/
 			case CLOSED_FOR_STOCKTAKING:
 			case INCREASED_DELIVERY:
 			case COMMUNITY_LIST:

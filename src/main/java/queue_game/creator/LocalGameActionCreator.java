@@ -159,9 +159,9 @@ public class LocalGameActionCreator implements ActionCreator {
 				if(cancelled) return cardPlayingCancelled();
 				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
 						QueuingCard.UNDER_THE_COUNTER_GOODS, prod2.product,prod2.store);
-			case TIPPING_FRIEND:
+			/*case TIPPING_FRIEND:
 				return new GameAction(GameActionType.CARD_PLAYED, gameState.getActivePlayer(),
-						QueuingCard.TIPPING_FRIEND);
+						QueuingCard.TIPPING_FRIEND);*/
 			case CRITICIZING_AUTHORITIES:
 				PawnParameters pawn4 = requestPawn(SELECT_PAWN_TO_MOVE);
 				if(cancelled) return cardPlayingCancelled();

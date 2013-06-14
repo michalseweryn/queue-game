@@ -294,10 +294,10 @@ public class Game implements Runnable {
 							if (underTheCounterGoods(action))
 								success = true;
 							break;
-						case TIPPING_FRIEND:
+						/*case TIPPING_FRIEND:
 							if (tippingFriend(action))
 								success = true;
-							break;
+							break;*/
 						case CRITICIZING_AUTHORITIES:
 							if (criticizingAuthorities(action))
 								success = true;

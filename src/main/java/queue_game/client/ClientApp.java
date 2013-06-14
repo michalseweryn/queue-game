@@ -199,7 +199,7 @@ public class ClientApp implements ActionCreator, DeckOfDeliveryCards, DecksOfQue
 		LinkedList<QueuingCard> cards = new LinkedList<QueuingCard>();
 		if(playerNr == playerId){
 			if(gameState.getDayNumber() % 5 == 0 && cardsLeft < 10)
-				cardsLeft = 10;
+				cardsLeft = 9;
 			while(cards.size() + gameState.getPlayer(playerId).getCardsOnHand().size() < 3 && cardsLeft-- > 0){
 				GameAction action;
 				try {

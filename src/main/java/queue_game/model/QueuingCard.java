@@ -6,7 +6,7 @@ package queue_game.model;
 public enum QueuingCard {
 	DELIVERY_ERROR("Pomyłka \nw dostawie"), NOT_YOUR_PLACE("Pan tu\nnie stał"), 
 	LUCKY_STRIKE("Szczęśliwy \ntraf"), MOTHER_WITH_CHILD("Matka z\ndzieckiem"), 
-	UNDER_THE_COUNTER_GOODS("Towar spod\nlady"), TIPPING_FRIEND("Kolega z\nkomitetu"),
+	UNDER_THE_COUNTER_GOODS("Towar spod\nlady"), //TIPPING_FRIEND("Kolega z\nkomitetu"),
 	CRITICIZING_AUTHORITIES("Krytyka\nwładzy"), INCREASED_DELIVERY("Zwiększona\ndostawa"),
 	CLOSED_FOR_STOCKTAKING("Remanent"), COMMUNITY_LIST("Lista \nspołeczna");
 	

@@ -119,9 +119,9 @@ public class JQueuingCard extends JPanel implements MouseListener {
 		case NOT_YOUR_PLACE:
 			this.setToolTipText("Przesuń swój pionek o jedno miejsce do przodu");
 			break;
-		case TIPPING_FRIEND:
+		/*case TIPPING_FRIEND:
 			this.setToolTipText("Podejrzyj dwie karty dostawy towaru");
-			break;
+			break;*/
 		case UNDER_THE_COUNTER_GOODS:
 			this.setToolTipText("Jeżeli jesteś pierwszy w kolejce, " +
 					"zabierz natychmiast towar" );
